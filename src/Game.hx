@@ -1,3 +1,4 @@
+import h2d.Tile;
 import dn.Process;
 import hxd.Key;
 
@@ -11,6 +12,9 @@ class Game extends Process {
 	public var level : Level;
 	public var hud : ui.Hud;
 
+	public var moonScene : MoonScene;
+	public var tile: Tile;
+
 	public function new() {
 		super(Main.ME);
 		ME = this;
@@ -23,6 +27,7 @@ class Game extends Process {
 		root.add(scroller, Const.DP_BG);
 		scroller.filter = new h2d.filter.ColorMatrix(); // force rendering for pixel perfect
 
+		moonScene = new MoonScene();
 		camera = new Camera();
 		level = new Level();
 		fx = new Fx();
@@ -30,6 +35,9 @@ class Game extends Process {
 
 		Process.resizeAll();
 		trace(Lang.t._("Game is ready."));
+		
+		new en.Hero(10, 10);
+		new en.MoonEntity(0, 0);
 	}
 
 	public function onCdbReload() {
