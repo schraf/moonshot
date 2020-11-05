@@ -10,10 +10,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - uses: krdlab/setup-haxe@v1
         with:
           haxe-version: 4.1.4
-
       - name: Install Dependencies
         run: |
           haxe -version
@@ -21,9 +21,5 @@ jobs:
           haxelib git deepnightLibs https://github.com/deepnight/deepnightLibs.git
           haxelib git heaps https://github.com/HeapsIO/heaps.git
           haxelib list
-
-      - uses: actions/checkout@v2
-
       - name: Build Javascript Target
         run: haxe js.hxml
-
