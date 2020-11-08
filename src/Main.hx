@@ -57,9 +57,12 @@ class Main extends dn.Process {
 		controller.bind(SELECT, Key.R);
 		controller.bind(START, Key.N);
 
+		controller.bind(AXIS_LEFT_Y_POS, Key.UP);
+		controller.bind(AXIS_LEFT_Y_NEG, Key.DOWN);
+
 		// Start
 		new dn.heaps.GameFocusHelper(Boot.ME.s2d, Assets.fontMedium);
-		delayer.addF( startGame, 1 );
+		delayer.addF( showSplashScreens, 1 );
 	}
 
 	public function startGame() {
@@ -71,6 +74,32 @@ class Main extends dn.Process {
 		}
 		else
 			new Game();
+	}
+
+	public function showMenu() {
+		if( Menu.ME!=null ) {
+			Menu.ME.destroy();
+			delayer.addF(function() {
+				new Menu();
+			}, 1);
+		}
+		else
+			new Menu();
+	}
+
+	public function showCredits() {
+		if( Credits.ME!=null ) {
+			Credits.ME.destroy();
+			delayer.addF(function() {
+				new Credits();
+			}, 1);
+		}
+		else
+			new Credits();
+	}
+
+	public function showSplashScreens() {
+		new SplashScreens();
 	}
 
 	override public function onResize() {
