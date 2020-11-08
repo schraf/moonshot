@@ -17,6 +17,7 @@ class SplashScreens extends Process {
 		flow.verticalAlign = Middle;
 
         cinematic.create({
+			#if !debug
 			addText("Untitled Game Studio presents");
             fadeIn();
             1500;
@@ -47,8 +48,9 @@ class SplashScreens extends Process {
             3000;
             fadeOut();
 			1000;
+			#end
             destroy();
-            Main.ME.startGame();
+            Main.ME.showMenu();
         });
 
 		Process.resizeAll();

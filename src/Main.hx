@@ -73,6 +73,17 @@ class Main extends dn.Process {
 			new Game();
 	}
 
+	public function showMenu() {
+		if( Menu.ME!=null ) {
+			Menu.ME.destroy();
+			delayer.addF(function() {
+				new Menu();
+			}, 1);
+		}
+		else
+			new Menu();
+	}
+
 	public function showSplashScreens() {
 		new SplashScreens();
 	}
