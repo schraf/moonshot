@@ -90,9 +90,13 @@ class Menu extends Process {
         else if (ca.downPressed()) {
             select(selectedOption + 1);
         } else if (ca.bPressed()) {
-            destroy();
             if (options[selectedOption] == CREDITS) {
+                destroy();
                 Main.ME.showCredits();
+            }
+            if (options[selectedOption] == NEW_GAME) {
+                destroy();
+                Main.ME.startGame();
             }
         }
     }
