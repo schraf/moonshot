@@ -57,6 +57,9 @@ class Main extends dn.Process {
 		controller.bind(SELECT, Key.R);
 		controller.bind(START, Key.N);
 
+		controller.bind(AXIS_LEFT_Y_POS, Key.UP);
+		controller.bind(AXIS_LEFT_Y_NEG, Key.DOWN);
+
 		// Start
 		new dn.heaps.GameFocusHelper(Boot.ME.s2d, Assets.fontMedium);
 		delayer.addF( showSplashScreens, 1 );
