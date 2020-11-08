@@ -8,10 +8,10 @@ class Menu extends Process {
     var flow: h2d.Flow;
     var ca : dn.heaps.Controller.ControllerAccess;
     
-    var NEW_GAME: Int = 2;
-    var HOW_TO_PLAY: Int = 3;
-    var LEADERBOARD: Int = 4;
-    var CREDITS: Int = 5;
+    var NEW_GAME: Int = 1;
+    var HOW_TO_PLAY: Int = 2;
+    var LEADERBOARD: Int = 3;
+    var CREDITS: Int = 4;
 
     var options: Array<Int>;
     
@@ -36,8 +36,6 @@ class Menu extends Process {
         addText("How To Play");
         addText("Leaderboards");
         addText("Credits");
-
-        flow.enableInteractive = true;
         
         options = [NEW_GAME, HOW_TO_PLAY, LEADERBOARD, CREDITS];
         selectedOption = 0;
@@ -71,6 +69,7 @@ class Menu extends Process {
     }
     
     override function onDispose() {
+        super.onDispose();
         options = null;
         ca.dispose();
 	}
@@ -90,6 +89,11 @@ class Menu extends Process {
         }
         else if (ca.downPressed()) {
             select(selectedOption + 1);
+        } else if (ca.bPressed()) {
+            destroy();
+            if (options[selectedOption] == CREDITS) {
+                Main.ME.showCredits();
+            }
         }
     }
 }

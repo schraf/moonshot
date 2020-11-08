@@ -87,6 +87,17 @@ class Main extends dn.Process {
 			new Menu();
 	}
 
+	public function showCredits() {
+		if( Credits.ME!=null ) {
+			Credits.ME.destroy();
+			delayer.addF(function() {
+				new Credits();
+			}, 1);
+		}
+		else
+			new Credits();
+	}
+
 	public function showSplashScreens() {
 		new SplashScreens();
 	}
