@@ -59,7 +59,7 @@ class Main extends dn.Process {
 
 		// Start
 		new dn.heaps.GameFocusHelper(Boot.ME.s2d, Assets.fontMedium);
-		delayer.addF( startGame, 1 );
+		delayer.addF( showSplashScreens, 1 );
 	}
 
 	public function startGame() {
@@ -71,6 +71,10 @@ class Main extends dn.Process {
 		}
 		else
 			new Game();
+	}
+
+	public function showSplashScreens() {
+		new SplashScreens();
 	}
 
 	override public function onResize() {
