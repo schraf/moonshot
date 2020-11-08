@@ -17,14 +17,39 @@ class SplashScreens extends Process {
 		flow.verticalAlign = Middle;
 
         cinematic.create({
-            tw.createMs(root.alpha, 0>1, 500);
-            1000;
-            tw.createMs(root.alpha, 0, 1000);
-            1000;
+			addText("Untitled Game Studio presents");
+            fadeIn();
+            1500;
+            fadeOut();
+			1000;
+			removeText();	
+			addText("In association with Shae's Youth Group");
+			fadeIn();
+            1500;
+            fadeOut();
+			1000;
+			removeText();	
+			addText("An Edric Yu Joint");
+			fadeIn();
+            1500;
+            fadeOut();
+			1000;
+			removeText();	
+			addText("Not sponsered by UPS, FedEx, or the USPS in any way");
+			fadeIn();
+            1500;
+            fadeOut();
+			1000;
+			removeText();	
+			addText("SPACE MAIL");
+			addText("the game");
+			fadeIn();
+            3000;
+            fadeOut();
+			1000;
             destroy();
             Main.ME.startGame();
         });
-        addText("Untitled Game Studio presents");
 
 		Process.resizeAll();
 	}
@@ -34,6 +59,18 @@ class SplashScreens extends Process {
 		tf.scale(5);
 		tf.text = str;
 		tf.textColor = c;
+	}
+
+	function removeText() {
+		flow.removeChildren();
+	}
+
+	function fadeIn() {
+		tw.createMs(root.alpha, 0>1, 500);
+	}
+
+	function fadeOut() {
+		tw.createMs(root.alpha, 0, 1000);
 	}
 
 	override function onResize() {
