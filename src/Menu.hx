@@ -18,6 +18,12 @@ class Menu extends Process {
     var selectedOption: Int;
 
 	public function new() {
+        #if debug
+        destroy();
+        Main.ME.startGame();
+        return;
+        #end
+
         super(Main.ME);
         createRoot(Main.ME.root);
 
