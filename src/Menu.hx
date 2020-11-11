@@ -20,7 +20,7 @@ class Menu extends Process {
 	public function new() {
         #if debug
         destroy();
-        Main.ME.startGame();
+        Main.ME.startShipBuilding();
         return;
         #end
 
@@ -102,7 +102,7 @@ class Menu extends Process {
             }
             if (options[selectedOption] == NEW_GAME) {
                 destroy();
-                Main.ME.startGame();
+                Main.ME.startShipBuilding();
             }
         }
     }

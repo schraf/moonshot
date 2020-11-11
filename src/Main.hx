@@ -76,6 +76,17 @@ class Main extends dn.Process {
 			new Game();
 	}
 
+	public function startShipBuilding() {
+		if( ShipBuilding.ME!=null ) {
+			ShipBuilding.ME.destroy();
+			delayer.addF(function() {
+				new ShipBuilding();
+			}, 1);
+		}
+		else
+			new ShipBuilding();
+	}
+
 	public function showMenu() {
 		if( Menu.ME!=null ) {
 			Menu.ME.destroy();
