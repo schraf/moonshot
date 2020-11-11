@@ -1,9 +1,12 @@
+import ship_building.ShipPart;
 import hxd.Res;
 import dn.Process;
 import hxd.Key;
 
 class ShipBuilding extends Process {
-	public static var ME : ShipBuilding;
+    public static var ME : ShipBuilding;
+    
+    public var ship: Array<Array<ShipPart>>;
 
 	public var ca : dn.heaps.Controller.ControllerAccess;
     
@@ -17,6 +20,14 @@ class ShipBuilding extends Process {
         
         background = new h2d.Bitmap(root);
         background.tile = Res.platform.toTile();
+
+        var xStart: Int = Math.ceil(w() / 2 / Const.GRID) - Math.ceil(Const.SHIP_WIDTH / 2 * Const.SHIP_PART_SCALE);
+        var yStart: Int = Math.ceil(h() / 2 / Const.GRID) - Math.ceil(Const.SHIP_HEIGHT / 2 * Const.SHIP_PART_SCALE);
+        ship = [
+            for(x in 0...Const.SHIP_WIDTH) [
+                for(y in 0...Const.SHIP_HEIGHT) new ShipPart(xStart + (x * Const.SHIP_PART_SCALE),yStart + (y * Const.SHIP_PART_SCALE))
+            ]
+        ];
 
 		Process.resizeAll();
 	}
@@ -33,19 +44,19 @@ class ShipBuilding extends Process {
 	}
 
 	function gc() {
-		if( Entity.GC==null || Entity.GC.length==0 )
+		if( ShipPart.GC==null || ShipPart.GC.length==0 )
 			return;
 
-		for(e in Entity.GC)
+		for(e in ShipPart.GC)
 			e.dispose();
-		Entity.GC = [];
+		ShipPart.GC = [];
 	}
 
 	override function onDispose() {
         super.onDispose();
         background = null;
 
-		for(e in Entity.ALL)
+		for(e in ShipPart.ALL)
 			e.destroy();
 		gc();
 	}
@@ -53,26 +64,26 @@ class ShipBuilding extends Process {
 	override function preUpdate() {
 		super.preUpdate();
 
-		for(e in Entity.ALL) if( !e.destroyed ) e.preUpdate();
+		for(e in ShipPart.ALL) if( !e.destroyed ) e.preUpdate();
 	}
 
 	override function postUpdate() {
 		super.postUpdate();
 
-		for(e in Entity.ALL) if( !e.destroyed ) e.postUpdate();
+		for(e in ShipPart.ALL) if( !e.destroyed ) e.postUpdate();
 		gc();
 	}
 
 	override function fixedUpdate() {
 		super.fixedUpdate();
 
-		for(e in Entity.ALL) if( !e.destroyed ) e.fixedUpdate();
+		for(e in ShipPart.ALL) if( !e.destroyed ) e.fixedUpdate();
 	}
 
 	override function update() {
 		super.update();
 
-		for(e in Entity.ALL) if( !e.destroyed ) e.update();
+		for(e in ShipPart.ALL) if( !e.destroyed ) e.update();
 
 		if( !ui.Console.ME.isActive() && !ui.Modal.hasAny() ) {
 			#if hl

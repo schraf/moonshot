@@ -19,4 +19,8 @@ class Const {
 	public static var DP_FX_FRONT = _inc++;
 	public static var DP_TOP = _inc++;
 	public static var DP_UI = _inc++;
+
+	public static var SHIP_WIDTH = 10;
+	public static var SHIP_HEIGHT = 10;
+	public static var SHIP_PART_SCALE = 3;
 }
