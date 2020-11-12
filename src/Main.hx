@@ -6,10 +6,12 @@ class Main extends dn.Process {
 	public var controller : dn.heaps.Controller;
 	public var ca : dn.heaps.Controller.ControllerAccess;
 
+	public var scene : h2d.Scene;
+
 	public function new(s:h2d.Scene) {
 		super();
 		ME = this;
-
+		this.scene = s;
         createRoot(s);
 
 		// Engine settings
@@ -57,8 +59,8 @@ class Main extends dn.Process {
 		controller.bind(SELECT, Key.R);
 		controller.bind(START, Key.N);
 
-		controller.bind(AXIS_LEFT_Y_POS, Key.UP);
-		controller.bind(AXIS_LEFT_Y_NEG, Key.DOWN);
+		controller.bind(AXIS_LEFT_Y_POS, Key.UP, Key.W);
+		controller.bind(AXIS_LEFT_Y_NEG, Key.DOWN, Key.S);
 
 		// Start
 		new dn.heaps.GameFocusHelper(Boot.ME.s2d, Assets.fontMedium);

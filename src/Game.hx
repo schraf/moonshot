@@ -1,5 +1,24 @@
+import box2D.dynamics.joints.B2PrismaticJointDef;
+import box2D.dynamics.joints.B2WeldJointDef;
+import box2D.dynamics.joints.B2WeldJoint;
+import hxsl.Types.Vec;
 import dn.Process;
 import hxd.Key;
+
+import box2D.dynamics.B2World;
+import box2D.common.math.B2Vec2;
+import box2D.dynamics.B2Body;
+import box2D.dynamics.B2BodyDef;
+import box2D.dynamics.B2BodyType;
+import box2D.dynamics.B2Fixture;
+import box2D.dynamics.B2FixtureDef;
+import box2D.collision.B2AABB;
+import box2D.collision.shapes.B2Shape;
+import box2D.collision.shapes.B2PolygonShape;
+import box2D.collision.shapes.B2CircleShape;
+
+import sim.en.Ship;
+import sim.en.Thruster;
 
 class Game extends Process {
 	public static var ME : Game;
@@ -10,6 +29,11 @@ class Game extends Process {
 	public var scroller : h2d.Layers;
 	public var level : Level;
 	public var hud : ui.Hud;
+
+	var world:B2World;
+	var ship: Ship;
+	var up:B2Vec2;
+
 
 	public function new() {
 		super(Main.ME);
@@ -30,6 +54,36 @@ class Game extends Process {
 
 		Process.resizeAll();
 		trace(Lang.t._("Game is ready."));
+
+		// new sim.en.Ship(10, 10);
+
+		world = new B2World(new B2Vec2(0, 0), true);
+		up = new B2Vec2(0, -50);
+
+		ship = new Ship(world, 0, 0);
+		var thruster = new Thruster(world, 50, -80, 5, AXIS_LEFT_X_NEG);
+		var thruster2 = new Thruster(world, -50, -80, -5, AXIS_LEFT_X_POS);
+
+		var thruster3 = new Thruster(world, 50, 80, -2, AXIS_LEFT_X_POS);
+		var thruster4 = new Thruster(world, -50, 80, 2, AXIS_LEFT_X_NEG);
+
+		// var thruster3 = new Thruster(world, 100, 0, 3, AXIS_LEFT_Y_NEG);
+
+		var jointDef = new B2WeldJointDef();
+
+		jointDef.initialize(ship.body, thruster.body, ship.body.getPosition());
+		world.createJoint(jointDef);
+
+		jointDef.initialize(ship.body, thruster2.body, ship.body.getPosition());
+		world.createJoint(jointDef);
+
+		jointDef.initialize(ship.body, thruster3.body, ship.body.getPosition());
+		world.createJoint(jointDef);
+
+		jointDef.initialize(ship.body, thruster4.body, ship.body.getPosition());
+		world.createJoint(jointDef);
+
+		camera.trackTarget(ship, true);
 	}
 
 	public function onCdbReload() {
@@ -80,8 +134,13 @@ class Game extends Process {
 
 	override function update() {
 		super.update();
-
 		for(e in Entity.ALL) if( !e.destroyed ) e.update();
+		
+		// ship.update();
+		// thruster.update();
+		world.step(1 / 60,  3,  3);
+		world.clearForces();
+
 
 		if( !ui.Console.ME.isActive() && !ui.Modal.hasAny() ) {
 			#if hl

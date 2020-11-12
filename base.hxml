@@ -2,5 +2,6 @@
 -lib castle
 -lib heaps
 -lib deepnightLibs
+-lib box2d
 -main Boot
 -dce full
