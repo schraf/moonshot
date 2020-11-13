@@ -1,5 +1,7 @@
 package sim.en;
 
+import hxd.res.Font;
+import hxd.res.DefaultFont;
 import h2d.Bitmap;
 import box2D.dynamics.B2World;
 import box2D.common.math.B2Vec2;
@@ -42,6 +44,11 @@ class Ship extends Entity {
     spr.setCenterRatio();
     sprScaleX = w / texture.width;
     sprScaleY = h / texture.height;
+
+    var tf = new h2d.Text(hxd.Res.fonts.minecraftiaOutline.toFont(), spr);
+    tf.text = "Untitled Rocket!";
+    tf.scale(20);
+    tf.textAlign = Center;
 
     ca = Main.ME.controller.createAccess("hero"); // creates an instance of controller
   }

@@ -55,7 +55,6 @@ class Game extends Process {
 		Process.resizeAll();
 		trace(Lang.t._("Game is ready."));
 
-		// new sim.en.Ship(10, 10);
 
 		world = new B2World(new B2Vec2(0, 0), true);
 		up = new B2Vec2(0, -50);
@@ -67,7 +66,9 @@ class Game extends Process {
 		var thruster3 = new Thruster(world, 50, 80, -2, AXIS_LEFT_X_POS);
 		var thruster4 = new Thruster(world, -50, 80, 2, AXIS_LEFT_X_NEG);
 
-		// var thruster3 = new Thruster(world, 100, 0, 3, AXIS_LEFT_Y_NEG);
+		for (i in 1...8) {
+			new Thruster(world, Math.round(Math.random() * 1000 - 500), Math.round(-Math.random() * 200) - 300, 3, AXIS_LEFT_Y_NEG);
+		}
 
 		var jointDef = new B2WeldJointDef();
 
@@ -84,6 +85,8 @@ class Game extends Process {
 		world.createJoint(jointDef);
 
 		camera.trackTarget(ship, true);
+		// scroller.setScale(2);
+
 	}
 
 	public function onCdbReload() {
@@ -91,7 +94,7 @@ class Game extends Process {
 
 	override function onResize() {
 		super.onResize();
-		scroller.setScale(Const.SCALE);
+		// scroller.setScale(Const.SCALE);
 	}
 
 
@@ -121,6 +124,7 @@ class Game extends Process {
 
 	override function postUpdate() {
 		super.postUpdate();
+		camera.postUpdate();
 
 		for(e in Entity.ALL) if( !e.destroyed ) e.postUpdate();
 		gc();
@@ -136,8 +140,8 @@ class Game extends Process {
 		super.update();
 		for(e in Entity.ALL) if( !e.destroyed ) e.update();
 		
-		// ship.update();
-		// thruster.update();
+		// camera.update();
+		scroller.setPosition(-ship.centerX, -ship.centerY);
 		world.step(1 / 60,  3,  3);
 		world.clearForces();
 

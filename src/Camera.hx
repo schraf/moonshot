@@ -88,26 +88,30 @@ class Camera extends dn.Process {
 
 	override function postUpdate() {
 		super.postUpdate();
-
+		
 		if( !ui.Console.ME.hasFlag("scroll") ) {
 			var level = Game.ME.level;
 			var scroller = Game.ME.scroller;
+			// scroller.setPosition(x, y);
+			// return;
+			scroller.x = -x + wid*0.5;
+			scroller.y = -y + hei*0.5;
 
 			// Update scroller
-			if( wid<level.wid*Const.GRID)
-				scroller.x = -x + wid*0.5;
-			else
-				scroller.x = wid*0.5 - level.wid*0.5*Const.GRID;
-			if( hei<level.hei*Const.GRID)
-				scroller.y = -y + hei*0.5;
-			else
-				scroller.y = hei*0.5 - level.hei*0.5*Const.GRID;
+			// if( wid<level.wid*Const.GRID)
+			// 	scroller.x = -x + wid*0.5;
+			// else
+			// 	scroller.x = wid*0.5 - level.wid*0.5*Const.GRID;
+			// if( hei<level.hei*Const.GRID)
+			// 	scroller.y = -y + hei*0.5;
+			// else
+			// 	scroller.y = hei*0.5 - level.hei*0.5*Const.GRID;
 
 			// Clamp
-			if( wid<level.wid*Const.GRID)
-				scroller.x = M.fclamp(scroller.x, wid-level.wid*Const.GRID, 0);
-			if( hei<level.hei*Const.GRID)
-				scroller.y = M.fclamp(scroller.y, hei-level.hei*Const.GRID, 0);
+			// if( wid<level.wid*Const.GRID)
+			// 	scroller.x = M.fclamp(scroller.x, wid-level.wid*Const.GRID, 0);
+			// if( hei<level.hei*Const.GRID)
+			// 	scroller.y = M.fclamp(scroller.y, hei-level.hei*Const.GRID, 0);
 
 			// Bumps friction
 			bumpOffX *= Math.pow(0.75, tmod);
