@@ -7,4 +7,5 @@ enum ShipPartType {
     Package;
     FuelStorage;
     Laser;
+    PackageLauncher;
 }

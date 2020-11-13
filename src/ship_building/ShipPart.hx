@@ -83,6 +83,8 @@ class ShipPart {
 				g.beginFill(0xf8fc00);
 			case Laser:
 				g.beginFill(0xff0000);
+			case PackageLauncher:
+				g.beginFill(0xb63db8);
 			default:
 				g.beginFill(0xbbbbbb);
 		}
@@ -103,6 +105,8 @@ class ShipPart {
 				return 15;
 			case Laser:
 				return 25;
+			case PackageLauncher:
+				return 0;
 			default:
 				return 0;
 		}
@@ -122,6 +126,8 @@ class ShipPart {
 				return 15;
 			case Laser:
 				return 10;
+			case PackageLauncher:
+				return 5;
 			default:
 				return 0;
 		}

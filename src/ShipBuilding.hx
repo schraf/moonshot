@@ -45,7 +45,7 @@ class ShipBuilding extends Process {
 
 		var startOfParts = [180,15];
 		var types = ShipPartType.createAll();
-		types.remove(ShipPartType.Empty);
+		// types.remove(ShipPartType.Empty);
 		var shopPartScale = 2.5;
 		parts = [
 			for (i in 0...types.length)
@@ -59,13 +59,42 @@ class ShipBuilding extends Process {
 		parts[0].highlight();
 
 		// Temporary showcase in main construction
-		for (i in 0...types.length)
-			ship[Std.int(i / ship[0].length)][i % ship[0].length].setType(types[i]);
+		// for (i in 0...types.length)w
+		// 	ship[Std.int(i / ship[0].length)][i % ship[0].length].setType(types[i]);
 
 		stats = new ShipStats();
+		debugShip();
 		calculateStats();
 
 		Process.resizeAll();
+	}
+
+	private function debugShip() {
+		for (i in 1...8)
+			for (j in 4...7)	
+				ship[i][j].setType(Block);
+		for (i in 3...6)
+			ship[i][7].setType(Block);
+		ship[2][3].setType(Block);
+		ship[6][3].setType(Block);
+		for (c in [
+			[2,5],
+			[3,5],
+			[3,6],
+			[5,5],
+			[5,6],
+			[6,5],
+		]) ship[c[0]][c[1]].setType(FuelStorage);
+		for (c in [
+			[2,7],
+			[6,7],
+			[3,8],
+			[5,8],
+		]) ship[c[0]][c[1]].setType(Booster);
+		ship[2][2].setType(Laser);
+		ship[6][2].setType(Laser);
+		ship[4][4].setType(PackageLauncher);
+		ship[4][6].setType(Package);
 	}
 
 	private function select(x: Int,y: Int) {
@@ -154,6 +183,7 @@ class ShipBuilding extends Process {
 		currentShipPartIndex++;
 		if (currentShipPartIndex >= parts.length) currentShipPartIndex = 0;
 		var part = parts[currentShipPartIndex];
+		trace("Selected " + part.getType());
 		part.highlight();
 	}
 
