@@ -1,5 +1,8 @@
 package ship_building;
 
+import h2d.Graphics;
+import hxd.Window;
+
 class ShipPart {
     public static var ALL : Array<ShipPart> = [];
     public static var GC : Array<ShipPart> = [];
@@ -34,6 +37,7 @@ class ShipPart {
 	public var ShipPartVisible = true;
 
     public var spr : HSprite;
+    public var g : Graphics;
 	public var colorAdd : h3d.Vector;
 	var debugLabel : Null<h2d.Text>;
 
@@ -46,18 +50,48 @@ class ShipPart {
 
 	var actions : Array<{ id:String, cb:Void->Void, t:Float }> = [];
 
-    public function new(x:Int, y:Int) {
+    public function new(x:Int, y:Int, type: ShipPartType = Empty) {
         uid = Const.NEXT_UNIQ;
         ALL.push(this);
 
 		cd = new dn.Cooldown(Const.FPS);
-        setPosCase(x,y);
+		setPosCase(x,y);
 
         spr = new HSprite(Assets.tiles);
         ShipBuilding.ME.root.add(spr, Const.DP_MAIN);
-		spr.colorAdd = colorAdd = new h3d.Vector();
-		spr.setCenterRatio(0.5,1);
-    }
+		// spr.colorAdd = colorAdd = new h3d.Vector();
+		// spr.setCenterRatio(0.5,1);
+
+		g = new h2d.Graphics(spr);
+		switch type {
+			case Empty: 
+				ShipPartVisible = false;
+			case Block:
+				g.beginFill(0x37B9D0);
+			case Booster:
+				g.beginFill(0xE72020);
+			case Package:
+				g.beginFill(0xA16F62);
+			default:
+				g.beginFill(0xbbbbbb);
+		}
+        g.beginFill(0x042b62);
+        g.drawRect(0,0,Const.SHIP_PART_SCALE * .9,Const.SHIP_PART_SCALE * .9);
+	}
+
+	public function setType(type: ShipPartType) {
+		ShipPartVisible = true;
+		switch type {
+			case Empty: 
+				ShipPartVisible = false;
+			case Block:
+				g.beginFill(0x042b62);
+			default:
+				g.beginFill(0xffffff);
+		}
+        g.beginFill(0x042b62);
+		g.drawRect(0,0,Const.SHIP_PART_SCALE * .9,Const.SHIP_PART_SCALE * .9);
+	}
 
 	inline function set_dir(v) {
 		return dir = v>0 ? 1 : v<0 ? -1 : dir;
@@ -88,6 +122,9 @@ class ShipPart {
 	public function bump(x:Float,y:Float) {
 		bdx+=x;
 		bdy+=y;
+	}
+
+	public function select() {
 	}
 
 	public function cancelVelocities() {

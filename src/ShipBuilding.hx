@@ -1,7 +1,9 @@
-import ship_building.ShipPart;
+import hxd.Event.EventKind;
+import ship_building.*;
 import hxd.Res;
 import dn.Process;
 import hxd.Key;
+import hxd.Window;
 
 class ShipBuilding extends Process {
     public static var ME : ShipBuilding;
@@ -10,7 +12,14 @@ class ShipBuilding extends Process {
 
 	public var ca : dn.heaps.Controller.ControllerAccess;
     
-    var background : h2d.Bitmap;
+	var background : h2d.Bitmap;
+
+	var xStart: Int = Math.ceil(w() / 2 / Const.GRID) - Math.ceil(Const.SHIP_WIDTH / 2 * Const.SHIP_PART_SCALE);
+	var yStart: Int = Math.ceil(h() / 2 / Const.GRID) - Math.ceil(Const.SHIP_HEIGHT / 2 * Const.SHIP_PART_SCALE);
+
+	var selected: ShipPart;
+	var sxy: Array<Int>;
+	var cursor: Cursor;
 
 	public function new() {
 		super(Main.ME);
@@ -19,18 +28,50 @@ class ShipBuilding extends Process {
 		createRootInLayers(Main.ME.root, Const.DP_BG);
         
         background = new h2d.Bitmap(root);
-        background.tile = Res.platform.toTile();
+		background.tile = Res.platform.toTile();
 
-        var xStart: Int = Math.ceil(w() / 2 / Const.GRID) - Math.ceil(Const.SHIP_WIDTH / 2 * Const.SHIP_PART_SCALE);
-        var yStart: Int = Math.ceil(h() / 2 / Const.GRID) - Math.ceil(Const.SHIP_HEIGHT / 2 * Const.SHIP_PART_SCALE);
+		// hxd.Window.getInstance().addEventTarget(clickListener);
+
         ship = [
             for(x in 0...Const.SHIP_WIDTH) [
                 for(y in 0...Const.SHIP_HEIGHT) new ShipPart(xStart + (x * Const.SHIP_PART_SCALE),yStart + (y * Const.SHIP_PART_SCALE))
             ]
-        ];
-
+		];
+		
+		selected = ship[0][0];
+		sxy = [0,0];
+		cursor = new Cursor(Math.floor((selected.cx + selected.xr) * Const.GRID), Math.floor((selected.cx + selected.xr) * Const.GRID));
 		Process.resizeAll();
 	}
+
+	private function select(x: Int,y: Int) {
+		x = x > Const.SHIP_WIDTH - 1 ? Const.SHIP_WIDTH - 1 : x;
+		x = x < 0 ? 0 : x;
+		y = y > Const.SHIP_HEIGHT - 1 ? Const.SHIP_HEIGHT - 1 : y;
+		y = y < 0 ? 0 : y;
+		sxy = [x,y];
+		selected = ship[x][y];
+		cursor.setPosCase(Math.floor(selected.centerX / Const.GRID + Const.SHIP_PART_SCALE / 2), Math.floor(selected.centerY / Const.GRID + Const.SHIP_PART_SCALE / 2));
+	}
+
+	// function clickListener(event : hxd.Event) {
+	// 	if (event.kind == EventKind.ERelease) {
+	// 		var xTile = event.relX / Const.GRID;
+	// 		var yTile = event.relY / Const.GRID;
+	// 		if (
+	// 			xTile >= xStart && xTile < xStart + Const.SHIP_WIDTH * Const.SHIP_PART_SCALE &&
+	// 			yTile >= yStart && yTile < yStart + Const.SHIP_HEIGHT * Const.SHIP_PART_SCALE
+	// 		) {
+	// 			var part = ship[Math.floor((xTile - xStart) / Const.GRID)][Math.floor((yTile - yStart) / Const.GRID)];
+	// 			if (selected == null) {
+	// 				part.select();
+	// 				selected = part;
+	// 			} else {
+	// 				selected = null;
+	// 			}
+	// 		}
+	// 	}
+	// }
 
 	override function onResize() {
 		super.onResize();
@@ -59,16 +100,21 @@ class ShipBuilding extends Process {
 		for(e in ShipPart.ALL)
 			e.destroy();
 		gc();
+
+		cursor.dispose();
 	}
 
 	override function preUpdate() {
 		super.preUpdate();
 
 		for(e in ShipPart.ALL) if( !e.destroyed ) e.preUpdate();
+
 	}
 
 	override function postUpdate() {
 		super.postUpdate();
+
+		cursor.postUpdate();
 
 		for(e in ShipPart.ALL) if( !e.destroyed ) e.postUpdate();
 		gc();
@@ -80,10 +126,46 @@ class ShipBuilding extends Process {
 		for(e in ShipPart.ALL) if( !e.destroyed ) e.fixedUpdate();
 	}
 
+	var currentShipPartIndex = 0;
+	var currentShipPartType = ShipPartType.Block;
+	function cycleShipPartType() {
+		var types = [
+			ShipPartType.Block,
+			ShipPartType.Booster,
+			ShipPartType.Package
+		];
+		currentShipPartIndex++;
+		if (currentShipPartIndex >= types.length) currentShipPartIndex = 0;
+		currentShipPartType = types[currentShipPartIndex];
+	}
+
 	override function update() {
 		super.update();
 
+		// cursor.update();
+
 		for(e in ShipPart.ALL) if( !e.destroyed ) e.update();
+	
+		if(ca.leftPressed()) {
+			select(sxy[0] - 1,sxy[1]);
+		}
+
+		if(ca.rightPressed())
+			select(sxy[0] + 1,sxy[1]);
+		
+		if(ca.upPressed())
+			select(sxy[0],sxy[1] - 1);
+
+		if(ca.downPressed())
+			select(sxy[0],sxy[1] + 1);
+
+		if (ca.bPressed()) {
+			ship[sxy[0]][sxy[1]].setType(ShipPartType.Block);
+		}
+
+		if (ca.bPressed()) {
+			ship[sxy[0]][sxy[1]].setType(ShipPartType.Block);
+		}
 
 		if( !ui.Console.ME.isActive() && !ui.Modal.hasAny() ) {
 			#if hl
