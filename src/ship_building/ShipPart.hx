@@ -41,6 +41,7 @@ class ShipPart {
     public var g : Graphics;
 	public var colorAdd : h3d.Vector;
 	var debugLabel : Null<h2d.Text>;
+	var size: Int;
 
 	public var footX(get,never) : Float; inline function get_footX() return (cx+xr)*Const.GRID;
 	public var footY(get,never) : Float; inline function get_footY() return (cy+yr)*Const.GRID;
@@ -60,14 +61,34 @@ class ShipPart {
 
         spr = new HSprite(Assets.tiles);
         ShipBuilding.ME.root.add(spr, Const.DP_MAIN);
-		// spr.colorAdd = colorAdd = new h3d.Vector();
-		// spr.setCenterRatio(0.5,1);
 
 		this.type = type;
 		g = new h2d.Graphics(spr);
+		size = Std.int(Const.SHIP_PART_SCALE * scale);
+		setType(type);
+	}
+
+	public function highlight() {
+		setType(type);
+		g.clear();
+        g.lineStyle(.3,0xffffff,1);
+        g.moveTo(0,0);
+        g.lineTo(0,size);
+        g.lineTo(size,size);
+        g.lineTo(size,0);
+		g.lineTo(0,0);
+	}
+
+	public function clearHighlight() {
+		g.clear();
+		setType(type);
+	}
+
+	public function setType(type: ShipPartType) {
+		this.type = type;
 		switch type {
 			case Empty: 
-				ShipPartVisible = false;
+				g.beginFill(0x1f323c);
 			case Block:
 				g.beginFill(0x37B9D0);
 			case Booster:
@@ -77,22 +98,7 @@ class ShipPart {
 			default:
 				g.beginFill(0xbbbbbb);
 		}
-        g.drawRect(0,0,Const.SHIP_PART_SCALE * scale * .9,Const.SHIP_PART_SCALE * scale * .9);
-	}
-
-	public function setType(type: ShipPartType) {
-		this.type = type;
-		ShipPartVisible = true;
-		switch type {
-			case Empty: 
-				ShipPartVisible = false;
-			case Block:
-				g.beginFill(0x042b62);
-			default:
-				g.beginFill(0xffffff);
-		}
-        g.beginFill(0x042b62);
-		g.drawRect(0,0,Const.SHIP_PART_SCALE * .9,Const.SHIP_PART_SCALE * .9);
+        g.drawRect(0,0,size,size);
 	}
 
 	public function getType() {return type;}

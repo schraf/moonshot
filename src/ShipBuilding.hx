@@ -20,9 +20,6 @@ class ShipBuilding extends Process {
 
 	var selected: ShipPart;
 	var sxy: Array<Int>;
-	var cursor: Cursor;
-
-	var shopCursor: Cursor;
 
 	public function new() {
 		super(Main.ME);
@@ -37,19 +34,13 @@ class ShipBuilding extends Process {
 
         ship = [
             for(x in 0...Const.SHIP_WIDTH) [
-                for(y in 0...Const.SHIP_HEIGHT) new ShipPart(xStart + (x * Const.SHIP_PART_SCALE),yStart + (y * Const.SHIP_PART_SCALE))
+                for(y in 0...Const.SHIP_HEIGHT) new ShipPart(xStart + (x * Const.SHIP_PART_SCALE),yStart + (y * Const.SHIP_PART_SCALE),.9)
             ]
 		];
 
 		selected = ship[0][0];
+		select(0,0);
 		sxy = [0,0];
-
-		cursor = new Cursor(
-			Std.int(selected.cx + selected.xr * Const.SHIP_PART_SCALE), 
-			Std.int(selected.cy + selected.yr * Const.SHIP_PART_SCALE),
-			Std.int(Const.SHIP_PART_SCALE * .45)
-		);
-		cursor.setPosCase(Math.floor(selected.centerX / Const.GRID + Const.SHIP_PART_SCALE / 2), Math.floor(selected.centerY / Const.GRID + Const.SHIP_PART_SCALE / 2));
 
 		var startOfParts = [180,15];
 		var types = ShipPartType.createAll();
@@ -60,32 +51,24 @@ class ShipBuilding extends Process {
 				Std.int(startOfParts[0] + (i % 2) * Const.SHIP_PART_SCALE * shopPartScale),
 				Std.int(startOfParts[1] + Std.int(i / 2) * Const.SHIP_PART_SCALE * shopPartScale),
 				types[i],
-				shopPartScale
+				2.0
 			)
 		];
-
-		shopCursor = new Cursor(
-			Std.int(startOfParts[0]),
-			Std.int(startOfParts[1]),
-			Std.int(Const.SHIP_PART_SCALE * shopPartScale * .45)
-		);
-		var shopSelected = parts[currentShipPartIndex];
-		cursor.setPosCase(
-			Math.floor(shopSelected.centerX / Const.GRID + (Const.SHIP_PART_SCALE + shopPartScale) / 2),
-			Math.floor(shopSelected.centerY / Const.GRID + (Const.SHIP_PART_SCALE + shopPartScale) / 2)
-		);
+		parts[0].highlight();
 		
 		Process.resizeAll();
 	}
 
 	private function select(x: Int,y: Int) {
+		selected.clearHighlight();
+		var check = [x,y];
 		x = x > Const.SHIP_WIDTH - 1 ? Const.SHIP_WIDTH - 1 : x;
 		x = x < 0 ? 0 : x;
 		y = y > Const.SHIP_HEIGHT - 1 ? Const.SHIP_HEIGHT - 1 : y;
 		y = y < 0 ? 0 : y;
 		sxy = [x,y];
 		selected = ship[x][y];
-		cursor.setPosCase(Math.floor(selected.centerX / Const.GRID + Const.SHIP_PART_SCALE / 2), Math.floor(selected.centerY / Const.GRID + Const.SHIP_PART_SCALE / 2));
+		selected.highlight();
 	}
 
 	// function clickListener(event : hxd.Event) {
@@ -134,8 +117,6 @@ class ShipBuilding extends Process {
 		for(e in ShipPart.ALL)
 			e.destroy();
 		gc();
-
-		cursor.dispose();
 	}
 
 	override function preUpdate() {
@@ -147,8 +128,6 @@ class ShipBuilding extends Process {
 
 	override function postUpdate() {
 		super.postUpdate();
-
-		cursor.postUpdate();
 
 		for(e in ShipPart.ALL) if( !e.destroyed ) e.postUpdate();
 		gc();
@@ -162,15 +141,15 @@ class ShipBuilding extends Process {
 
 	var currentShipPartIndex = 0;
 	function cycleShipPartType() {
+		parts[currentShipPartIndex].clearHighlight();
 		currentShipPartIndex++;
 		if (currentShipPartIndex >= parts.length) currentShipPartIndex = 0;
-		trace(parts[currentShipPartIndex].getType());
+		var part = parts[currentShipPartIndex];
+		part.highlight();
 	}
 
 	override function update() {
 		super.update();
-
-		// cursor.update();
 
 		for(e in ShipPart.ALL) if( !e.destroyed ) e.update();
 	
@@ -188,6 +167,7 @@ class ShipBuilding extends Process {
 			select(sxy[0],sxy[1] + 1);
 
 		if (ca.bPressed()) {
+			trace(currentShipPartIndex);
 			ship[sxy[0]][sxy[1]].setType(parts[currentShipPartIndex].getType());
 		}
 
