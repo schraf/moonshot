@@ -20,7 +20,7 @@ class Const {
 	public static var DP_TOP = _inc++;
 	public static var DP_UI = _inc++;
 
-	public static var SHIP_WIDTH = 5;
-	public static var SHIP_HEIGHT = 5;
+	public static var SHIP_WIDTH = 8;
+	public static var SHIP_HEIGHT = 8;
 	public static var SHIP_PART_SCALE = 5;
 }

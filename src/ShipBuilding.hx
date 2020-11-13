@@ -20,6 +20,7 @@ class ShipBuilding extends Process {
 
 	var selected: ShipPart;
 	var sxy: Array<Int>;
+	var stats: ShipStats;
 
 	public function new() {
 		super(Main.ME);
@@ -47,15 +48,23 @@ class ShipBuilding extends Process {
 		types.remove(ShipPartType.Empty);
 		var shopPartScale = 2.5;
 		parts = [
-			for (i in 0...types.length) new ShipPart(
-				Std.int(startOfParts[0] + (i % 2) * Const.SHIP_PART_SCALE * shopPartScale),
-				Std.int(startOfParts[1] + Std.int(i / 2) * Const.SHIP_PART_SCALE * shopPartScale),
-				types[i],
-				2.0
+			for (i in 0...types.length)
+				new ShipPart(
+					startOfParts[0] + (i % 2) * Const.SHIP_PART_SCALE * shopPartScale,
+					startOfParts[1] + Std.int(i / 2) * Const.SHIP_PART_SCALE * shopPartScale,
+					types[i],
+					2.0
 			)
 		];
 		parts[0].highlight();
-		
+
+		// Temporary showcase in main construction
+		for (i in 0...types.length)
+			ship[Std.int(i / ship[0].length)][i % ship[0].length].setType(types[i]);
+
+		stats = new ShipStats();
+		calculateStats();
+
 		Process.resizeAll();
 	}
 
@@ -148,6 +157,18 @@ class ShipBuilding extends Process {
 		part.highlight();
 	}
 
+	function calculateStats() {
+		stats.clear();
+		for (row in ship) {
+			for (part in row) {
+				stats.addMass(part.mass());
+				stats.addCost(part.cost());
+				if (part.getType() == ShipPartType.FuelStorage)
+					stats.addFuel(50);
+			}
+		}
+	}	
+
 	override function update() {
 		super.update();
 
@@ -167,8 +188,8 @@ class ShipBuilding extends Process {
 			select(sxy[0],sxy[1] + 1);
 
 		if (ca.bPressed()) {
-			trace(currentShipPartIndex);
 			ship[sxy[0]][sxy[1]].setType(parts[currentShipPartIndex].getType());
+			calculateStats();
 		}
 
 		if (ca.xPressed()) {

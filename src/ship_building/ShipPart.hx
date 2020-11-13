@@ -52,12 +52,12 @@ class ShipPart {
 
 	var actions : Array<{ id:String, cb:Void->Void, t:Float }> = [];
 
-    public function new(x:Int, y:Int, type: ShipPartType = Empty, scale: Float = 1) {
+    public function new(x:Float, y:Float, type: ShipPartType = Empty, scale: Float = 1) {
         uid = Const.NEXT_UNIQ;
         ALL.push(this);
 
 		cd = new dn.Cooldown(Const.FPS);
-		setPosCase(x,y);
+		setPosPixel(x * Const.GRID,y * Const.GRID);
 
         spr = new HSprite(Assets.tiles);
         ShipBuilding.ME.root.add(spr, Const.DP_MAIN);
@@ -66,6 +66,65 @@ class ShipPart {
 		g = new h2d.Graphics(spr);
 		size = Std.int(Const.SHIP_PART_SCALE * scale);
 		setType(type);
+	}
+
+	public function setType(type: ShipPartType) {
+		this.type = type;
+		switch type {
+			case Empty: 
+				g.beginFill(0x1f323c);
+			case Block:
+				g.beginFill(0x37B9D0);
+			case Booster:
+				g.beginFill(0xfc9300);
+			case Package:
+				g.beginFill(0xA16F62);
+			case FuelStorage:
+				g.beginFill(0xf8fc00);
+			case Laser:
+				g.beginFill(0xff0000);
+			default:
+				g.beginFill(0xbbbbbb);
+		}
+        g.drawRect(0,0,size,size);
+	}
+
+	public function cost() {
+		switch type {
+			case Empty: 
+				return 0;
+			case Block:
+				return 5;
+			case Booster:
+				return 25;
+			case Package:
+				return 0;
+			case FuelStorage:
+				return 15;
+			case Laser:
+				return 25;
+			default:
+				return 0;
+		}
+	}
+
+	public function mass() {
+		switch type {
+			case Empty: 
+				return 0;
+			case Block:
+				return 5;
+			case Booster:
+				return 20;
+			case Package:
+				return 50;
+			case FuelStorage:
+				return 15;
+			case Laser:
+				return 10;
+			default:
+				return 0;
+		}
 	}
 
 	public function highlight() {
@@ -82,23 +141,6 @@ class ShipPart {
 	public function clearHighlight() {
 		g.clear();
 		setType(type);
-	}
-
-	public function setType(type: ShipPartType) {
-		this.type = type;
-		switch type {
-			case Empty: 
-				g.beginFill(0x1f323c);
-			case Block:
-				g.beginFill(0x37B9D0);
-			case Booster:
-				g.beginFill(0xE72020);
-			case Package:
-				g.beginFill(0xA16F62);
-			default:
-				g.beginFill(0xbbbbbb);
-		}
-        g.drawRect(0,0,size,size);
 	}
 
 	public function getType() {return type;}

@@ -5,6 +5,6 @@ enum ShipPartType {
     Block;
     Booster;
     Package;
-    // FuelStorage;
-    // Laser;
+    FuelStorage;
+    Laser;
 }
