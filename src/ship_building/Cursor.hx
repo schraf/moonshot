@@ -12,14 +12,15 @@ class Cursor {
     public var xr = 0.5;
     public var yr = 1.0;
 
-    public function new(x, y) {
+    public function new(x, y, size) {
         spr = new HSprite(Assets.tiles);
         ShipBuilding.ME.root.add(spr, Const.DP_MAIN);
         var g = new h2d.Graphics(spr);
 
+        setPosCase(x,y);
+
         spr.set("empty");
         g.lineStyle(.3,0xffffff,1);
-        var size = Const.SHIP_PART_SCALE * .45;
         g.moveTo(-size,-size);
         g.lineTo(-size,size);
         g.lineTo(size,size);
@@ -28,15 +29,16 @@ class Cursor {
     }
 
     public function dispose() {
-        ca.dispose();
-		spr.remove();
-		spr = null;    }
+      ca.dispose();
+      spr.remove();
+      spr = null;    
+    }
 
     public function setPosCase(x:Int, y:Int) {
-		cx = x;
-		cy = y;
-		xr = 0.5;
-		yr = 1;
+      cx = x;
+      cy = y;
+      xr = 0.5;
+      yr = 1;
     }
 
     public function postUpdate() {

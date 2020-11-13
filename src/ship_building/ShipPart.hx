@@ -35,6 +35,7 @@ class ShipPart {
 	public var sprScaleX = 3.5 * Const.SHIP_PART_SCALE;
 	public var sprScaleY = 3.5 * Const.SHIP_PART_SCALE;
 	public var ShipPartVisible = true;
+	var type: ShipPartType;
 
     public var spr : HSprite;
     public var g : Graphics;
@@ -50,7 +51,7 @@ class ShipPart {
 
 	var actions : Array<{ id:String, cb:Void->Void, t:Float }> = [];
 
-    public function new(x:Int, y:Int, type: ShipPartType = Empty) {
+    public function new(x:Int, y:Int, type: ShipPartType = Empty, scale: Float = 1) {
         uid = Const.NEXT_UNIQ;
         ALL.push(this);
 
@@ -62,6 +63,7 @@ class ShipPart {
 		// spr.colorAdd = colorAdd = new h3d.Vector();
 		// spr.setCenterRatio(0.5,1);
 
+		this.type = type;
 		g = new h2d.Graphics(spr);
 		switch type {
 			case Empty: 
@@ -75,11 +77,11 @@ class ShipPart {
 			default:
 				g.beginFill(0xbbbbbb);
 		}
-        g.beginFill(0x042b62);
-        g.drawRect(0,0,Const.SHIP_PART_SCALE * .9,Const.SHIP_PART_SCALE * .9);
+        g.drawRect(0,0,Const.SHIP_PART_SCALE * scale * .9,Const.SHIP_PART_SCALE * scale * .9);
 	}
 
 	public function setType(type: ShipPartType) {
+		this.type = type;
 		ShipPartVisible = true;
 		switch type {
 			case Empty: 
@@ -92,6 +94,8 @@ class ShipPart {
         g.beginFill(0x042b62);
 		g.drawRect(0,0,Const.SHIP_PART_SCALE * .9,Const.SHIP_PART_SCALE * .9);
 	}
+
+	public function getType() {return type;}
 
 	inline function set_dir(v) {
 		return dir = v>0 ? 1 : v<0 ? -1 : dir;

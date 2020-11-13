@@ -9,6 +9,7 @@ class ShipBuilding extends Process {
     public static var ME : ShipBuilding;
     
     public var ship: Array<Array<ShipPart>>;
+    public var parts: Array<ShipPart>;
 
 	public var ca : dn.heaps.Controller.ControllerAccess;
     
@@ -20,6 +21,8 @@ class ShipBuilding extends Process {
 	var selected: ShipPart;
 	var sxy: Array<Int>;
 	var cursor: Cursor;
+
+	var shopCursor: Cursor;
 
 	public function new() {
 		super(Main.ME);
@@ -37,10 +40,41 @@ class ShipBuilding extends Process {
                 for(y in 0...Const.SHIP_HEIGHT) new ShipPart(xStart + (x * Const.SHIP_PART_SCALE),yStart + (y * Const.SHIP_PART_SCALE))
             ]
 		];
-		
+
 		selected = ship[0][0];
 		sxy = [0,0];
-		cursor = new Cursor(Math.floor((selected.cx + selected.xr) * Const.GRID), Math.floor((selected.cx + selected.xr) * Const.GRID));
+
+		cursor = new Cursor(
+			Std.int(selected.cx + selected.xr * Const.SHIP_PART_SCALE), 
+			Std.int(selected.cy + selected.yr * Const.SHIP_PART_SCALE),
+			Std.int(Const.SHIP_PART_SCALE * .45)
+		);
+		cursor.setPosCase(Math.floor(selected.centerX / Const.GRID + Const.SHIP_PART_SCALE / 2), Math.floor(selected.centerY / Const.GRID + Const.SHIP_PART_SCALE / 2));
+
+		var startOfParts = [180,15];
+		var types = ShipPartType.createAll();
+		types.remove(ShipPartType.Empty);
+		var shopPartScale = 2.5;
+		parts = [
+			for (i in 0...types.length) new ShipPart(
+				Std.int(startOfParts[0] + (i % 2) * Const.SHIP_PART_SCALE * shopPartScale),
+				Std.int(startOfParts[1] + Std.int(i / 2) * Const.SHIP_PART_SCALE * shopPartScale),
+				types[i],
+				shopPartScale
+			)
+		];
+
+		shopCursor = new Cursor(
+			Std.int(startOfParts[0]),
+			Std.int(startOfParts[1]),
+			Std.int(Const.SHIP_PART_SCALE * shopPartScale * .45)
+		);
+		var shopSelected = parts[currentShipPartIndex];
+		cursor.setPosCase(
+			Math.floor(shopSelected.centerX / Const.GRID + (Const.SHIP_PART_SCALE + shopPartScale) / 2),
+			Math.floor(shopSelected.centerY / Const.GRID + (Const.SHIP_PART_SCALE + shopPartScale) / 2)
+		);
+		
 		Process.resizeAll();
 	}
 
@@ -127,16 +161,10 @@ class ShipBuilding extends Process {
 	}
 
 	var currentShipPartIndex = 0;
-	var currentShipPartType = ShipPartType.Block;
 	function cycleShipPartType() {
-		var types = [
-			ShipPartType.Block,
-			ShipPartType.Booster,
-			ShipPartType.Package
-		];
 		currentShipPartIndex++;
-		if (currentShipPartIndex >= types.length) currentShipPartIndex = 0;
-		currentShipPartType = types[currentShipPartIndex];
+		if (currentShipPartIndex >= parts.length) currentShipPartIndex = 0;
+		trace(parts[currentShipPartIndex].getType());
 	}
 
 	override function update() {
@@ -160,11 +188,11 @@ class ShipBuilding extends Process {
 			select(sxy[0],sxy[1] + 1);
 
 		if (ca.bPressed()) {
-			ship[sxy[0]][sxy[1]].setType(ShipPartType.Block);
+			ship[sxy[0]][sxy[1]].setType(parts[currentShipPartIndex].getType());
 		}
 
-		if (ca.bPressed()) {
-			ship[sxy[0]][sxy[1]].setType(ShipPartType.Block);
+		if (ca.xPressed()) {
+			cycleShipPartType();
 		}
 
 		if( !ui.Console.ME.isActive() && !ui.Modal.hasAny() ) {
