@@ -85,8 +85,6 @@ class Game extends Process {
 		world.createJoint(jointDef);
 
 		camera.trackTarget(ship, true);
-		// scroller.setScale(2);
-
 	}
 
 	public function onCdbReload() {
@@ -124,7 +122,6 @@ class Game extends Process {
 
 	override function postUpdate() {
 		super.postUpdate();
-		camera.postUpdate();
 
 		for(e in Entity.ALL) if( !e.destroyed ) e.postUpdate();
 		gc();
@@ -139,9 +136,7 @@ class Game extends Process {
 	override function update() {
 		super.update();
 		for(e in Entity.ALL) if( !e.destroyed ) e.update();
-		
-		// camera.update();
-		scroller.setPosition(-ship.centerX, -ship.centerY);
+
 		world.step(1 / 60,  3,  3);
 		world.clearForces();
 
