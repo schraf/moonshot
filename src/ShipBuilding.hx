@@ -31,7 +31,7 @@ class ShipBuilding extends Process {
         background = new h2d.Bitmap(root);
 		background.tile = Res.platform.toTile();
 
-		// hxd.Window.getInstance().addEventTarget(clickListener);
+		hxd.Window.getInstance().addEventTarget(clickListener);
 
         ship = [
             for(x in 0...Const.SHIP_WIDTH) [
@@ -43,7 +43,7 @@ class ShipBuilding extends Process {
 		select(0,0);
 		sxy = [0,0];
 
-		var startOfParts = [180,15];
+		var startOfParts = [xStart + Const.SHIP_WIDTH * Const.SHIP_PART_SCALE * 1.1,yStart];
 		var types = ShipPartType.createAll();
 		// types.remove(ShipPartType.Empty);
 		var shopPartScale = 2.5;
@@ -109,24 +109,18 @@ class ShipBuilding extends Process {
 		selected.highlight();
 	}
 
-	// function clickListener(event : hxd.Event) {
-	// 	if (event.kind == EventKind.ERelease) {
-	// 		var xTile = event.relX / Const.GRID;
-	// 		var yTile = event.relY / Const.GRID;
-	// 		if (
-	// 			xTile >= xStart && xTile < xStart + Const.SHIP_WIDTH * Const.SHIP_PART_SCALE &&
-	// 			yTile >= yStart && yTile < yStart + Const.SHIP_HEIGHT * Const.SHIP_PART_SCALE
-	// 		) {
-	// 			var part = ship[Math.floor((xTile - xStart) / Const.GRID)][Math.floor((yTile - yStart) / Const.GRID)];
-	// 			if (selected == null) {
-	// 				part.select();
-	// 				selected = part;
-	// 			} else {
-	// 				selected = null;
-	// 			}
-	// 		}
-	// 	}
-	// }
+	function clickListener(event : hxd.Event) {
+		if (event.kind == EventKind.ERelease) {
+			var xTile = Std.int(event.relX / Const.GRID);
+			var yTile = Std.int(event.relY / Const.GRID);
+			if (
+				xTile >= xStart && xTile < xStart + Const.SHIP_WIDTH * Const.SHIP_PART_SCALE &&
+				yTile >= yStart && yTile < yStart + Const.SHIP_HEIGHT * Const.SHIP_PART_SCALE
+			) {
+				select(Math.floor((xTile - xStart) / Const.SHIP_PART_SCALE),Math.floor((yTile - yStart) / Const.SHIP_PART_SCALE));
+			}
+		}
+	}
 
 	override function onResize() {
 		super.onResize();
