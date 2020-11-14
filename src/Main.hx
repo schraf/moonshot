@@ -14,7 +14,7 @@ class Main extends dn.Process {
 
 		// Engine settings
 		hxd.Timer.wantedFPS = Const.FPS;
-		engine.backgroundColor = 0xff<<24|0x111133;
+		engine.backgroundColor = 0xff<<24|0x193248;
         #if( hl && !debug )
         engine.fullScreen = true;
         #end
@@ -59,6 +59,9 @@ class Main extends dn.Process {
 
 		controller.bind(AXIS_LEFT_Y_POS, Key.UP);
 		controller.bind(AXIS_LEFT_Y_NEG, Key.DOWN);
+
+		// Post FX
+		PostFX.init(s);
 
 		// Start
 		new dn.heaps.GameFocusHelper(Boot.ME.s2d, Assets.fontMedium);
@@ -116,6 +119,7 @@ class Main extends dn.Process {
 
     override function update() {
 		Assets.tiles.tmod = tmod;
-        super.update();
+		super.update();
+		PostFX.update(tmod);
     }
 }

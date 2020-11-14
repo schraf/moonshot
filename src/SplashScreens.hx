@@ -4,6 +4,7 @@ import dn.Process;
 class SplashScreens extends Process {
     var flow: h2d.Flow;
 	var cinematic = new dn.Cinematic(Const.FPS);
+	var background: Background;
 
 	public function new() {
         super(Main.ME);
@@ -16,32 +17,34 @@ class SplashScreens extends Process {
 		flow.horizontalAlign = Middle;
 		flow.verticalAlign = Middle;
 
+		background = Background.addToLayer(root);
+
         cinematic.create({
-			#if !debug
+			#if !skip_splash
 			addText("Untitled Game Studio presents");
             fadeIn();
             1500;
             fadeOut();
 			1000;
-			removeText();	
+			removeText();
 			addText("In association with Shae's Youth Group");
 			fadeIn();
             1500;
             fadeOut();
 			1000;
-			removeText();	
+			removeText();
 			addText("An Edric Yu Joint");
 			fadeIn();
             1500;
             fadeOut();
 			1000;
-			removeText();	
+			removeText();
 			addText("Not sponsered by UPS, FedEx, or the USPS in any way");
 			fadeIn();
             1500;
             fadeOut();
 			1000;
-			removeText();	
+			removeText();
 			addText("SPACE MAIL");
 			addText("the game");
 			fadeIn();
@@ -68,11 +71,11 @@ class SplashScreens extends Process {
 	}
 
 	function fadeIn() {
-		tw.createMs(root.alpha, 0>1, 500);
+		tw.createMs(flow.alpha, 0>1, 500);
 	}
 
 	function fadeOut() {
-		tw.createMs(root.alpha, 0, 1000);
+		tw.createMs(flow.alpha, 0, 1000);
 	}
 
 	override function onResize() {
