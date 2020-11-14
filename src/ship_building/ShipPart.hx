@@ -71,67 +71,46 @@ class ShipPart {
 	public function setType(type: ShipPartType) {
 		this.type = type;
 		switch type {
-			case Empty: 
-				g.beginFill(0x1f323c);
-			case Block:
-				g.beginFill(0x37B9D0);
-			case Booster:
-				g.beginFill(0xfc9300);
-			case Package:
-				g.beginFill(0xA16F62);
-			case FuelStorage:
-				g.beginFill(0xf8fc00);
-			case Laser:
-				g.beginFill(0xff0000);
-			case PackageLauncher:
-				g.beginFill(0xb63db8);
-			default:
-				g.beginFill(0xbbbbbb);
+		  case Empty:  g.beginFill(0x1f323c);
+		  case Block: g.beginFill(0x37B9D0);
+		  case Booster: g.beginFill(0xfc9300);
+		  case Package: g.beginFill(0xA16F62);
+		  case FuelStorage: g.beginFill(0xf8fc00);
+		  case Laser: g.beginFill(0xff0000);
+		  case PackageLauncher: g.beginFill(0xb63db8);
+		  default:
+			g.beginFill(0xbbbbbb);
 		}
-        g.drawRect(0,0,size,size);
-	}
-
-	public function cost() {
+			g.drawRect(0,0,size,size);
+	  }
+	
+	  public function cost() {
 		switch type {
-			case Empty: 
-				return 0;
-			case Block:
-				return 5;
-			case Booster:
-				return 25;
-			case Package:
-				return 0;
-			case FuelStorage:
-				return 15;
-			case Laser:
-				return 25;
-			case PackageLauncher:
-				return 0;
-			default:
-				return 0;
+		  case Empty:  return 0;
+		  case Block: return 5;
+		  case Booster: return 25;
+		  case Package: return 0;
+		  case FuelStorage: return 15;
+		  case Laser: return 25;
+		  case PackageLauncher: return 0;
+		  default:
+			return 0;
 		}
-	}
-
-	public function mass() {
+	  }
+	
+	  public function mass() {
 		switch type {
-			case Empty: 
-				return 0;
-			case Block:
-				return 5;
-			case Booster:
-				return 20;
-			case Package:
-				return 50;
-			case FuelStorage:
-				return 15;
-			case Laser:
-				return 10;
-			case PackageLauncher:
-				return 5;
-			default:
-				return 0;
+		  case Empty:  return 0;
+		  case Block: return 5;
+		  case Booster: return 20;
+		  case Package: return 50;
+		  case FuelStorage: return 15;
+		  case Laser: return 10;
+		  case PackageLauncher: return 5;
+		  default:
+			return 0;
 		}
-	}
+	  }
 
 	public function highlight() {
 		setType(type);
