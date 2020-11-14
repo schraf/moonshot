@@ -1,145 +1,159 @@
 
 tiles.png
-size: 2048,1024
+size: 2048,2048
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 attachment
   rotate: false
-  xy: 947, 441
+  xy: 1098, 873
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 base
   rotate: false
-  xy: 947, 699
+  xy: 689, 164
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 battery
   rotate: false
-  xy: 689, 441
+  xy: 1356, 1389
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 empty
   rotate: false
-  xy: 1205, 692
+  xy: 947, 673
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 fxCircle0
   rotate: false
-  xy: 1463, 947
+  xy: 689, 154
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
   index: -1
 fxDot0
   rotate: false
-  xy: 689, 433
+  xy: 2, 2
   size: 2, 2
   orig: 2, 2
   offset: 0, 0
   index: -1
 fxImpact0
   rotate: false
-  xy: 2, 2
+  xy: 1098, 866
   size: 8, 5
   orig: 8, 5
   offset: 0, 0
   index: -1
 fxLine0
   rotate: false
-  xy: 1205, 695
+  xy: 1614, 1643
   size: 17, 2
   orig: 17, 2
   offset: 0, 0
   index: -1
 fxLineDir0
   rotate: false
-  xy: 689, 437
+  xy: 947, 676
   size: 17, 2
   orig: 17, 2
   offset: 0, 0
   index: -1
 fxSmallCircle0
   rotate: false
-  xy: 518, 278
+  xy: 1927, 1776
   size: 3, 3
   orig: 3, 3
   offset: 0, 0
   index: -1
 fxSmoke0
   rotate: false
-  xy: 2, 9
+  xy: 1927, 1781
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 fxTail0
   rotate: false
-  xy: 518, 283
+  xy: 2, 6
   size: 17, 6
   orig: 17, 6
   offset: 0, 0
   index: -1
+ground
+  rotate: false
+  xy: 2, 1647
+  size: 1923, 156
+  orig: 1923, 156
+  offset: 0, 0
+  index: -1
 laser
   rotate: false
-  xy: 260, 33
+  xy: 1098, 1131
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 moon
   rotate: false
-  xy: 2, 291
+  xy: 2, 14
   size: 685, 664
   orig: 685, 664
   offset: 0, 0
   index: -1
 pixel
   rotate: false
-  xy: 708, 438
+  xy: 21, 11
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 solar
   rotate: false
-  xy: 2, 33
+  xy: 1098, 1389
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 storage
   rotate: false
-  xy: 1205, 699
+  xy: 1356, 1131
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 thruster
   rotate: false
-  xy: 689, 699
+  xy: 689, 422
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
+tower
+  rotate: false
+  xy: 2, 680
+  size: 1094, 965
+  orig: 1094, 965
+  offset: 0, 0
+  index: -1
 uiBar
   rotate: false
-  xy: 537, 287
+  xy: 1951, 1801
   size: 3, 2
   orig: 3, 2
   offset: 0, 0
   index: -1
 uiBarBg
   rotate: false
-  xy: 26, 28
+  xy: 1356, 1126
   size: 4, 3
   orig: 4, 3
   offset: 0, 0
