@@ -1,37 +1,31 @@
-import dn.Rand;
 
 class Background extends h2d.Layers
 {
-	public static var NUMBER_OF_STARS = 16;
-	public static var SIZE_THRESHOLD = 0.3; // smaller = more small stars
-	public static var SMALL_SCALE = 0.5;
-	public static var LARGE_SCALE = 1.0;
+	public static var STAR_DENSITY = 0.0001;
+	public static var STAR_SIZE_THRESHOLD = 0.3; // smaller = more small stars
+	public static var STAR_SMALL_SCALE = 0.5;
+	public static var STAR_LARGE_SCALE = 1.0;
 
-	public static function addToLayer(layer:h2d.Layers): Background {
-		var background = new Background(layer);
-		background.addStars();
-		background.addMoon();
-		return background;
-	}
+	public function addStars(bounds: h2d.col.Bounds) {
+		var numberOfStars = Math.ceil(bounds.width * bounds.height * STAR_DENSITY);
 
-	public function addStars() {
-		for(i in 0...NUMBER_OF_STARS) {
+		for (i in 0...numberOfStars) {
 			var star = Assets.tiles.getBitmap("fxCircle0", this);
-			star.x = Math.random() * Main.ME.w();
-			star.y = Math.random() * Main.ME.h();
+			star.x = Math.random() * bounds.width + bounds.xMin;
+			star.y = Math.random() * bounds.height + bounds.yMin;
 
-			if (Math.random() < SIZE_THRESHOLD) {
-				star.scale(LARGE_SCALE);
+			if (Math.random() < STAR_SIZE_THRESHOLD) {
+				star.scale(STAR_LARGE_SCALE);
 			} else {
-				star.scale(SMALL_SCALE);
+				star.scale(STAR_SMALL_SCALE);
 			}
 		}
 	}
 
-	public function addMoon() {
+	public function addMoon(x: Float, y: Float, scale: Float) {
 		var moon = Assets.tiles.getBitmap("moon", this);
-		moon.x = Main.ME.w() * 0.7;
-		moon.y = Main.ME.h() * 0.2;
-		moon.scale(0.2);
+		moon.x = x;
+		moon.y = y;
+		moon.scale(scale);
 	}
 }

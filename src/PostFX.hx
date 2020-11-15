@@ -73,7 +73,7 @@ class FilmGrainShader extends h3d.shader.ScreenShader {
 class PostFX {
 	static var shader: FilmGrainShader;
 
-	public static function init(scene: h2d.Scene) {
+	public static function init(object: h2d.Object) {
 		#if debug
 		ui.Console.ME.addCommand(
 			"filmgrain",
@@ -108,7 +108,7 @@ class PostFX {
 		shader.vignetteSize = 20.0;
 		shader.vignetteSpeed = 0.02;
 		shader.vignetteStrength = 0.50;
-		scene.filter = new h2d.filter.Shader(shader);
+		object.filter = new h2d.filter.Shader(shader);
 	}
 
 	public static function update(tmod: Float) {
