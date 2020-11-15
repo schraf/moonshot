@@ -4,7 +4,6 @@ import dn.Process;
 class SplashScreens extends Process {
 	var flow: h2d.Flow;
 	var cinematic = new dn.Cinematic(Const.FPS);
-	var background: Background;
 
 	public function new() {
 		super(Main.ME);
@@ -24,7 +23,7 @@ class SplashScreens extends Process {
 		flow.horizontalAlign = Middle;
 		flow.verticalAlign = Middle;
 
-		background = new Background(root);
+		var background = new Background(root);
 		background.addStars(bounds);
 		background.addMoon(Const.VIEWPORT_WIDTH * 0.8, Const.VIEWPORT_HEIGHT * 0.1, 0.3);
 

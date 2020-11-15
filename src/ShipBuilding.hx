@@ -7,16 +7,14 @@ import hxd.Window;
 
 class ShipBuilding extends Process {
     public static var ME : ShipBuilding;
-    
+
     public var ship: Array<Array<ShipPart>>;
     public var parts: Array<ShipPart>;
 
 	public var ca : dn.heaps.Controller.ControllerAccess;
-    
-	var background : h2d.Bitmap;
 
-	var xStart: Int = Math.ceil(w() / 2 / Const.GRID) - Math.ceil(Const.SHIP_WIDTH / 2 * Const.SHIP_PART_SCALE);
-	var yStart: Int = Math.ceil(h() / 2 / Const.GRID) - Math.ceil(Const.SHIP_HEIGHT / 2 * Const.SHIP_PART_SCALE);
+	var xStart: Int = Math.ceil(Const.VIEWPORT_WIDTH * 0.5 / Const.GRID) - Math.ceil(Const.SHIP_WIDTH * 0.5 * Const.SHIP_PART_SCALE);
+	var yStart: Int = Math.ceil(Const.VIEWPORT_HEIGHT * 0.5 / Const.GRID) - Math.ceil(Const.SHIP_HEIGHT * 0.5 * Const.SHIP_PART_SCALE);
 
 	var selected: ShipPart;
 	var sxy: Array<Int>;
@@ -27,9 +25,18 @@ class ShipBuilding extends Process {
 		ME = this;
 		ca = Main.ME.controller.createAccess("game");
 		createRootInLayers(Main.ME.root, Const.DP_BG);
-        
-        background = new h2d.Bitmap(root);
-		background.tile = Res.platform.toTile();
+
+		var bounds = new h2d.col.Bounds();
+		bounds.set(0.0, 0.0, Const.VIEWPORT_WIDTH, Const.VIEWPORT_HEIGHT);
+		var center = bounds.getCenter();
+		var camera = Boot.ME.s2d.camera;
+		camera.setAnchor(0.5, 0.5);
+		camera.setPosition(center.x, center.y);
+
+		var background = new Background(root);
+		background.addStars(bounds);
+		background.addMoon(Const.VIEWPORT_WIDTH * 0.8, Const.VIEWPORT_HEIGHT * 0.1, 0.3);
+		background.addGround();
 
 		hxd.Window.getInstance().addEventTarget(clickListener);
 
@@ -71,7 +78,7 @@ class ShipBuilding extends Process {
 
 	private function debugShip() {
 		for (i in 1...8)
-			for (j in 4...7)	
+			for (j in 4...7)
 				ship[i][j].setType(Block);
 		for (i in 3...6)
 			ship[i][7].setType(Block);
@@ -122,17 +129,6 @@ class ShipBuilding extends Process {
 		}
 	}
 
-	override function onResize() {
-		super.onResize();
-
-        var sx = w()/background.tile.width;
-		var sy = h()/background.tile.height;
-        var s = Math.min(sx, sy);
-		background.setScale(s);
-		background.x = ( w()*0.5 - background.tile.width*s*0.5 );
-		background.y = ( h()*0.5 - background.tile.height*s*0.5 );
-	}
-
 	function gc() {
 		if( ShipPart.GC==null || ShipPart.GC.length==0 )
 			return;
@@ -144,7 +140,6 @@ class ShipBuilding extends Process {
 
 	override function onDispose() {
         super.onDispose();
-        background = null;
 
 		for(e in ShipPart.ALL)
 			e.destroy();
@@ -191,20 +186,20 @@ class ShipBuilding extends Process {
 					stats.addFuel(50);
 			}
 		}
-	}	
+	}
 
 	override function update() {
 		super.update();
 
 		for(e in ShipPart.ALL) if( !e.destroyed ) e.update();
-	
+
 		if(ca.leftPressed()) {
 			select(sxy[0] - 1,sxy[1]);
 		}
 
 		if(ca.rightPressed())
 			select(sxy[0] + 1,sxy[1]);
-		
+
 		if(ca.upPressed())
 			select(sxy[0],sxy[1] - 1);
 

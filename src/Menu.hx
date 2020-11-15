@@ -18,7 +18,7 @@ class Menu extends Process {
     var selectedOption: Int;
 
 	public function new() {
-        #if !skip_menu
+        #if skip_menu
         destroy();
         Main.ME.startShipBuilding();
         return;

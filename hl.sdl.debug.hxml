@@ -1,2 +1,4 @@
 hl.sdl.hxml
 -debug
+-D skip_splash
+-D skip_menu
