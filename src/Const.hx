@@ -6,6 +6,8 @@ class Const {
 	public static var SCALE = 1.0; // ignored if auto-scaling
 	public static var UI_SCALE = 1.0;
 	public static var GRID = 16;
+	public static var VIEWPORT_WIDTH = 1920;
+	public static var VIEWPORT_HEIGHT = 1080;
 
 	static var _uniq = 0;
 	public static var NEXT_UNIQ(get,never) : Int; static inline function get_NEXT_UNIQ() return _uniq++;
