@@ -9,6 +9,7 @@ class Boot extends hxd.App {
 	// Engine ready
 	override function init() {
 		ME = this;
+		s2d.scaleMode = h2d.ScaleMode.LetterBox(Const.VIEWPORT_WIDTH, Const.VIEWPORT_HEIGHT);
 		new Main(s2d);
 		onResize();
 	}

@@ -3,3 +3,4 @@ redist.*
 bin/*.*
 .DS_Store
 .vscode/*
+dump

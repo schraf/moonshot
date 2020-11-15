@@ -5,10 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "HL debug",
+            "name": "HL SDL debug",
             "request": "launch",
-            "type": "hl",
-            "hxml": "hl.debug.hxml",
+            "type":"hl",
+            "argsFile": "hl.sdl.debug.hxml",
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "haxe: active configuration"
+        },
+        {
+            "name": "HL DX debug",
+            "request": "launch",
+            "type":"hl",
+            "argsFile": "hl.debug.hxml",
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "HL debug"
         },
