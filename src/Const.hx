@@ -24,5 +24,7 @@ class Const {
 
 	public static var SHIP_WIDTH = 9;
 	public static var SHIP_HEIGHT = 9;
-	public static var SHIP_PART_SCALE = 5;
+	public static var SHIP_PART_SCALE = 0.1;
+
+	public static var SHIP_PANEL_WIDTH = 400;
 }

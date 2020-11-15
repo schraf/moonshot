@@ -4,8 +4,8 @@ import h2d.Graphics;
 import hxd.Window;
 
 class ShipPart {
-    public static var ALL : Array<ShipPart> = [];
-    public static var GC : Array<ShipPart> = [];
+	public static var ALL : Array<ShipPart> = [];
+	public static var GC : Array<ShipPart> = [];
 
 	public var shipBuilding(get,never) : ShipBuilding; inline function get_shipBuilding() return ShipBuilding.ME;
 	public var destroyed(default,null) = false;
@@ -15,15 +15,15 @@ class ShipPart {
 	public var cd : dn.Cooldown;
 
 	public var uid : Int;
-    public var cx = 0;
-    public var cy = 0;
-    public var xr = 0.5;
-    public var yr = 1.0;
+	public var cx = 0;
+	public var cy = 0;
+	public var xr = 0.5;
+	public var yr = 1.0;
 
-    public var dx = 0.;
-    public var dy = 0.;
-    public var bdx = 0.;
-    public var bdy = 0.;
+	public var dx = 0.;
+	public var dy = 0.;
+	public var bdx = 0.;
+	public var bdy = 0.;
 	public var dxTotal(get,never) : Float; inline function get_dxTotal() return dx+bdx;
 	public var dyTotal(get,never) : Float; inline function get_dyTotal() return dy+bdy;
 	public var frict = 0.82;
@@ -37,8 +37,8 @@ class ShipPart {
 	public var ShipPartVisible = true;
 	var type: ShipPartType;
 
-    public var spr : HSprite;
-    public var g : Graphics;
+	public var spr : h2d.Drawable;
+	var highlightFilter: h2d.filter.Filter;
 	public var colorAdd : h3d.Vector;
 	var debugLabel : Null<h2d.Text>;
 	var size: Int;
@@ -52,101 +52,93 @@ class ShipPart {
 
 	var actions : Array<{ id:String, cb:Void->Void, t:Float }> = [];
 
-    public function new(x:Float, y:Float, type: ShipPartType = Empty, scale: Float = 1) {
-        uid = Const.NEXT_UNIQ;
-        ALL.push(this);
+	public function new(x:Float, y:Float, type: ShipPartType = Empty, scale: Float = 1) {
+		uid = Const.NEXT_UNIQ;
+		ALL.push(this);
 
 		cd = new dn.Cooldown(Const.FPS);
 		setPosPixel(x * Const.GRID,y * Const.GRID);
 
-        spr = new HSprite(Assets.tiles);
-        ShipBuilding.ME.root.add(spr, Const.DP_MAIN);
+		highlightFilter = new h2d.filter.Outline(3.0, 0xFF808080);
 
-		this.type = type;
-		g = new h2d.Graphics(spr);
 		size = Std.int(Const.SHIP_PART_SCALE * scale);
 		setType(type);
 	}
 
 	public function setType(type: ShipPartType) {
-		this.type = type;
-		switch type {
-			case Empty: 
-				g.beginFill(0x1f323c);
-			case Block:
-				g.beginFill(0x37B9D0);
-			case Booster:
-				g.beginFill(0xfc9300);
-			case Package:
-				g.beginFill(0xA16F62);
-			case FuelStorage:
-				g.beginFill(0xf8fc00);
-			case Laser:
-				g.beginFill(0xff0000);
-			case PackageLauncher:
-				g.beginFill(0xb63db8);
-			default:
-				g.beginFill(0xbbbbbb);
+		if (type != this.type) {
+
+			if (spr != null) {
+				spr.remove();
+				spr = null;
+			}
+
+			spr = ShipVisuals.create(type, 128, 128);
+
+			if (spr != null) {
+				ShipBuilding.ME.root.add(spr, Const.DP_MAIN);
+			}
+
+			this.type = type;
 		}
-        g.drawRect(0,0,size,size);
 	}
 
 	public function cost() {
 		switch type {
-			case Empty: 
-				return 0;
+			case Empty:
+			return 0;
 			case Block:
-				return 5;
+			return 5;
 			case Booster:
-				return 25;
+			return 25;
 			case Package:
-				return 0;
-			case FuelStorage:
-				return 15;
+			return 0;
+			case Battery:
+			return 15;
 			case Laser:
-				return 25;
+			return 25;
 			case PackageLauncher:
-				return 0;
+			return 0;
+			case SolarPanel:
+			return 30;
 			default:
-				return 0;
+			return 0;
 		}
 	}
 
 	public function mass() {
 		switch type {
-			case Empty: 
-				return 0;
+			case Empty:
+			return 0;
 			case Block:
-				return 5;
+			return 5;
 			case Booster:
-				return 20;
+			return 20;
 			case Package:
-				return 50;
-			case FuelStorage:
-				return 15;
+			return 50;
+			case Battery:
+			return 15;
 			case Laser:
-				return 10;
+			return 10;
 			case PackageLauncher:
-				return 5;
+			return 5;
+			case SolarPanel:
+			return 10;
 			default:
-				return 0;
+			return 0;
 		}
 	}
 
 	public function highlight() {
-		setType(type);
-		g.clear();
-        g.lineStyle(.3,0xffffff,1);
-        g.moveTo(0,0);
-        g.lineTo(0,size);
-        g.lineTo(size,size);
-        g.lineTo(size,0);
-		g.lineTo(0,0);
+		if (spr != null) {
+			spr.filter = highlightFilter;
+		}
 	}
 
 	public function clearHighlight() {
-		g.clear();
-		setType(type);
+		if (spr != null) {
+			spr.filter = null;
+		}
 	}
 
 	public function getType() {return type;}
@@ -209,20 +201,24 @@ class ShipPart {
 
 	public function makePoint() return new CPoint(cx,cy, xr,yr);
 
-    public inline function destroy() {
-        if( !destroyed ) {
-            destroyed = true;
-            GC.push(this);
-        }
-    }
+	public inline function destroy() {
+		if( !destroyed ) {
+			destroyed = true;
+			GC.push(this);
+		}
+	}
 
-    public function dispose() {
-        ALL.remove(this);
+	public function dispose() {
+		ALL.remove(this);
 
 		colorAdd = null;
 
-		spr.remove();
-		spr = null;
+		if (spr != null) {
+			spr.remove();
+			spr = null;
+		}
+
+		highlightFilter = null;
 
 		if( debugLabel!=null ) {
 			debugLabel.remove();
@@ -231,7 +227,7 @@ class ShipPart {
 
 		cd.destroy();
 		cd = null;
-    }
+	}
 
 	public inline function debugFloat(v:Float, ?c=0xffffff) {
 		debug( pretty(v), c );
@@ -301,17 +297,19 @@ class ShipPart {
 	}
 
 
-    public function preUpdate() {
+	public function preUpdate() {
 		cd.update(tmod);
 		updateActions();
-    }
+	}
 
-    public function postUpdate() {
-        spr.x = (cx+xr)*Const.GRID;
-        spr.y = (cy+yr)*Const.GRID;
-        spr.scaleX = dir*sprScaleX;
-        spr.scaleY = sprScaleY;
-		spr.visible = ShipPartVisible;
+	public function postUpdate() {
+		if (spr != null) {
+			spr.x = (cx+xr)*Const.GRID;
+			spr.y = (cy+yr)*Const.GRID;
+			spr.scaleX = dir*sprScaleX;
+			spr.scaleY = sprScaleY;
+			spr.visible = ShipPartVisible;
+		}
 
 		if( debugLabel!=null ) {
 			debugLabel.x = Std.int(footX - debugLabel.textWidth*0.5);
@@ -321,7 +319,7 @@ class ShipPart {
 
 	public function fixedUpdate() {} // runs at a "guaranteed" 30 fps
 
-    public function update() { // runs at an unknown fps
+	public function update() { // runs at an unknown fps
 		// X
 		var steps = M.ceil( M.fabs(dxTotal*tmod) );
 		var step = dxTotal*tmod / steps;
@@ -355,5 +353,5 @@ class ShipPart {
 		bdy*=Math.pow(bumpFrict,tmod);
 		if( M.fabs(dy)<=0.0005*tmod ) dy = 0;
 		if( M.fabs(bdy)<=0.0005*tmod ) bdy = 0;
-    }
+	}
 }
