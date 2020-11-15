@@ -6,17 +6,17 @@ class ShipPartButton extends h2d.Object {
 	static var SELECTED_COLOR = 0xFFFFFFFF;
 	static var SELECTED_SIZE = 4.0;
 
-	var partType: ShipPartType;
+	var part: Data.ShipPart;
 	var visuals: h2d.Drawable;
 	var interactive: h2d.Interactive;
 	var outline: h2d.filter.Outline;
 	var selected: Bool;
 	var panel: ShipPartPanel;
 
-	public function new (partType: ShipPartType, width: Float, height: Float, panel: ShipPartPanel) {
+	public function new (part: Data.ShipPart, width: Float, height: Float, panel: ShipPartPanel) {
 		super(panel);
-		this.partType = partType;
-		this.visuals = ShipVisuals.create(this.partType, width, height, this);
+		this.part = part;
+		this.visuals = ShipVisuals.create(this.part, width, height, this);
 		this.interactive = new h2d.Interactive(width, height, this.visuals);
 		this.outline = new h2d.filter.Outline();
 		this.selected = false;
@@ -47,8 +47,8 @@ class ShipPartButton extends h2d.Object {
 		}
 	}
 
-	public function getPartType (): ShipPartType {
-		return this.partType;
+	public function getPart (): Data.ShipPart {
+		return this.part;
 	}
 
 	public function deselect () {
@@ -69,16 +69,16 @@ class ShipPartPanel extends h2d.Flow {
 		Instance = this;
 	}
 
-	public function addPart (partType: ShipPartType, width: Float, height: Float): ShipPartButton {
-		return new ShipPartButton(partType, width, height, this);
+	public function addPart (shipPart: Data.ShipPart, width: Float, height: Float): ShipPartButton {
+		return new ShipPartButton(shipPart, width, height, this);
 	}
 
-	public function getSelectedPart (): ShipPartType {
+	public function getSelectedPart (): Data.ShipPart {
 		if (this.selectedPart != null) {
-			return this.selectedPart.getPartType();
+			return this.selectedPart.getPart();
 		}
 
-		return ShipPartType.Empty;
+		return null;
 	}
 
 	public function onSelected (part: ShipPartButton) {

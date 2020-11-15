@@ -3,7 +3,7 @@ package ship_building;
 class ShipLayoutCell extends h2d.Object {
 
 	var root: h2d.Object;
-	var partType: ShipPartType;
+	var part: Null<Data.ShipPart>;
 	var visuals: h2d.Drawable;
 	var interactive: h2d.Interactive;
 	var cellX: Int;
@@ -16,36 +16,37 @@ class ShipLayoutCell extends h2d.Object {
 		this.cellX = x;
 		this.cellY = y;
 		this.size = size;
-		this.partType = ShipPartType.Empty;
 		this.interactive = new h2d.Interactive(size, size, this);
 		this.layout = layout;
 
 		this.interactive.onPush = function (event: hxd.Event) {
-			setPartType(ShipPartPanel.Instance.getSelectedPart());
+			setPart(ShipPartPanel.Instance.getSelectedPart());
 		}
 	}
 
-	public function setPartType (partType: ShipPartType) {
-		if (this.partType == partType) {
+	public function setPart (part: Null<Data.ShipPart>) {
+		if (this.part == part) {
 			return;
 		}
 
-		if (partType == ShipPartType.Empty) {
+		if (part == null) {
 			this.visuals = null;
 		} else {
-			this.visuals = ShipVisuals.create(partType, this.size, this.size, this);
+			this.visuals = ShipVisuals.create(part, this.size, this.size, this);
 		}
 
-		this.partType = partType;
+		this.part = part;
+
+		ShipBuilding.ME.calculateStats();
 	}
 
-	public function getPartType (): ShipPartType {
-		return this.partType;
+	public function getPart (): Data.ShipPart {
+		return this.part;
 	}
 }
 
 class ShipLayout extends h2d.Flow {
-	var cells: Array<ShipLayoutCell>;
+	public var cells: Array<ShipLayoutCell>;
 
 	public function new (cellSize: Float, ?parent: h2d.Object) {
 		super(parent);

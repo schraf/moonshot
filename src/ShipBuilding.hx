@@ -46,26 +46,30 @@ class ShipBuilding extends Process {
 		panel.y = 100;
 
 		var partSize = Math.floor(Const.SHIP_PANEL_WIDTH * 0.5);
-
-		panel.addPart(ShipPartType.Booster, partSize, partSize);
-		panel.addPart(ShipPartType.Package, partSize, partSize);
-		panel.addPart(ShipPartType.Battery, partSize, partSize);
-		panel.addPart(ShipPartType.Laser, partSize, partSize);
-		panel.addPart(ShipPartType.SolarPanel, partSize, partSize);
+		panel.addPart(Data.shipPart.get(Data.ShipPartKind.Battery), partSize, partSize);
+		panel.addPart(Data.shipPart.get(Data.ShipPartKind.Booster), partSize, partSize);
+		panel.addPart(Data.shipPart.get(Data.ShipPartKind.Package), partSize, partSize);
+		panel.addPart(Data.shipPart.get(Data.ShipPartKind.Laser), partSize, partSize);
+		panel.addPart(Data.shipPart.get(Data.ShipPartKind.SolarPanel), partSize, partSize);
 	}
 
-	function calculateStats() {
+	public function calculateStats() {
 		stats.clear();
-		/*
-		for (row in ship) {
-			for (part in row) {
-				stats.addMass(part.mass());
-				stats.addCost(part.cost());
-				if (part.getType() == ShipPartType.Battery)
-					stats.addFuel(50);
+
+		for (cell in layout.cells) {
+			if (cell != null) {
+				var part = cell.getPart();
+
+				if (part != null) {
+					stats.addMass(part.mass);
+					stats.addCost(part.cost);
+
+					if (part.power_capacity > 0) {
+						stats.addFuel(part.power_capacity);
+					}
+				}
 			}
 		}
-		*/
 	}
 
 }

@@ -14,17 +14,9 @@ class ShipVisuals {
 		return base;
 	}
 
-	public static function create(partType: ship_building.ShipPartType, width: Float, height: Float, ?parent: h2d.Object): h2d.Drawable {
-		switch (partType) {
-			case ship_building.ShipPartType.Package: return createSimpleShipPart("storage", width, height, parent);
-			case ship_building.ShipPartType.Booster: return createSimpleShipPart("thruster", width, height, parent);
-			case ship_building.ShipPartType.Laser: return createSimpleShipPart("laser", width, height, parent);
-			case ship_building.ShipPartType.Battery: return createSimpleShipPart("battery", width, height, parent);
-			case ship_building.ShipPartType.SolarPanel: return createSimpleShipPart("solar", width, height, parent);
-			case ship_building.ShipPartType.Empty: return null;
-			default: ui.Console.ME.error('unsupported ship part visual $partType');
-		}
-
-		return null;
+	public static function create(part: Data.ShipPart, width: Float, height: Float, ?parent: h2d.Object): h2d.Drawable {
+		var base = createPartVisuals("base", width, height, parent);
+		createPartVisuals(part.tile_name, width, height, base);
+		return base;
 	}
 }
