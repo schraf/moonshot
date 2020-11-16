@@ -18,9 +18,9 @@ class Menu extends Process {
     var selectedOption: Int;
 
 	public function new() {
-        #if !skip_menu
+        #if skip_menu
         destroy();
-        Main.ME.startGame();
+        Main.ME.startShipBuilding();
         return;
         #end
 
@@ -102,7 +102,7 @@ class Menu extends Process {
             }
             if (options[selectedOption] == NEW_GAME) {
                 destroy();
-                Main.ME.startGame();
+                Main.ME.startShipBuilding();
             }
         }
     }

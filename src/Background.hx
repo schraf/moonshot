@@ -28,4 +28,15 @@ class Background extends h2d.Layers
 		moon.y = y;
 		moon.scale(scale);
 	}
+
+	public function addGround() {
+		var ground = Assets.tiles.getBitmap("ground", this);
+		ground.scale(1.0);
+		ground.x = 0;
+		ground.y = Const.VIEWPORT_HEIGHT - ground.tile.height;
+
+		var tower = Assets.tiles.getBitmap("tower", this);
+		tower.x = (Const.VIEWPORT_WIDTH * 0.5) - (tower.tile.width * 0.5);
+		tower.y = ground.y - tower.tile.height + 150;
+	}
 }
