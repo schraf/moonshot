@@ -57,16 +57,14 @@ class ShipBuilding extends Process {
 		stats.clear();
 
 		for (cell in layout.cells) {
-			if (cell != null) {
-				var part = cell.getPart();
+			var part = cell.getPart();
 
-				if (part != null) {
-					stats.addMass(part.mass);
-					stats.addCost(part.cost);
+			if (part != null) {
+				stats.addMass(part.mass);
+				stats.addCost(part.cost);
 
-					if (part.power_capacity > 0) {
-						stats.addFuel(part.power_capacity);
-					}
+				if (part.power_capacity > 0) {
+					stats.addFuel(part.power_capacity);
 				}
 			}
 		}

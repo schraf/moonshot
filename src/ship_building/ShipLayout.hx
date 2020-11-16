@@ -1,5 +1,7 @@
 package ship_building;
 
+import ShipDefinition.ShipPartDefinition;
+
 class ShipLayoutCell extends h2d.Object {
 
 	var root: h2d.Object;
@@ -43,6 +45,14 @@ class ShipLayoutCell extends h2d.Object {
 	public function getPart (): Data.ShipPart {
 		return this.part;
 	}
+
+	public function toDefinition (): ShipPartDefinition {
+		if (this.part != null) {
+			return new ShipPartDefinition(this.cellX, this.cellY, this.part);
+		}
+
+		return null;
+	}
 }
 
 class ShipLayout extends h2d.Flow {
@@ -63,5 +73,19 @@ class ShipLayout extends h2d.Flow {
 			}
 
 		}
+	}
+
+	public function toShipDefinition (): ShipDefinition {
+		var definition = new ShipDefinition();
+
+		for (cell in this.cells) {
+			var partDefinition = cell.toDefinition();
+
+			if (partDefinition != null) {
+				definition.parts.push(partDefinition);
+			}
+		}
+
+		return definition;
 	}
 }
