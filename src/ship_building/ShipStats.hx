@@ -26,7 +26,7 @@ class ShipStats {
         flow.fillHeight = true;
         flow.horizontalAlign = Left;
         flow.verticalAlign = Middle;
-        
+
         fuelText = addText();
         costText = addText();
         massText = addText();
@@ -54,8 +54,7 @@ class ShipStats {
     }
 
     function addText(str="", c=0xFFFFFF) {
-		var tf = new h2d.Text(Assets.fontPixel, flow);
-		tf.scale(3);
+		var tf = new h2d.Text(Assets.fontMedium, flow);
 		tf.text = str;
         tf.textColor = c;
         return tf;

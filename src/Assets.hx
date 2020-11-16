@@ -15,10 +15,10 @@ class Assets {
 		initDone = true;
 
 		fontPixel = hxd.Res.fonts.minecraftiaOutline.toFont();
-		fontTiny = hxd.Res.fonts.barlow_condensed_medium_regular_9.toFont();
-		fontSmall = hxd.Res.fonts.barlow_condensed_medium_regular_11.toFont();
-		fontMedium = hxd.Res.fonts.barlow_condensed_medium_regular_17.toFont();
-		fontLarge = hxd.Res.fonts.barlow_condensed_medium_regular_32.toFont();
+		fontTiny = hxd.Res.fonts.SquadaOne16.toFont();
+		fontSmall = hxd.Res.fonts.SquadaOne32.toFont();
+		fontMedium = hxd.Res.fonts.SquadaOne64.toFont();
+		fontLarge = hxd.Res.fonts.SquadaOne96.toFont();
 		tiles = dn.heaps.assets.Atlas.load("atlas/tiles.atlas");
 	}
 }

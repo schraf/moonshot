@@ -68,8 +68,7 @@ class SplashScreens extends Process {
 	}
 
 	function addText(str:String, c=0xFFFFFF) {
-		var tf = new h2d.Text(Assets.fontPixel, flow);
-		tf.scale(5);
+		var tf = new h2d.Text(Assets.fontLarge, flow);
 		tf.text = str;
 		tf.textColor = c;
 	}
