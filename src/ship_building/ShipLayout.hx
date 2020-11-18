@@ -21,6 +21,15 @@ class ShipLayoutCell extends h2d.Object {
 		this.interactive = new h2d.Interactive(size, size, this);
 		this.layout = layout;
 
+		var grid = new h2d.Bitmap(Assets.ship.get("grid"), this);
+		grid.width = size;
+		grid.height = size;
+
+		var gridFilter = new h2d.filter.ColorMatrix();
+		gridFilter.matrix.identity();
+		gridFilter.matrix.colorSet(0xFFFFFF, 0.1);
+		grid.filter = gridFilter;
+
 		this.interactive.onPush = function (event: hxd.Event) {
 			setPart(ShipPartPanel.Instance.getSelectedPart());
 		}
@@ -60,7 +69,6 @@ class ShipLayout extends h2d.Flow {
 
 	public function new (cellSize: Float, ?parent: h2d.Object) {
 		super(parent);
-		debug = true;
 		cells = [];
 
 		this.overflow = h2d.Flow.FlowOverflow.Limit;

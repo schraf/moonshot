@@ -1,33 +1,40 @@
 
 ship.png
-size: 2048,512
+size: 4096,512
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 attachment
   rotate: false
-  xy: 1292, 2
+  xy: 1550, 2
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 base
   rotate: false
-  xy: 1034, 2
+  xy: 1292, 2
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 battery
   rotate: false
-  xy: 776, 2
+  xy: 1034, 2
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+grid
+  rotate: false
+  xy: 518, 2
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 laser
   rotate: false
-  xy: 518, 2
+  xy: 776, 2
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
@@ -41,7 +48,7 @@ solar
   index: -1
 storage
   rotate: false
-  xy: 1550, 2
+  xy: 1808, 2
   size: 256, 256
   orig: 256, 256
   offset: 0, 0

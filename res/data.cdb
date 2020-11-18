@@ -76,8 +76,80 @@
 			],
 			"separators": [],
 			"props": {}
+		},
+		{
+			"name": "shipStats",
+			"columns": [
+				{
+					"typeStr": "0",
+					"name": "id"
+				},
+				{
+					"typeStr": "1",
+					"name": "name",
+					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "maxValue",
+					"opt": true,
+					"display": null
+				}
+			],
+			"lines": [
+				{
+					"id": "cost",
+					"name": "Cost",
+					"maxValue": 1000
+				},
+				{
+					"id": "mass",
+					"name": "Mass",
+					"maxValue": 5000
+				},
+				{
+					"id": "fuel",
+					"name": "Fuel",
+					"maxValue": 10000
+				}
+			],
+			"separators": [],
+			"props": {}
 		}
 	],
-	"customTypes": [],
+	"customTypes": [
+		{
+			"name": "ShipStat",
+			"cases": [
+				{
+					"name": "Cost",
+					"args": [
+						{
+							"name": "value",
+							"typeStr": "3"
+						}
+					]
+				},
+				{
+					"name": "Mass",
+					"args": [
+						{
+							"name": "value",
+							"typeStr": "3"
+						}
+					]
+				},
+				{
+					"name": "Fuel",
+					"args": [
+						{
+							"name": "value",
+							"typeStr": "3"
+						}
+					]
+				}
+			]
+		}
+	],
 	"compress": false
 }

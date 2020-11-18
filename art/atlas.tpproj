@@ -32,7 +32,7 @@ limitMemory=true
 useIndexes=true
 
 scaleFactors=[{suffix:"",factor:0.5,resampling:bicubic}]
-inputFiles=[{path:ship/attachment.png,type:Input,regionName:null},{path:ship/thruster.png,type:Input,regionName:null},{path:ship/base.png,type:Input,regionName:null},{path:ship/battery.png,type:Input,regionName:null},{path:ship/laser.png,type:Input,regionName:null},{path:ship/solar.png,type:Input,regionName:null},{path:ship/storage.png,type:Input,regionName:null}]
+inputFiles=[{path:ship/attachment.png,type:Input,regionName:null},{path:ship/thruster.png,type:Input,regionName:null},{path:ship/base.png,type:Input,regionName:null},{path:ship/battery.png,type:Input,regionName:null},{path:ship/laser.png,type:Input,regionName:null},{path:ship/solar.png,type:Input,regionName:null},{path:ship/storage.png,type:Input,regionName:null},{path:ship/grid.png,type:Input,regionName:null}]
 
 
 ---
