@@ -2,7 +2,7 @@
 class ShipVisuals {
 
 	static function createPartVisuals(tileName: String, width: Float, height: Float, ?parent: h2d.Object): h2d.Drawable {
-		var part = new h2d.Bitmap(Assets.tiles.getTile(tileName), parent);
+		var part = new h2d.Bitmap(Assets.ship.get(tileName), parent);
 		part.width = width;
 		part.height = height;
 		return part;

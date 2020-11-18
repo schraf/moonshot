@@ -1,0 +1,27 @@
+
+background.png
+size: 2048,2048
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+ground
+  rotate: false
+  xy: 2, 1635
+  size: 1923, 156
+  orig: 1923, 156
+  offset: 0, 0
+  index: -1
+moon
+  rotate: false
+  xy: 2, 2
+  size: 685, 664
+  orig: 685, 664
+  offset: 0, 0
+  index: -1
+tower
+  rotate: false
+  xy: 2, 668
+  size: 1094, 965
+  orig: 1094, 965
+  offset: 0, 0
+  index: -1

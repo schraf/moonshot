@@ -29,6 +29,14 @@ class ShipBuilding extends Process {
 		layout.x = 420;
 		layout.y = 75;
 
+		var launchButton = new ui.Button("LAUNCH", 400, 200, root);
+		launchButton.x = 30;
+		launchButton.y = 800;
+
+		launchButton.onPush = function (event: hxd.Event) {
+			trace('LAUNCH!');
+		}
+
 		initPanel();
 
 		stats = new ShipStats();
