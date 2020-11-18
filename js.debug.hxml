@@ -1,2 +1,4 @@
 js.hxml
+-D skip_splash
+-D skip_menu
 -debug

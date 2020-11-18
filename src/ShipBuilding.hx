@@ -34,7 +34,8 @@ class ShipBuilding extends Process {
 		launchButton.y = 800;
 
 		launchButton.onPush = function (event: hxd.Event) {
-			trace('LAUNCH!');
+			destroy();
+			Main.ME.startGame();
 		}
 
 		initPanel();
