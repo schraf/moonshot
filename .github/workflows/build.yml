@@ -20,6 +20,7 @@ jobs:
           haxelib install --always js.hxml
           haxelib git deepnightLibs https://github.com/deepnight/deepnightLibs.git
           haxelib git heaps https://github.com/HeapsIO/heaps.git
+          haxelib git box2d https://github.com/openfl/box2d.git
           haxelib list
       - name: Build Javascript Target
         run: haxe js.hxml
