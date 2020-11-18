@@ -1,2 +1,9 @@
-js.hxml
+-cp src
+-lib castle
+-lib heaps
+-lib deepnightLibs
+-lib box2d
+-js bin/client.js
+-main Boot
+-dce full
 -debug

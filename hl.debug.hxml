@@ -1,2 +1,8 @@
-hl.dx.hxml
+-cp src
+-lib castle
+-lib heaps
+-lib deepnightLibs
+-hl bin/client.hl
+-main Boot
+-dce full
 -debug

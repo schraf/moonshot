@@ -8,6 +8,7 @@ class Camera extends dn.Process {
 	public var hei(get,never) : Int;
 	var bumpOffX = 0.;
 	var bumpOffY = 0.;
+	public var zoom = 1.;
 
 	public function new() {
 		super(Game.ME);
@@ -92,8 +93,8 @@ class Camera extends dn.Process {
 			var level = Game.ME.level;
 			var scroller = Game.ME.scroller;
 
-			scroller.x = -x + wid*0.5;
-			scroller.y = -y + hei*0.5;
+			scroller.x = -x*zoom + wid*0.5;
+			scroller.y = -y*zoom + hei*0.5;
 
 			// Bumps friction
 			bumpOffX *= Math.pow(0.75, tmod);
@@ -116,6 +117,8 @@ class Camera extends dn.Process {
 			// Rounding
 			scroller.x = M.round(scroller.x);
 			scroller.y = M.round(scroller.y);
+
+			scroller.setScale( Const.SCALE * zoom );
 		}
 	}
 }

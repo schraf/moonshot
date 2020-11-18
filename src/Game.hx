@@ -1,10 +1,13 @@
-import box2D.dynamics.joints.B2PrismaticJointDef;
-import box2D.dynamics.joints.B2WeldJointDef;
-import box2D.dynamics.joints.B2WeldJoint;
+import box2D.collision.B2Manifold;
 import hxsl.Types.Vec;
 import dn.Process;
 import hxd.Key;
 
+import box2D.dynamics.contacts.B2Contact;
+import box2D.dynamics.B2ContactListener;
+import box2D.dynamics.joints.B2PrismaticJointDef;
+import box2D.dynamics.joints.B2WeldJointDef;
+import box2D.dynamics.joints.B2WeldJoint;
 import box2D.dynamics.B2World;
 import box2D.common.math.B2Vec2;
 import box2D.dynamics.B2Body;
@@ -19,6 +22,31 @@ import box2D.collision.shapes.B2CircleShape;
 
 import sim.en.Ship;
 import sim.en.Thruster;
+import sim.en.Asteroid;
+
+class ContactListener extends B2ContactListener {
+	var shipBody :B2Body;
+	
+	
+	public function new(shipBody) {
+		super();
+		this.shipBody = shipBody;
+	}
+	function isOnShip(body) {
+		if (body == shipBody) return true;
+		return !body.shouldCollide(shipBody);
+	}
+	override function beginContact(contact:B2Contact):Void {
+		var bodyA = contact.getFixtureA().getBody();
+		var bodyB = contact.getFixtureB().getBody();
+		if (isOnShip(bodyA) || isOnShip(bodyB)) {
+			trace(Math.random());
+		}
+	}
+	override function endContact(contact:B2Contact):Void { }
+	override function preSolve(contact:B2Contact, oldManifold):Void {}
+	override function postSolve(contact:B2Contact, impulse):Void { }
+}
 
 class Game extends Process {
 	public static var ME : Game;
@@ -55,7 +83,6 @@ class Game extends Process {
 		Process.resizeAll();
 		trace(Lang.t._("Game is ready."));
 
-
 		world = new B2World(new B2Vec2(0, 0), true);
 		up = new B2Vec2(0, -50);
 
@@ -63,28 +90,38 @@ class Game extends Process {
 		var thruster = new Thruster(world, 50, -80, 5, AXIS_LEFT_X_NEG);
 		var thruster2 = new Thruster(world, -50, -80, -5, AXIS_LEFT_X_POS);
 
-		var thruster3 = new Thruster(world, 50, 80, -2, AXIS_LEFT_X_POS);
-		var thruster4 = new Thruster(world, -50, 80, 2, AXIS_LEFT_X_NEG);
-
-		for (i in 1...8) {
-			new Thruster(world, Math.round(Math.random() * 1000 - 500), Math.round(-Math.random() * 200) - 300, 3, AXIS_LEFT_Y_NEG);
-		}
-
+		// var thruster3 = new Thruster(world, 50, 80, -2, AXIS_LEFT_X_POS);
+		// var thruster4 = new Thruster(world, -50, 80, 2, AXIS_LEFT_X_NEG);
+		
 		var jointDef = new B2WeldJointDef();
-
 		jointDef.initialize(ship.body, thruster.body, ship.body.getPosition());
 		world.createJoint(jointDef);
 
 		jointDef.initialize(ship.body, thruster2.body, ship.body.getPosition());
 		world.createJoint(jointDef);
 
-		jointDef.initialize(ship.body, thruster3.body, ship.body.getPosition());
-		world.createJoint(jointDef);
+		// jointDef.initialize(ship.body, thruster3.body, ship.body.getPosition());
+		// world.createJoint(jointDef);
 
-		jointDef.initialize(ship.body, thruster4.body, ship.body.getPosition());
-		world.createJoint(jointDef);
+		// jointDef.initialize(ship.body, thruster4.body, ship.body.getPosition());
+		// world.createJoint(jointDef);
 
+		new Asteroid(world, 300, 300);
+		new Asteroid(world, 300, -300);
+		new Asteroid(world, 400, -300);
+		new Asteroid(world, -400, -300);
+		new Asteroid(world, -20, -300);
+
+		// for (i in 1...8) {
+		// 	new Thruster(world, Math.round(Math.random() * 1000 - 500), Math.round(-Math.random() * 200) - 300, 3, AXIS_LEFT_Y_NEG);
+		// }
+
+
+		camera.zoom = .5;
 		camera.trackTarget(ship, true);
+
+		var cl = new ContactListener(ship.body);
+		world.setContactListener(cl);
 	}
 
 	public function onCdbReload() {
