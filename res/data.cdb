@@ -1,5 +1,155 @@
 {
-	"sheets": [],
-	"customTypes": [],
+	"sheets": [
+		{
+			"name": "shipPart",
+			"columns": [
+				{
+					"typeStr": "0",
+					"name": "id",
+					"kind": "localizable"
+				},
+				{
+					"typeStr": "3",
+					"name": "cost",
+					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "mass",
+					"display": null
+				},
+				{
+					"typeStr": "1",
+					"name": "tile_name",
+					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "power_usage"
+				},
+				{
+					"typeStr": "3",
+					"name": "power_capacity"
+				}
+			],
+			"lines": [
+				{
+					"cost": 20,
+					"mass": 100,
+					"tile_name": "thruster",
+					"power_usage": 80,
+					"id": "Booster",
+					"power_capacity": 0
+				},
+				{
+					"cost": 100,
+					"mass": 200,
+					"tile_name": "storage",
+					"power_usage": 0,
+					"id": "Package",
+					"power_capacity": 0
+				},
+				{
+					"cost": 75,
+					"mass": 50,
+					"tile_name": "battery",
+					"power_usage": 0,
+					"id": "Battery",
+					"power_capacity": 0
+				},
+				{
+					"cost": 60,
+					"mass": 76,
+					"tile_name": "laser",
+					"power_usage": 500,
+					"id": "Laser",
+					"power_capacity": 0
+				},
+				{
+					"cost": 50,
+					"mass": 35,
+					"tile_name": "solar",
+					"power_usage": 0,
+					"id": "SolarPanel",
+					"power_capacity": 1000
+				}
+			],
+			"separators": [],
+			"props": {}
+		},
+		{
+			"name": "shipStats",
+			"columns": [
+				{
+					"typeStr": "0",
+					"name": "id"
+				},
+				{
+					"typeStr": "1",
+					"name": "name",
+					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "maxValue",
+					"opt": true,
+					"display": null
+				}
+			],
+			"lines": [
+				{
+					"id": "cost",
+					"name": "Cost",
+					"maxValue": 1000
+				},
+				{
+					"id": "mass",
+					"name": "Mass",
+					"maxValue": 5000
+				},
+				{
+					"id": "fuel",
+					"name": "Fuel",
+					"maxValue": 10000
+				}
+			],
+			"separators": [],
+			"props": {}
+		}
+	],
+	"customTypes": [
+		{
+			"name": "ShipStat",
+			"cases": [
+				{
+					"name": "Cost",
+					"args": [
+						{
+							"name": "value",
+							"typeStr": "3"
+						}
+					]
+				},
+				{
+					"name": "Mass",
+					"args": [
+						{
+							"name": "value",
+							"typeStr": "3"
+						}
+					]
+				},
+				{
+					"name": "Fuel",
+					"args": [
+						{
+							"name": "value",
+							"typeStr": "3"
+						}
+					]
+				}
+			]
+		}
+	],
 	"compress": false
 }

@@ -12,41 +12,41 @@ class Main extends dn.Process {
 		super();
 		ME = this;
 		this.scene = s;
-        createRoot(s);
+		createRoot(s);
 
 		// Engine settings
 		hxd.Timer.wantedFPS = Const.FPS;
-		engine.backgroundColor = 0xff<<24|0x111133;
-        #if( hl && !debug )
-        engine.fullScreen = true;
-        #end
+		engine.backgroundColor = 0xff<<24|0x000000;
+		#if( hl && !debug )
+		engine.fullScreen = true;
+		#end
 
 		// Resources
 		#if(hl && debug)
 		hxd.Res.initLocal();
-        #else
-        hxd.Res.initEmbed();
-        #end
+		#else
+		hxd.Res.initEmbed();
+		#end
 
-        // Hot reloading
+		// Hot reloading
 		#if debug
-        hxd.res.Resource.LIVE_UPDATE = true;
-        hxd.Res.data.watch(function() {
-            delayer.cancelById("cdb");
+		hxd.res.Resource.LIVE_UPDATE = true;
+		hxd.Res.data.watch(function() {
+			delayer.cancelById("cdb");
 
-            delayer.addS("cdb", function() {
-            	Data.load( hxd.Res.data.entry.getBytes().toString() );
-            	if( Game.ME!=null )
-                    Game.ME.onCdbReload();
-            }, 0.2);
-        });
+			delayer.addS("cdb", function() {
+				Data.load( hxd.Res.data.entry.getBytes().toString() );
+				if( Game.ME!=null )
+					Game.ME.onCdbReload();
+			}, 0.2);
+		});
 		#end
 
 		// Assets & data init
 		Assets.init();
-		new ui.Console(Assets.fontTiny, s);
+		new ui.Console(Assets.fontSmall, s);
 		Lang.init("en");
-		Data.load( hxd.Res.data.entry.getText() );
+		Data.load(hxd.Res.data.entry.getText());
 
 		// Game controller
 		controller = new dn.heaps.Controller(s);
@@ -62,6 +62,9 @@ class Main extends dn.Process {
 		controller.bind(AXIS_LEFT_Y_POS, Key.UP, Key.W);
 		controller.bind(AXIS_LEFT_Y_NEG, Key.DOWN, Key.S);
 
+		// Post FX
+		PostFX.init(s);
+
 		// Start
 		new dn.heaps.GameFocusHelper(Boot.ME.s2d, Assets.fontMedium);
 		delayer.addF( showSplashScreens, 1 );
@@ -76,6 +79,17 @@ class Main extends dn.Process {
 		}
 		else
 			new Game();
+	}
+
+	public function startShipBuilding() {
+		if( ShipBuilding.ME!=null ) {
+			ShipBuilding.ME.destroy();
+			delayer.addF(function() {
+				new ShipBuilding();
+			}, 1);
+		}
+		else
+			new ShipBuilding();
 	}
 
 	public function showMenu() {
@@ -116,8 +130,9 @@ class Main extends dn.Process {
 		Const.UI_SCALE = Const.SCALE;
 	}
 
-    override function update() {
+	override function update() {
 		Assets.tiles.tmod = tmod;
-        super.update();
-    }
+		super.update();
+		PostFX.update(tmod);
+	}
 }

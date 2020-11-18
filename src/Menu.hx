@@ -7,20 +7,20 @@ class Menu extends Process {
 
     var flow: h2d.Flow;
     var ca : dn.heaps.Controller.ControllerAccess;
-    
+
     var NEW_GAME: Int = 1;
     var HOW_TO_PLAY: Int = 2;
     var LEADERBOARD: Int = 3;
     var CREDITS: Int = 4;
 
     var options: Array<Int>;
-    
+
     var selectedOption: Int;
 
 	public function new() {
-        #if debug
+        #if skip_menu
         destroy();
-        Main.ME.startGame();
+        Main.ME.startShipBuilding();
         return;
         #end
 
@@ -42,7 +42,7 @@ class Menu extends Process {
         addText("How To Play");
         addText("Leaderboards");
         addText("Credits");
-        
+
         options = [NEW_GAME, HOW_TO_PLAY, LEADERBOARD, CREDITS];
         selectedOption = 0;
         select(0);
@@ -51,12 +51,11 @@ class Menu extends Process {
 	}
 
 	function addText(str:String, c=0xFFFFFF) {
-		var tf = new h2d.Text(Assets.fontPixel, flow);
-		tf.scale(5);
+		var tf = new h2d.Text(Assets.fontLarge, flow);
 		tf.text = str;
 		tf.textColor = c;
     }
-    
+
     function select(optionToSelect: Int) {
         if (optionToSelect >= options.length) {
             optionToSelect = 0;
@@ -73,7 +72,7 @@ class Menu extends Process {
 		super.onResize();
 		root.setScale(Const.SCALE);
     }
-    
+
     override function onDispose() {
         super.onDispose();
         options = null;
@@ -88,7 +87,7 @@ class Menu extends Process {
 			e.dispose();
 		Entity.GC = [];
     }
-    
+
     override function update() {
         if (ca.upPressed()) {
             select(selectedOption - 1);
@@ -102,7 +101,7 @@ class Menu extends Process {
             }
             if (options[selectedOption] == NEW_GAME) {
                 destroy();
-                Main.ME.startGame();
+                Main.ME.startShipBuilding();
             }
         }
     }

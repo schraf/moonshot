@@ -1,8 +1,4 @@
--cp src
--lib castle
--lib heaps
--lib deepnightLibs
--hl bin/client.hl
--main Boot
--dce full
+hl.dx.hxml
 -debug
+-D skip_splash
+-D skip_menu

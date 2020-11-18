@@ -2,63 +2,73 @@ import h2d.Flow.FlowAlign;
 import dn.Process;
 
 class SplashScreens extends Process {
-    var flow: h2d.Flow;
+	var flow: h2d.Flow;
 	var cinematic = new dn.Cinematic(Const.FPS);
 
 	public function new() {
-        super(Main.ME);
+		super(Main.ME);
 		createRoot(Main.ME.root);
 
-        flow = new h2d.Flow(root);
+		var bounds = new h2d.col.Bounds();
+		bounds.set(0.0, 0.0, Const.VIEWPORT_WIDTH, Const.VIEWPORT_HEIGHT);
+		var center = bounds.getCenter();
+		var camera = Boot.ME.s2d.camera;
+		camera.setAnchor(0.5, 0.5);
+		camera.setPosition(center.x, center.y);
+
+		flow = new h2d.Flow(root);
 		flow.layout = Vertical;
 		flow.fillWidth = true;
 		flow.fillHeight = true;
 		flow.horizontalAlign = Middle;
 		flow.verticalAlign = Middle;
 
-        cinematic.create({
-			#if !debug
+		var background = new Background(root);
+		background.addStars(bounds);
+		background.addMoon(Const.VIEWPORT_WIDTH * 0.8, Const.VIEWPORT_HEIGHT * 0.1, 0.3);
+
+		cinematic.create({
+			#if !skip_splash
 			addText("Untitled Game Studio presents");
-            fadeIn();
-            1500;
-            fadeOut();
+			fadeIn();
+			1500;
+			fadeOut();
 			1000;
-			removeText();	
+			removeText();
 			addText("In association with Shae's Youth Group");
 			fadeIn();
-            1500;
-            fadeOut();
+			1500;
+			fadeOut();
 			1000;
-			removeText();	
+			removeText();
 			addText("An Edric Yu Joint");
 			fadeIn();
-            1500;
-            fadeOut();
+			1500;
+			fadeOut();
 			1000;
-			removeText();	
+			removeText();
 			addText("Not sponsered by UPS, FedEx, or the USPS in any way");
 			fadeIn();
-            1500;
-            fadeOut();
+			1500;
+			fadeOut();
 			1000;
-			removeText();	
+			removeText();
 			addText("SPACE MAIL");
 			addText("the game");
 			fadeIn();
-            3000;
-            fadeOut();
+			3000;
+			fadeOut();
 			1000;
 			#end
-            destroy();
-            Main.ME.showMenu();
-        });
+			destroy();
+			Main.ME.showMenu();
+		});
 
 		Process.resizeAll();
 	}
 
 	function addText(str:String, c=0xFFFFFF) {
-		var tf = new h2d.Text(Assets.fontPixel, flow);
-		tf.scale(5);
+		var tf = new h2d.Text(Assets.fontLarge, flow);
 		tf.text = str;
 		tf.textColor = c;
 	}
@@ -68,11 +78,11 @@ class SplashScreens extends Process {
 	}
 
 	function fadeIn() {
-		tw.createMs(root.alpha, 0>1, 500);
+		tw.createMs(flow.alpha, 0>1, 500);
 	}
 
 	function fadeOut() {
-		tw.createMs(root.alpha, 0, 1000);
+		tw.createMs(flow.alpha, 0, 1000);
 	}
 
 	override function onResize() {
@@ -80,19 +90,8 @@ class SplashScreens extends Process {
 		root.setScale(Const.SCALE);
 	}
 
-
-	function gc() {
-		if( Entity.GC==null || Entity.GC.length==0 )
-			return;
-
-		for(e in Entity.GC)
-			e.dispose();
-		Entity.GC = [];
-	}
-
 	override function preUpdate() {
 		super.preUpdate();
-
 		cinematic.update(tmod);
 	}
 }
