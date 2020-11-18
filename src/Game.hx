@@ -1,3 +1,4 @@
+import sim.en.Moon;
 import box2D.collision.B2Manifold;
 import hxsl.Types.Vec;
 import dn.Process;
@@ -62,6 +63,9 @@ class Game extends Process {
 	var ship: Ship;
 	var up:B2Vec2;
 
+	var moon: Moon;
+	var asteroid1: Asteroid;
+	var asteroid2: Asteroid;
 
 	public function new() {
 		super(Main.ME);
@@ -90,8 +94,8 @@ class Game extends Process {
 		var thruster = new Thruster(world, 50, -80, 5, AXIS_LEFT_X_NEG);
 		var thruster2 = new Thruster(world, -50, -80, -5, AXIS_LEFT_X_POS);
 
-		// var thruster3 = new Thruster(world, 50, 80, -2, AXIS_LEFT_X_POS);
-		// var thruster4 = new Thruster(world, -50, 80, 2, AXIS_LEFT_X_NEG);
+		var thruster3 = new Thruster(world, 50, 80, -2, AXIS_LEFT_X_POS);
+		var thruster4 = new Thruster(world, -50, 80, 2, AXIS_LEFT_X_NEG);
 		
 		var jointDef = new B2WeldJointDef();
 		jointDef.initialize(ship.body, thruster.body, ship.body.getPosition());
@@ -100,17 +104,20 @@ class Game extends Process {
 		jointDef.initialize(ship.body, thruster2.body, ship.body.getPosition());
 		world.createJoint(jointDef);
 
-		// jointDef.initialize(ship.body, thruster3.body, ship.body.getPosition());
-		// world.createJoint(jointDef);
+		jointDef.initialize(ship.body, thruster3.body, ship.body.getPosition());
+		world.createJoint(jointDef);
 
-		// jointDef.initialize(ship.body, thruster4.body, ship.body.getPosition());
-		// world.createJoint(jointDef);
+		jointDef.initialize(ship.body, thruster4.body, ship.body.getPosition());
+		world.createJoint(jointDef);
 
-		new Asteroid(world, 300, 300);
-		new Asteroid(world, 300, -300);
-		new Asteroid(world, 400, -300);
-		new Asteroid(world, -400, -300);
-		new Asteroid(world, -20, -300);
+		asteroid1 = new Asteroid(world, 2000, 300);
+		// new Asteroid(world, 400, -300);
+		// new Asteroid(world, -400, -300);
+		// new Asteroid(world, -20, -300);
+		asteroid2 = new Asteroid(world, 600, 700);
+		asteroid2.body.applyForce(new B2Vec2(-3000, 0), asteroid2.body.getPosition());
+
+		moon = new Moon(world, 600, -600);
 
 		// for (i in 1...8) {
 		// 	new Thruster(world, Math.round(Math.random() * 1000 - 500), Math.round(-Math.random() * 200) - 300, 3, AXIS_LEFT_Y_NEG);
@@ -177,6 +184,9 @@ class Game extends Process {
 		world.step(1 / 60,  3,  3);
 		world.clearForces();
 
+		moon.applyGravity(ship.body);
+		moon.applyGravity(asteroid1.body);
+		moon.applyGravity(asteroid2.body);
 
 		if( !ui.Console.ME.isActive() && !ui.Modal.hasAny() ) {
 			#if hl

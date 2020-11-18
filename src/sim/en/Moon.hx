@@ -14,12 +14,14 @@ import dn.heaps.GamePad.PadKey;
 import box2D.common.math.B2Vec2;
 import box2D.dynamics.B2Body;
 
-class Asteroid extends Entity {
+class Moon extends Entity {
   var time: Float = 0.;
   public var body: B2Body;
 
-  var r = 80;
-  var d = 160;
+  var r = 750;
+  var d = 1500;
+
+  static var G = 70;
 
   public function new(b2world, x, y) {
     super(x, y);
@@ -32,20 +34,32 @@ class Asteroid extends Entity {
     fixtureDef.friction = 0;
 
     var bodyDef = new B2BodyDef();
-    bodyDef.type = B2BodyType.DYNAMIC_BODY;
+    bodyDef.type = B2BodyType.STATIC_BODY;
     bodyDef.position.set(x/100, y/100);
 
     this.body = b2world.createBody(bodyDef);
     this.body.createFixture(fixtureDef);
 
-    var texture = hxd.Res.load("ball.png").toTexture();
+    var texture = hxd.Res.load("ball2.png").toTexture();
 
     spr.setTexture(texture);
     spr.setCenterRatio();
     sprScaleX = d / texture.width;
     sprScaleY = d / texture.height;
+  }
 
-    this.body.applyTorque(Math.random() - Math.random() * 1000);
+  public function applyGravity(otherBody: B2Body) {
+    var q = this.body.getPosition();
+    var p = otherBody.getPosition();
+
+    var dx = q.x - p.x;
+    var dy = q.y - p.y;
+
+    var dsq = dx * dx + dy * dy;
+    var vec: B2Vec2 = new B2Vec2(dx, dy);
+    vec.normalize();
+    vec.multiply(G * otherBody.getMass() / dsq);
+    otherBody.applyForce(vec, p);
 
   }
 
@@ -53,8 +67,7 @@ class Asteroid extends Entity {
     var theta = body.getAngle();
     var p = body.getPosition();
     setPosPixel(p.x * 100, p.y * 100);
-    spr.rotation = body.getAngle();
+    spr.rotation = theta;
   }
-
 
 }

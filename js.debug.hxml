@@ -1,9 +1,4 @@
--cp src
--lib castle
--lib heaps
--lib deepnightLibs
--lib box2d
--js bin/client.js
--main Boot
--dce full
+js.hxml
+-D skip_splash
+-D skip_menu
 -debug
