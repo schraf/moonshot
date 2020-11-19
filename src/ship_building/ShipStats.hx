@@ -5,7 +5,6 @@ import h2d.Flow.FlowAlign;
 import dn.Process;
 
 class ShipStats {
-	var spr: HSprite;
 	var panel: ui.Panel;
 
 	public var _mass: Int = 0;
@@ -17,9 +16,6 @@ class ShipStats {
 	private var fuelText: Text;
 
 	public function new() {
-		spr = new HSprite(Assets.tiles);
-		ShipBuilding.ME.root.add(spr, Const.DP_MAIN);
-
 		fuelText = addText();
 		costText = addText();
 		massText = addText();

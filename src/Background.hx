@@ -10,7 +10,7 @@ class Background extends h2d.Layers
 		var numberOfStars = Math.ceil(bounds.width * bounds.height * STAR_DENSITY);
 
 		for (i in 0...numberOfStars) {
-			var star = new h2d.Bitmap(Assets.fx.get("fxCircle0"), this);
+			var star = new h2d.Bitmap(Assets.fx.getTile("fxCircle0"), this);
 			star.x = Math.random() * bounds.width + bounds.xMin;
 			star.y = Math.random() * bounds.height + bounds.yMin;
 
@@ -23,18 +23,18 @@ class Background extends h2d.Layers
 	}
 
 	public function addMoon(x: Float, y: Float, scale: Float) {
-		var moon = new h2d.Bitmap(Assets.background.get("moon"), this);
+		var moon = new h2d.Bitmap(Assets.background.getTile("moon"), this);
 		moon.x = x;
 		moon.y = y;
 		moon.scale(scale);
 	}
 
 	public function addGround() {
-		var ground = new h2d.Bitmap(Assets.background.get("ground"), this);
+		var ground = new h2d.Bitmap(Assets.background.getTile("ground"), this);
 		ground.x = 0;
 		ground.y = Const.VIEWPORT_HEIGHT - ground.tile.height;
 
-		var tower = new h2d.Bitmap(Assets.background.get("tower"), this);
+		var tower = new h2d.Bitmap(Assets.background.getTile("tower"), this);
 		tower.x = (Const.VIEWPORT_WIDTH * 0.5) - (tower.tile.width * 0.5);
 		tower.y = ground.y - tower.tile.height + 150;
 	}

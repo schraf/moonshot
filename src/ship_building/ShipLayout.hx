@@ -21,7 +21,7 @@ class ShipLayoutCell extends h2d.Object {
 		this.interactive = new h2d.Interactive(size, size, this);
 		this.layout = layout;
 
-		var grid = new h2d.Bitmap(Assets.ship.get("grid"), this);
+		var grid = new h2d.Bitmap(Assets.ship.getTile("grid"), this);
 		grid.width = size;
 		grid.height = size;
 

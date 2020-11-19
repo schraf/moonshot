@@ -89,7 +89,7 @@ class Ship extends Entity {
 
 
     // if (ca.xPressed()) {
-    //   // 
+    //   //
     // }
   }
 }

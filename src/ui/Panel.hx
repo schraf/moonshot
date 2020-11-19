@@ -13,7 +13,7 @@ class Panel extends h2d.Flow {
 		addSpacing(5);
 
 		var row = new h2d.Flow(this);
-		new h2d.Bitmap(Assets.ui.get("BlockPrimary"), row);
+		new h2d.Bitmap(Assets.ui.getTile("BlockPrimary"), row);
 		row.addSpacing(5);
 		row.addChild(object);
 	}
@@ -22,12 +22,12 @@ class Panel extends h2d.Flow {
 		var header = new h2d.Flow(this);
 		header.verticalAlign = h2d.Flow.FlowAlign.Top;
 
-		new h2d.Bitmap(Assets.ui.get("ShortCorner"), header);
+		new h2d.Bitmap(Assets.ui.getTile("ShortCorner"), header);
 		header.addSpacing(5);
 		var title = new h2d.Text(Assets.fontSmall, header);
 		title.text = text;
 		header.addSpacing(5);
-		var tile = Assets.ui.get("SmallEndCap");
+		var tile = Assets.ui.getTile("SmallEndCap");
 		tile.flipX();
 		tile.dx = 0.0;
 		new h2d.Bitmap(tile, header);
@@ -39,13 +39,13 @@ class Panel extends h2d.Flow {
 		var footer = new h2d.Flow(this);
 		footer.verticalAlign = h2d.Flow.FlowAlign.Bottom;
 
-		var tile = Assets.ui.get("LongCorner");
+		var tile = Assets.ui.getTile("LongCorner");
 		tile.flipY();
 		tile.dy = 0.0;
 		new h2d.Bitmap(tile, footer);
 		footer.addSpacing(5);
 
-		tile = Assets.ui.get("SmallEndCap");
+		tile = Assets.ui.getTile("SmallEndCap");
 		tile.flipX();
 		tile.dx = 0.0;
 		new h2d.Bitmap(tile, footer);

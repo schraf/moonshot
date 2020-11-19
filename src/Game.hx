@@ -27,8 +27,8 @@ import sim.en.Asteroid;
 
 class ContactListener extends B2ContactListener {
 	var shipBody :B2Body;
-	
-	
+
+
 	public function new(shipBody) {
 		super();
 		this.shipBody = shipBody;
@@ -54,9 +54,7 @@ class Game extends Process {
 
 	public var ca : dn.heaps.Controller.ControllerAccess;
 	public var fx : Fx;
-	public var camera : Camera;
 	public var scroller : h2d.Layers;
-	public var level : Level;
 	public var hud : ui.Hud;
 
 	var world:B2World;
@@ -79,10 +77,20 @@ class Game extends Process {
 		root.add(scroller, Const.DP_BG);
 		scroller.filter = new h2d.filter.ColorMatrix(); // force rendering for pixel perfect
 
-		camera = new Camera();
-		level = new Level();
 		fx = new Fx();
 		hud = new ui.Hud();
+
+		var bounds = new h2d.col.Bounds();
+		bounds.set(0.0, 0.0, Const.VIEWPORT_WIDTH, Const.VIEWPORT_HEIGHT);
+
+		var center = bounds.getCenter();
+		var camera = Boot.ME.s2d.camera;
+		camera.setAnchor(0.5, 0.5);
+		camera.setPosition(center.x, center.y);
+
+		var background = new Background();
+		background.addStars(bounds);
+		scroller.add(background, Const.DP_BG);
 
 		Process.resizeAll();
 		trace(Lang.t._("Game is ready."));
@@ -96,7 +104,7 @@ class Game extends Process {
 
 		var thruster3 = new Thruster(world, 50, 80, -2, AXIS_LEFT_X_POS);
 		var thruster4 = new Thruster(world, -50, 80, 2, AXIS_LEFT_X_NEG);
-		
+
 		var jointDef = new B2WeldJointDef();
 		jointDef.initialize(ship.body, thruster.body, ship.body.getPosition());
 		world.createJoint(jointDef);
@@ -117,15 +125,11 @@ class Game extends Process {
 		asteroid2 = new Asteroid(world, 600, 700);
 		asteroid2.body.applyForce(new B2Vec2(-3000, 0), asteroid2.body.getPosition());
 
-		moon = new Moon(world, 600, -600);
+		moon = new Moon(world, Math.floor(bounds.width * 0.7), Math.floor(bounds.height * 0.25));
 
 		// for (i in 1...8) {
 		// 	new Thruster(world, Math.round(Math.random() * 1000 - 500), Math.round(-Math.random() * 200) - 300, 3, AXIS_LEFT_Y_NEG);
 		// }
-
-
-		camera.zoom = .5;
-		camera.trackTarget(ship, true);
 
 		var cl = new ContactListener(ship.body);
 		world.setContactListener(cl);

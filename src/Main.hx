@@ -131,7 +131,7 @@ class Main extends dn.Process {
 	}
 
 	override function update() {
-		Assets.tiles.tmod = tmod;
+		Assets.fx.tmod = tmod;
 		super.update();
 		PostFX.update(tmod);
 	}

@@ -7,13 +7,13 @@ class Button extends h2d.Interactive {
 
 		var flow = new h2d.Flow(this);
 
-		new h2d.Bitmap(Assets.ui.get("LargeEndCap"), flow);
+		new h2d.Bitmap(Assets.ui.getTile("LargeEndCap"), flow);
 		flow.addSpacing(5);
 
-		var button = new h2d.Bitmap(Assets.ui.get("ButtonPrimary"), flow);
+		var button = new h2d.Bitmap(Assets.ui.getTile("ButtonPrimary"), flow);
 		flow.addSpacing(5);
 
-		var flippedEndCap = Assets.ui.get("LargeEndCap");
+		var flippedEndCap = Assets.ui.getTile("LargeEndCap");
 		flippedEndCap.flipX();
 		flippedEndCap.dx = 0.0;
 		new h2d.Bitmap(flippedEndCap, flow);
