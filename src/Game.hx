@@ -65,7 +65,7 @@ class Game extends Process {
 	var asteroid1: Asteroid;
 	var asteroid2: Asteroid;
 
-	public function new() {
+	public function new(shipDefinition: ShipDefinition) {
 		super(Main.ME);
 		ME = this;
 		ca = Main.ME.controller.createAccess("game");
@@ -98,7 +98,13 @@ class Game extends Process {
 		world = new B2World(new B2Vec2(0, 0), true);
 		up = new B2Vec2(0, -50);
 
-		ship = new Ship(world, 0, 0);
+		ship = new Ship(shipDefinition, world, Const.VIEWPORT_HEIGHT - 300, 300);
+
+/* NOTE:
+	These are ship parts and probably should not be their own entity.
+	I would use the ship definition passed into the Ship entity to
+	access what parts are where relative to the ship origin.
+
 		var thruster = new Thruster(world, 50, -80, 5, AXIS_LEFT_X_NEG);
 		var thruster2 = new Thruster(world, -50, -80, -5, AXIS_LEFT_X_POS);
 
@@ -117,6 +123,7 @@ class Game extends Process {
 
 		jointDef.initialize(ship.body, thruster4.body, ship.body.getPosition());
 		world.createJoint(jointDef);
+*/
 
 		asteroid1 = new Asteroid(world, 2000, 300);
 		// new Asteroid(world, 400, -300);
@@ -201,10 +208,6 @@ class Game extends Process {
 				else
 					hxd.System.exit();
 			#end
-
-			// Restart
-			if( ca.selectPressed() )
-				Main.ME.startGame();
 		}
 	}
 }

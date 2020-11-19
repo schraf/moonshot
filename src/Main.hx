@@ -70,15 +70,15 @@ class Main extends dn.Process {
 		delayer.addF( showSplashScreens, 1 );
 	}
 
-	public function startGame() {
+	public function startGame(shipDefinition: ShipDefinition) {
 		if( Game.ME!=null ) {
 			Game.ME.destroy();
 			delayer.addF(function() {
-				new Game();
+				new Game(shipDefinition);
 			}, 1);
 		}
 		else
-			new Game();
+			new Game(shipDefinition);
 	}
 
 	public function startShipBuilding() {

@@ -23,6 +23,20 @@ class ShipVisuals {
 		return base;
 	}
 
+	public static function createFromDefinition(definition: ShipDefinition, width: Float, height: Float, ?parent: h2d.Object): h2d.Object {
+		var object = new h2d.Object(parent);
+		var offsetX = Const.SHIP_WIDTH * width * 0.5;
+		var offsetY = Const.SHIP_HEIGHT * height * 0.5;
+
+		for (shipPartDefinition in definition.parts) {
+			var part = create(shipPartDefinition.part, width, height, shipPartDefinition.attachments, object);
+			part.x = shipPartDefinition.x * width - offsetX;
+			part.y = shipPartDefinition.y * height - offsetY;
+		}
+
+		return object;
+	}
+
 	public static function addAttachment(partVisual: h2d.Bitmap, attachmentDir: ShipPartAttachment) {
 		var attachment = createPartVisuals("attachment", partVisual.width, partVisual.height, partVisual);
 

@@ -34,8 +34,9 @@ class ShipBuilding extends Process {
 		launchButton.y = 800;
 
 		launchButton.onPush = function (event: hxd.Event) {
+			var shipDefinition = layout.toShipDefinition();
 			destroy();
-			Main.ME.startGame();
+			Main.ME.startGame(shipDefinition);
 		}
 
 		initPanel();

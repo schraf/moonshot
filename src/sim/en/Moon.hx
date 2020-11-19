@@ -18,8 +18,7 @@ class Moon extends Entity {
 	var time: Float = 0.;
 	public var body: B2Body;
 
-	var r = 750;
-	var d = 1500;
+	var r = 100;
 
 	static var G = 70;
 
@@ -42,7 +41,7 @@ class Moon extends Entity {
 
 		spr.set(Assets.background, "moon");
 		spr.setCenterRatio();
-		setScale(0.3);
+		setScale((r*2.0) / spr.tile.width);
 	}
 
 	public function applyGravity(otherBody: B2Body) {
