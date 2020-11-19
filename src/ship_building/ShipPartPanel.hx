@@ -16,7 +16,7 @@ class ShipPartButton extends h2d.Object {
 	public function new (part: Data.ShipPart, width: Float, height: Float, panel: ShipPartPanel) {
 		super(panel);
 		this.part = part;
-		this.visuals = ShipVisuals.create(this.part, width, height, this);
+		this.visuals = ShipVisuals.create(this.part, width, height, 0, this);
 		this.interactive = new h2d.Interactive(width, height, this.visuals);
 		this.outline = new h2d.filter.Outline();
 		this.selected = false;

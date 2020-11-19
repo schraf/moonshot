@@ -1,12 +1,13 @@
 package ship_building;
 
 import ShipDefinition.ShipPartDefinition;
+import ShipDefinition.ShipPartAttachment;
 
 class ShipLayoutCell extends h2d.Object {
 
 	var root: h2d.Object;
 	var part: Null<Data.ShipPart>;
-	var visuals: h2d.Drawable;
+	var visuals: h2d.Bitmap;
 	var interactive: h2d.Interactive;
 	var cellX: Int;
 	var cellY: Int;
@@ -35,7 +36,7 @@ class ShipLayoutCell extends h2d.Object {
 		}
 	}
 
-	public function setPart (part: Null<Data.ShipPart>) {
+	public function setPart (part: Data.ShipPart) {
 		if (this.part == part) {
 			return;
 		}
@@ -43,11 +44,12 @@ class ShipLayoutCell extends h2d.Object {
 		if (part == null) {
 			this.visuals = null;
 		} else {
-			this.visuals = ShipVisuals.create(part, this.size, this.size, this);
+			this.visuals = ShipVisuals.create(part, this.size, this.size, 0, this);
 		}
 
 		this.part = part;
 
+		ShipLayout.Instance.onCellModified(this.cellX, this.cellY);
 		ShipBuilding.ME.calculateStats();
 	}
 
@@ -55,9 +57,13 @@ class ShipLayoutCell extends h2d.Object {
 		return this.part;
 	}
 
+	public function getVisuals (): h2d.Bitmap {
+		return this.visuals;
+	}
+
 	public function toDefinition (): ShipPartDefinition {
 		if (this.part != null) {
-			return new ShipPartDefinition(this.cellX, this.cellY, this.part);
+			return new ShipPartDefinition(this.cellX, this.cellY, this.part, 0);
 		}
 
 		return null;
@@ -65,10 +71,13 @@ class ShipLayoutCell extends h2d.Object {
 }
 
 class ShipLayout extends h2d.Flow {
+	public static var Instance: ShipLayout;
+
 	public var cells: Array<ShipLayoutCell>;
 
 	public function new (cellSize: Float, ?parent: h2d.Object) {
 		super(parent);
+		Instance = this;
 		cells = [];
 
 		this.overflow = h2d.Flow.FlowOverflow.Limit;
@@ -81,6 +90,60 @@ class ShipLayout extends h2d.Flow {
 			}
 
 		}
+	}
+
+	public function getShipPartCell (x: Int, y: Int): ShipLayoutCell {
+		var index = y * Const.SHIP_WIDTH + x;
+
+		if (index >= cells.length) {
+			return null;
+		}
+
+		return cells[index];
+	}
+
+	public function onCellModified (x: Int, y: Int) {
+		setAttachmentsForCell(x, y);
+		setAttachmentsForCell(x - 1, y);
+		setAttachmentsForCell(x + 1, y);
+		setAttachmentsForCell(x, y - 1);
+		setAttachmentsForCell(x, y + 1);
+	}
+
+	function setAttachmentsForCell (x: Int, y: Int) {
+		var cell = getShipPartCell(x, y);
+
+		if (cell != null && cell.getPart() != null) {
+			var attachments = calculateAttachmentFlags(x, y);
+			ShipVisuals.setAttachments(cell.getVisuals(), attachments);
+		}
+	}
+
+	function calculateAttachmentFlags (x: Int, y: Int): Int {
+		var flags = 0;
+
+		var top = getShipPartCell(x, y - 1);
+		var bottom = getShipPartCell(x, y + 1);
+		var left = getShipPartCell(x - 1, y);
+		var right = getShipPartCell(x + 1, y);
+
+		if (top != null && top.getPart() != null) {
+			flags |= ShipPartAttachment.Top;
+		}
+
+		if (bottom != null && bottom.getPart() != null) {
+			flags |= ShipPartAttachment.Bottom;
+		}
+
+		if (left != null && left.getPart() != null) {
+			flags |= ShipPartAttachment.Left;
+		}
+
+		if (right != null && right.getPart() != null) {
+			flags |= ShipPartAttachment.Right;
+		}
+
+		return flags;
 	}
 
 	public function toShipDefinition (): ShipDefinition {
