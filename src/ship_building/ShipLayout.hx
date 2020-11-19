@@ -63,7 +63,8 @@ class ShipLayoutCell extends h2d.Object {
 
 	public function toDefinition (): ShipPartDefinition {
 		if (this.part != null) {
-			return new ShipPartDefinition(this.cellX, this.cellY, this.part, 0);
+			var attachments = ShipLayout.Instance.calculateAttachmentFlags(this.cellX, this.cellY);
+			return new ShipPartDefinition(this.cellX, this.cellY, this.part, attachments);
 		}
 
 		return null;
@@ -119,7 +120,7 @@ class ShipLayout extends h2d.Flow {
 		}
 	}
 
-	function calculateAttachmentFlags (x: Int, y: Int): Int {
+	public function calculateAttachmentFlags (x: Int, y: Int): Int {
 		var flags = 0;
 
 		var top = getShipPartCell(x, y - 1);
