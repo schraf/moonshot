@@ -1,3 +1,4 @@
+import sim.en.Package;
 import sim.en.Moon;
 import box2D.collision.B2Manifold;
 import hxsl.Types.Vec;
@@ -57,7 +58,7 @@ class Game extends Process {
 	public var scroller : h2d.Layers;
 	public var hud : ui.Hud;
 
-	var world:B2World;
+	public var world:B2World;
 	var ship: Ship;
 	var up:B2Vec2;
 
@@ -198,6 +199,9 @@ class Game extends Process {
 		moon.applyGravity(ship.body);
 		moon.applyGravity(asteroid1.body);
 		moon.applyGravity(asteroid2.body);
+		if (Package.PACKAGE != null) {
+			moon.applyGravity(Package.PACKAGE.body);
+		}
 
 		if( !ui.Console.ME.isActive() && !ui.Modal.hasAny() ) {
 			#if hl

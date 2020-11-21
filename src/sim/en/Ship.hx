@@ -83,8 +83,11 @@ class Ship extends Entity {
 		// }
 
 
-		// if (ca.xPressed()) {
-		//   //
-		// }
+		if (ca.xPressed()) {
+			if(Package.PACKAGE == null) {
+				var p = body.getPosition();
+				new Package(Game.ME.world , cast p.x * 100, cast p.y * 100);
+			}
+		}
 	}
 }
