@@ -123,13 +123,12 @@ class Ship extends Entity {
 
 		var moon = Game.ME.moon.body.getPosition();
 
-		var dx = packagePosition.x - moon.x;
-		var dy = packagePosition.y - moon.y;
+		var dx = moon.x - packagePosition.x;
+		var dy = moon.y - packagePosition.y;
 
-		var dsq = dx * dx + dy * dy;
 		var vec: B2Vec2 = new B2Vec2(dx, dy);
 		vec.normalize();
-		vec.multiply(packageLauncherPower / dsq);
+		vec.multiply(packageLauncherPower);
 
 		newPackage.body.applyForce(vec , packagePosition);
 	}
