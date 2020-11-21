@@ -17,43 +17,36 @@ import box2D.dynamics.B2Body;
 class Asteroid extends Entity {
   var time: Float = 0.;
 
-  var r = 80;
-  var d = 160;
+	var r = 60;
 
-  public function new(b2world, x, y) {
-    super(x, y);
+	public function new(b2world, x, y) {
+		super(x, y);
 
-    var shape = new B2CircleShape(r/100);
+		var shape = new B2CircleShape(r/100);
 
-    var fixtureDef = new B2FixtureDef();
-    fixtureDef.density = 10;
-    fixtureDef.shape = shape;
-    fixtureDef.friction = 0;
+		var fixtureDef = new B2FixtureDef();
+		fixtureDef.density = 10;
+		fixtureDef.shape = shape;
+		fixtureDef.friction = 0;
 
-    var bodyDef = new B2BodyDef();
-    bodyDef.type = B2BodyType.DYNAMIC_BODY;
-    bodyDef.position.set(x/100, y/100);
+		var bodyDef = new B2BodyDef();
+		bodyDef.type = B2BodyType.DYNAMIC_BODY;
+		bodyDef.position.set(x/100, y/100);
 
-    this.body = b2world.createBody(bodyDef);
-    this.body.createFixture(fixtureDef);
+		this.body = b2world.createBody(bodyDef);
+		this.body.createFixture(fixtureDef);
 
-    var texture = hxd.Res.load("ball.png").toTexture();
+		spr.set(Assets.background, Math.random() <= 0.5 ? "asteroid_a" : "asteroid_b");
+		spr.setCenterRatio();
+		setScale((r<<1) / spr.tile.width);
 
-    spr.setTexture(texture);
-    spr.setCenterRatio();
-    sprScaleX = d / texture.width;
-    sprScaleY = d / texture.height;
+		this.body.applyTorque(Math.random() - Math.random() * 1000);
+	}
 
-    this.body.applyTorque(Math.random() - Math.random() * 1000);
-
-  }
-
-  override function update() {
-    var theta = body.getAngle();
-    var p = body.getPosition();
-    setPosPixel(p.x * 100, p.y * 100);
-    spr.rotation = body.getAngle();
-  }
-
-
+	override function update() {
+		var theta = body.getAngle();
+		var p = body.getPosition();
+		setPosPixel(p.x * 100, p.y * 100);
+		spr.rotation = body.getAngle();
+	}
 }
