@@ -16,14 +16,14 @@ import box2D.dynamics.B2Body;
 
 class Moon extends Entity {
 	var time: Float = 0.;
-	public var body: B2Body;
 
 	var r = 100;
 
-	static var G = 70;
+	static var G = 10;
 
 	public function new(b2world, x, y) {
 		super(x, y);
+		ignoreGravity = true;
 
 		var shape = new B2CircleShape(r/100);
 

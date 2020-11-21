@@ -9,18 +9,14 @@ import box2D.collision.shapes.B2PolygonShape;
 import box2D.dynamics.B2Body;
 
 class Package extends Entity {
-	public static var PACKAGE: Package = null;
-
 	var w = 10; // w and h sprite coords
 	var h = 10;
 
 	var time:Float = 0.;
-	public var body:B2Body;
 
 	// x and y in sprite coords
 	public function new(b2world, x, y) {
 		super(x, y);
-		PACKAGE = this;
 
 		var shape = new B2PolygonShape();
 		shape.setAsBox(w/200, h/200); // div by 2 for halfwidth, div by 100 for b2 coords

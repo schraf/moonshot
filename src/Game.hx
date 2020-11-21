@@ -191,17 +191,15 @@ class Game extends Process {
 
 	override function update() {
 		super.update();
-		for(e in Entity.ALL) if( !e.destroyed ) e.update();
+		for(e in Entity.ALL) if( !e.destroyed ) {
+			e.update();
+			if (e.body != null && !e.ignoreGravity) {
+				moon.applyGravity(e.body);
+			}
+		}
 
 		world.step(1 / 60,  3,  3);
 		world.clearForces();
-
-		moon.applyGravity(ship.body);
-		moon.applyGravity(asteroid1.body);
-		moon.applyGravity(asteroid2.body);
-		if (Package.PACKAGE != null) {
-			moon.applyGravity(Package.PACKAGE.body);
-		}
 
 		if( !ui.Console.ME.isActive() && !ui.Modal.hasAny() ) {
 			#if hl

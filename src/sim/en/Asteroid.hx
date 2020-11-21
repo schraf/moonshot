@@ -16,7 +16,6 @@ import box2D.dynamics.B2Body;
 
 class Asteroid extends Entity {
   var time: Float = 0.;
-  public var body: B2Body;
 
   var r = 80;
   var d = 160;

@@ -16,7 +16,6 @@ import box2D.collision.shapes.B2PolygonShape;
 class Ship extends Entity {
 	var ca:dn.heaps.Controller.ControllerAccess;
 	var time:Float = 0.;
-	public var body:B2Body;
 
 	var w = 100; // w and h sprite coords
 	var h = 200;
@@ -120,7 +119,7 @@ class Ship extends Entity {
 		trace(packageLauncherPower);
 
 		var packagePosition = body.getPosition();
-		new Package(Game.ME.world , cast packagePosition.x * 100, cast packagePosition.y * 100);
+		var newPackage = new Package(Game.ME.world , cast packagePosition.x * 100, cast packagePosition.y * 100);
 
 		var moon = Game.ME.moon.body.getPosition();
 
@@ -132,6 +131,6 @@ class Ship extends Entity {
 		vec.normalize();
 		vec.multiply(packageLauncherPower / dsq);
 
-		Package.PACKAGE.body.applyForce(vec , packagePosition);
+		newPackage.body.applyForce(vec , packagePosition);
 	}
 }
