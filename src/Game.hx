@@ -1,3 +1,4 @@
+import sim.en.Package;
 import sim.en.Moon;
 import box2D.collision.B2Manifold;
 import hxsl.Types.Vec;
@@ -41,7 +42,7 @@ class ContactListener extends B2ContactListener {
 		var bodyA = contact.getFixtureA().getBody();
 		var bodyB = contact.getFixtureB().getBody();
 		if (isOnShip(bodyA) || isOnShip(bodyB)) {
-			trace(Math.random());
+			//trace(Math.random());
 		}
 	}
 	override function endContact(contact:B2Contact):Void { }
@@ -57,11 +58,11 @@ class Game extends Process {
 	public var scroller : h2d.Layers;
 	public var hud : ui.Hud;
 
-	var world:B2World;
+	public var world:B2World;
 	var ship: Ship;
 	var up:B2Vec2;
 
-	var moon: Moon;
+	public var moon: Moon;
 	var asteroid1: Asteroid;
 	var asteroid2: Asteroid;
 
@@ -190,14 +191,15 @@ class Game extends Process {
 
 	override function update() {
 		super.update();
-		for(e in Entity.ALL) if( !e.destroyed ) e.update();
+		for(e in Entity.ALL) if( !e.destroyed ) {
+			e.update();
+			if (e.body != null && !e.ignoreGravity) {
+				moon.applyGravity(e.body);
+			}
+		}
 
 		world.step(1 / 60,  3,  3);
 		world.clearForces();
-
-		moon.applyGravity(ship.body);
-		moon.applyGravity(asteroid1.body);
-		moon.applyGravity(asteroid2.body);
 
 		if( !ui.Console.ME.isActive() && !ui.Modal.hasAny() ) {
 			#if hl

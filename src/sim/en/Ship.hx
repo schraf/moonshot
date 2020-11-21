@@ -1,5 +1,6 @@
 package sim.en;
 
+import box2D.dynamics.B2FilterData;
 import hxd.res.Font;
 import hxd.res.DefaultFont;
 import h2d.Bitmap;
@@ -15,10 +16,12 @@ import box2D.collision.shapes.B2PolygonShape;
 class Ship extends Entity {
 	var ca:dn.heaps.Controller.ControllerAccess;
 	var time:Float = 0.;
-	public var body:B2Body;
 
 	var w = 100; // w and h sprite coords
 	var h = 200;
+
+	var packageLauncherPower = 0.0;
+	var packageLauncherPowerModifier = 0.1;
 
 	var shipDefinition: ShipDefinition;
 
@@ -31,10 +34,14 @@ class Ship extends Entity {
 		var shape = new B2PolygonShape();
 		shape.setAsBox(w/200, h/200); // div by 2 for halfwidth, div by 100 for b2 coords
 
+		var filterData = new B2FilterData();
+		filterData.groupIndex = -1;
+
 		var fixtureDef = new B2FixtureDef();
 		fixtureDef.density = 1;
 		fixtureDef.shape = shape;
 		fixtureDef.friction = 0;
+		fixtureDef.filter = filterData;
 
 		var bodyDef = new B2BodyDef();
 		bodyDef.type = B2BodyType.DYNAMIC_BODY;
@@ -83,8 +90,46 @@ class Ship extends Entity {
 		// }
 
 
-		// if (ca.xPressed()) {
-		//   //
-		// }
+		if (ca.xPressed()) {
+			//if(Package.PACKAGE == null) {
+				if (packageLauncherPower == 0) {
+					packageLauncherPower = 1;
+				} else {
+					launchPackage();
+					packageLauncherPower = 0;
+				}
+			//}
+		}
+	}
+
+	override function fixedUpdate() {
+		super.fixedUpdate();
+		if (packageLauncherPower != 0) {
+			packageLauncherPower += packageLauncherPowerModifier;
+			if (packageLauncherPower >= 10) {
+				packageLauncherPowerModifier = -0.1;
+			}
+			if (packageLauncherPower <= 1) {
+				packageLauncherPowerModifier = 0.1;
+			}
+		}
+	}
+
+	function launchPackage() {
+		trace(packageLauncherPower);
+
+		var packagePosition = body.getPosition();
+		var newPackage = new Package(Game.ME.world , cast packagePosition.x * 100, cast packagePosition.y * 100);
+
+		var moon = Game.ME.moon.body.getPosition();
+
+		var dx = moon.x - packagePosition.x;
+		var dy = moon.y - packagePosition.y;
+
+		var vec: B2Vec2 = new B2Vec2(dx, dy);
+		vec.normalize();
+		vec.multiply(packageLauncherPower);
+
+		newPackage.body.applyForce(vec , packagePosition);
 	}
 }

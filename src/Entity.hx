@@ -1,6 +1,11 @@
+import box2D.dynamics.B2Body;
+
 class Entity {
 	public static var ALL : Array<Entity> = [];
 	public static var GC : Array<Entity> = [];
+
+	public var body: B2Body = null;
+	public var ignoreGravity: Bool = false;
 
 	public var game(get,never) : Game; inline function get_game() return Game.ME;
 	public var fx(get,never) : Fx; inline function get_fx() return Game.ME.fx;

@@ -6,7 +6,7 @@
         {
             "label": "HL debug",
             "type": "hxml",
-            "file": "hl.debug.hxml",
+            "file": "hl.sdl.debug.hxml",
             "presentation": {
                 "reveal": "never",
                 "panel": "dedicated",

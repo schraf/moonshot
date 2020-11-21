@@ -17,7 +17,6 @@ class Thruster extends Entity {
   var ca: dn.heaps.Controller.ControllerAccess;
   var key: PadKey;
   var time: Float = 0.;
-  public var body: B2Body;
 
   var w = 50;
   var h = 100;
@@ -27,6 +26,7 @@ class Thruster extends Entity {
   public function new(b2world, x, y, angle, key) {
     super(x, y);
     this.key = key;
+    ignoreGravity = true;
 
     var shape = new B2PolygonShape();
     shape.setAsBox(w/200, h/200); // div by 2 for halfwidth, div by 100 for b2 coords
