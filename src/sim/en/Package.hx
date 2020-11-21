@@ -37,12 +37,9 @@ class Package extends Entity {
 		this.body = b2world.createBody(bodyDef);
 		this.body.createFixture(fixtureDef);
 
-		var texture = hxd.Res.load("ball.png").toTexture();
-
-		spr.setTexture(texture);
+		spr.set(Assets.background, "package");
 		spr.setCenterRatio();
-		sprScaleX = 40/ texture.width;
-		sprScaleY = 40 / texture.height;
+		setScale(40 / spr.tile.width);
 	}
 
 	override function update() {
