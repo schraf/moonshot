@@ -42,7 +42,7 @@ class ContactListener extends B2ContactListener {
 		var bodyA = contact.getFixtureA().getBody();
 		var bodyB = contact.getFixtureB().getBody();
 		if (isOnShip(bodyA) || isOnShip(bodyB)) {
-			trace(Math.random());
+			//trace(Math.random());
 		}
 	}
 	override function endContact(contact:B2Contact):Void { }
@@ -62,7 +62,7 @@ class Game extends Process {
 	var ship: Ship;
 	var up:B2Vec2;
 
-	var moon: Moon;
+	public var moon: Moon;
 	var asteroid1: Asteroid;
 	var asteroid2: Asteroid;
 

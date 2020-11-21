@@ -1,5 +1,6 @@
 package sim.en;
 
+import box2D.dynamics.B2FilterData;
 import box2D.common.math.B2Vec2;
 import box2D.dynamics.B2BodyDef;
 import box2D.dynamics.B2BodyType;
@@ -24,10 +25,14 @@ class Package extends Entity {
 		var shape = new B2PolygonShape();
 		shape.setAsBox(w/200, h/200); // div by 2 for halfwidth, div by 100 for b2 coords
 
+		var filterData = new B2FilterData();
+		filterData.groupIndex = -1;
+
 		var fixtureDef = new B2FixtureDef();
 		fixtureDef.density = 1;
 		fixtureDef.shape = shape;
 		fixtureDef.friction = 0;
+		fixtureDef.filter = filterData;
 
 		var bodyDef = new B2BodyDef();
 		bodyDef.type = B2BodyType.DYNAMIC_BODY;
