@@ -2,6 +2,7 @@ import box2D.dynamics.B2Body;
 
 class Entity {
 	public static var ALL : Array<Entity> = [];
+	public static var HOUSES : Array<sim.en.House> = [];
 	public static var GC : Array<Entity> = [];
 
 	public var body: B2Body = null;

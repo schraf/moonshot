@@ -6,11 +6,15 @@ class ShipBuilding extends Process {
 
 	public var layout: ShipLayout;
 	public var panel: ShipPartPanel;
+	public var gameMode: Data.GameMode;
+
 	var stats: ShipStats;
 
-	public function new() {
+	public function new(gameMode: Data.GameMode) {
 		super(Main.ME);
 		ME = this;
+		this.gameMode = gameMode;
+
 		createRootInLayers(Main.ME.root, Const.DP_BG);
 
 		var bounds = new h2d.col.Bounds();
@@ -36,7 +40,7 @@ class ShipBuilding extends Process {
 		launchButton.onPush = function (event: hxd.Event) {
 			var shipDefinition = layout.toShipDefinition();
 			destroy();
-			Main.ME.startGame(shipDefinition);
+			Main.ME.startGame(this.gameMode, shipDefinition);
 		}
 
 		initPanel();

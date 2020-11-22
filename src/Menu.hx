@@ -3,49 +3,54 @@ import h2d.Flow.FlowAlign;
 import dn.Process;
 
 class Menu extends Process {
-    public static var ME : Menu;
+	public static var ME : Menu;
 
-    var flow: h2d.Flow;
-    var ca : dn.heaps.Controller.ControllerAccess;
+	var flow: h2d.Flow;
+	var ca : dn.heaps.Controller.ControllerAccess;
 
-    var NEW_GAME: Int = 1;
-    var HOW_TO_PLAY: Int = 2;
-    var LEADERBOARD: Int = 3;
-    var CREDITS: Int = 4;
+	var NEW_GAME: Int = 1;
+	var HOW_TO_PLAY: Int = 2;
+	var LEADERBOARD: Int = 3;
+	var CREDITS: Int = 4;
 
-    var options: Array<Int>;
+	var options: Array<Int>;
 
-    var selectedOption: Int;
+	var selectedOption: Int;
+	var gameMode: Data.GameMode;
 
 	public function new() {
-        #if skip_menu
-        destroy();
-        Main.ME.startShipBuilding();
-        return;
-        #end
 
-        super(Main.ME);
-        createRoot(Main.ME.root);
+		// TODO: add game mode selection
+		this.gameMode = Data.gameMode.get(Data.GameModeKind.ClassA);
 
-        ca = Main.ME.controller.createAccess("menu");
+		#if skip_menu
+		destroy();
+		Main.ME.startShipBuilding(this.gameMode);
+		return;
+		#end
 
-        flow = new h2d.Flow(root);
+		super(Main.ME);
+		createRoot(Main.ME.root);
+
+		ca = Main.ME.controller.createAccess("menu");
+
+		flow = new h2d.Flow(root);
 		flow.layout = Vertical;
 		flow.fillWidth = true;
 		flow.fillHeight = true;
 		flow.horizontalAlign = Middle;
 		flow.verticalAlign = Middle;
 
-        addText("MAIN MENU");
-        flow.addSpacing(50);
-        addText("New Game");
-        addText("How To Play");
-        addText("Leaderboards");
-        addText("Credits");
+		addText("MAIN MENU");
+		flow.addSpacing(50);
+		addText("New Game");
+		addText("How To Play");
+		addText("Leaderboards");
+		addText("Credits");
 
-        options = [NEW_GAME, HOW_TO_PLAY, LEADERBOARD, CREDITS];
-        selectedOption = 0;
-        select(0);
+		options = [NEW_GAME, HOW_TO_PLAY, LEADERBOARD, CREDITS];
+		selectedOption = 0;
+		select(0);
 
 		Process.resizeAll();
 	}
@@ -54,29 +59,29 @@ class Menu extends Process {
 		var tf = new h2d.Text(Assets.fontLarge, flow);
 		tf.text = str;
 		tf.textColor = c;
-    }
+	}
 
-    function select(optionToSelect: Int) {
-        if (optionToSelect >= options.length) {
-            optionToSelect = 0;
-        } else if (optionToSelect < 0) {
-            optionToSelect = options.length - 1;
-        }
+	function select(optionToSelect: Int) {
+		if (optionToSelect >= options.length) {
+			optionToSelect = 0;
+		} else if (optionToSelect < 0) {
+			optionToSelect = options.length - 1;
+		}
 
-        flow.getChildAt(options[selectedOption]).alpha = 1;
-        flow.getChildAt(options[optionToSelect]).alpha = 0.5;
-        selectedOption = optionToSelect;
-    }
+		flow.getChildAt(options[selectedOption]).alpha = 1;
+		flow.getChildAt(options[optionToSelect]).alpha = 0.5;
+		selectedOption = optionToSelect;
+	}
 
 	override function onResize() {
 		super.onResize();
 		root.setScale(Const.SCALE);
-    }
+	}
 
-    override function onDispose() {
-        super.onDispose();
-        options = null;
-        ca.dispose();
+	override function onDispose() {
+		super.onDispose();
+		options = null;
+		ca.dispose();
 	}
 
 	function gc() {
@@ -86,24 +91,24 @@ class Menu extends Process {
 		for(e in Entity.GC)
 			e.dispose();
 		Entity.GC = [];
-    }
+	}
 
-    override function update() {
-        if (ca.upPressed()) {
-            select(selectedOption - 1);
-        }
-        else if (ca.downPressed()) {
-            select(selectedOption + 1);
-        } else if (ca.bPressed()) {
-            if (options[selectedOption] == CREDITS) {
-                destroy();
-                Main.ME.showCredits();
-            }
-            if (options[selectedOption] == NEW_GAME) {
-                destroy();
-                Main.ME.startShipBuilding();
-            }
-        }
-    }
+	override function update() {
+		if (ca.upPressed()) {
+			select(selectedOption - 1);
+		}
+		else if (ca.downPressed()) {
+			select(selectedOption + 1);
+		} else if (ca.bPressed()) {
+			if (options[selectedOption] == CREDITS) {
+				destroy();
+				Main.ME.showCredits();
+			}
+			if (options[selectedOption] == NEW_GAME) {
+				destroy();
+				Main.ME.startShipBuilding(this.gameMode);
+			}
+		}
+	}
 }
 
