@@ -69,21 +69,27 @@ class ShipBuilding extends Process {
 	}
 
 	public function calculateStats() {
-		stats.clear();
+		if (stats != null && layout != null) {
+			stats.clear();
 
-		for (cell in layout.cells) {
-			var part = cell.getPart();
+			for (cell in layout.cells) {
+				var part = cell.getPart();
 
-			if (part != null) {
-				stats.addMass(part.mass);
-				stats.addCost(part.cost);
+				if (part != null) {
+					stats.addMass(part.mass);
+					stats.addCost(part.cost);
 
-				if (part.power_capacity > 0) {
-					stats.addFuel(part.power_capacity);
+					if (part.power_capacity > 0) {
+						stats.addFuel(part.power_capacity);
+					}
 				}
 			}
 		}
 	}
 
+	override function fixedUpdate() {
+		super.fixedUpdate();
+		layout.update();
+	}
 }
 

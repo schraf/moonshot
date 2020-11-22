@@ -24,6 +24,7 @@ class Ship extends Entity {
 	var packageLauncherPowerModifier = 0.1;
 
 	var shipDefinition: ShipDefinition;
+	var visuals: h2d.Object;
 
 	// x and y in sprite coords
 	public function new(shipDefinition: ShipDefinition, b2world, x, y) {
@@ -51,7 +52,7 @@ class Ship extends Entity {
 		this.body = b2world.createBody(bodyDef);
 		this.body.createFixture(fixtureDef);
 
-		ShipVisuals.createFromDefinition(this.shipDefinition, 30, 30, spr);
+		visuals = ShipVisuals.createFromDefinition(this.shipDefinition, 30, 30, spr);
 
 		ca = Main.ME.controller.createAccess("hero"); // creates an instance of controller
 	}
@@ -110,6 +111,18 @@ class Ship extends Entity {
 			}
 			if (packageLauncherPower <= 1) {
 				packageLauncherPowerModifier = 0.1;
+			}
+		}
+
+		for (base in this.visuals) {
+			for (child in base) {
+				for (partDefinition in this.shipDefinition.parts) {
+					if (child.name == partDefinition.id) {
+						if (partDefinition.part.flags.has(Data.ShipPart_flags.rotateAnimation)) {
+							child.rotate(Const.SHIP_PART_ROTATE_SPEED * Const.FPS);
+						}
+					}
+				}
 			}
 		}
 	}

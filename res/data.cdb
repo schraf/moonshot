@@ -32,8 +32,14 @@
 					"name": "power_capacity"
 				},
 				{
-					"typeStr": "10:rotatable,showInPanel",
+					"typeStr": "10:rotatable,showInPanel,locked,rotateAnimation",
 					"name": "flags"
+				},
+				{
+					"typeStr": "4",
+					"name": "scale",
+					"opt": true,
+					"display": null
 				}
 			],
 			"lines": [
@@ -90,6 +96,16 @@
 					"power_usage": 50,
 					"power_capacity": 0,
 					"flags": 2
+				},
+				{
+					"id": "Core",
+					"cost": 0,
+					"mass": 50,
+					"tile_name": "core",
+					"power_usage": 0,
+					"power_capacity": 0,
+					"flags": 12,
+					"scale": 0.7
 				}
 			],
 			"separators": [],

@@ -14,6 +14,7 @@ class ShipLayoutCell extends h2d.Object {
 	var partRotation: Int;
 	var size: Float;
 	var layout: ShipLayout;
+	var id: String;
 
 	public function new (x: Int, y: Int, size: Float, layout: ShipLayout) {
 		super(layout);
@@ -23,6 +24,7 @@ class ShipLayoutCell extends h2d.Object {
 		this.size = size;
 		this.interactive = new h2d.Interactive(size, size, this);
 		this.layout = layout;
+		this.id = '${this.cellX}.${this.cellY}';
 
 		var grid = new h2d.Bitmap(Assets.ship.getTile("grid"), this);
 		grid.width = size;
@@ -33,8 +35,14 @@ class ShipLayoutCell extends h2d.Object {
 		gridFilter.matrix.colorSet(0xFFFFFF, 0.1);
 		grid.filter = gridFilter;
 
+		this.interactive.enableRightButton = true;
+
 		this.interactive.onPush = function (event: hxd.Event) {
-			setPart(ShipPartPanel.Instance.getSelectedPart());
+			if (event.button == 0) {
+				setPart(ShipPartPanel.Instance.getSelectedPart());
+			} else {
+				setPart(null);
+			}
 		}
 
 		this.interactive.onWheel = function (event: hxd.Event) {
@@ -45,8 +53,7 @@ class ShipLayoutCell extends h2d.Object {
 					this.partRotation = (this.partRotation + 360 - 90) % 360;
 				}
 
-				this.visuals.remove();
-				this.visuals = ShipVisuals.create(part, this.size, this.size, this.partRotation, 0, this);
+				setVisuals(part);
 				ShipLayout.Instance.onCellModified(this.cellX, this.cellY);
 			}
 		}
@@ -57,20 +64,34 @@ class ShipLayoutCell extends h2d.Object {
 			return;
 		}
 
-		if (this.visuals != null) {
-			this.visuals.remove();
+		if (this.part != null && this.part.flags.has(Data.ShipPart_flags.locked)) {
+			return;
 		}
 
-		if (part == null) {
+		if (this.visuals != null) {
+			this.visuals.remove();
 			this.visuals = null;
-		} else {
-			this.visuals = ShipVisuals.create(part, this.size, this.size, this.partRotation, 0, this);
+		}
+
+		// reset rotation
+		this.partRotation = 0;
+
+		if (part != null) {
+			setVisuals(part);
 		}
 
 		this.part = part;
 
 		ShipLayout.Instance.onCellModified(this.cellX, this.cellY);
 		ShipBuilding.ME.calculateStats();
+	}
+
+	function setVisuals(part: Data.ShipPart) {
+		if (this.visuals != null) {
+			this.visuals.remove();
+		}
+
+		this.visuals = ShipVisuals.create(this.id, part, this.size, this.size, this.partRotation, 0, this);
 	}
 
 	public function getPart (): Data.ShipPart {
@@ -84,7 +105,7 @@ class ShipLayoutCell extends h2d.Object {
 	public function toDefinition (): ShipPartDefinition {
 		if (this.part != null) {
 			var attachments = ShipLayout.Instance.calculateAttachmentFlags(this.cellX, this.cellY);
-			return new ShipPartDefinition(this.cellX, this.cellY, this.partRotation, this.part, attachments);
+			return new ShipPartDefinition(this.id, this.cellX, this.cellY, this.partRotation, this.part, attachments);
 		}
 
 		return null;
@@ -104,6 +125,7 @@ class ShipLayout extends h2d.Flow {
 		this.overflow = h2d.Flow.FlowOverflow.Limit;
 		this.multiline = true;
 		this.maxWidth = Math.ceil(Const.SHIP_WIDTH * cellSize);
+		this.colWidth = Math.ceil(cellSize);
 
 		for (y in 0...Const.SHIP_HEIGHT) {
 			for (x in 0...Const.SHIP_WIDTH) {
@@ -111,6 +133,8 @@ class ShipLayout extends h2d.Flow {
 			}
 
 		}
+
+		getShipPartCell(Math.floor(Const.SHIP_WIDTH / 2), Math.floor(Const.SHIP_HEIGHT / 2)).setPart(Data.shipPart.get(Data.ShipPartKind.Core));
 	}
 
 	public function getShipPartCell (x: Int, y: Int): ShipLayoutCell {
@@ -179,5 +203,22 @@ class ShipLayout extends h2d.Flow {
 		}
 
 		return definition;
+	}
+
+	public function update () {
+		for (cell in this.cells) {
+			var part = cell.getPart();
+
+			if (part != null && part.flags.has(Data.ShipPart_flags.rotateAnimation)) {
+				var visuals = cell.getVisuals();
+
+				for (child in visuals) {
+					if (child.name != "attachment") {
+						child.rotate(Const.SHIP_PART_ROTATE_SPEED * Const.FPS);
+						needReflow = true;
+					}
+				}
+			}
+		}
 	}
 }

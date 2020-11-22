@@ -2,13 +2,16 @@ import ShipDefinition.ShipPartAttachment;
 
 class ShipVisuals {
 
-	static function createPartVisuals(tileName: String, x: Float, y: Float, width: Float, height: Float, rotation: Int, center: Bool, ?parent: h2d.Object): h2d.Bitmap {
+	static function createPartVisuals(tileName: String, x: Float, y: Float, width: Float, height: Float, rotation: Int, scale: Float, center: Bool, ?parent: h2d.Object, ?id: String): h2d.Bitmap {
 		var part = new h2d.Bitmap(Assets.ship.getTile(tileName), parent);
 		part.x = x;
 		part.y = y;
 		part.width = width;
 		part.height = height;
-		part.name = tileName;
+
+		if (id != null) {
+			part.name = id;
+		}
 
 		if (center) {
 			part.tile.dx = -(width * 0.5);
@@ -19,12 +22,14 @@ class ShipVisuals {
 			part.rotation = hxd.Math.degToRad(rotation);
 		}
 
+		part.setScale(scale);
+
 		return part;
 	}
 
-	public static function create(part: Data.ShipPart, width: Float, height: Float, rotation: Int, attachments: Int, ?parent: h2d.Object): h2d.Bitmap {
-		var base = createPartVisuals("base", 0.0, 0.0, width, height, 0, false, parent);
-		createPartVisuals(part.tile_name, width * 0.5, height * 0.5, width, height, rotation, true, base);
+	public static function create(id: String, part: Data.ShipPart, width: Float, height: Float, rotation: Int, attachments: Int, ?parent: h2d.Object): h2d.Bitmap {
+		var base = createPartVisuals("base", 0.0, 0.0, width, height, 0, 1.0, false, parent, "base");
+		createPartVisuals(part.tile_name, width * 0.5, height * 0.5, width, height, rotation, part.scale != null ? part.scale : 1.0, true, base, id);
 		setAttachments(base, attachments);
 		return base;
 	}
@@ -35,7 +40,7 @@ class ShipVisuals {
 		var offsetY = Const.SHIP_HEIGHT * height * 0.5;
 
 		for (shipPartDefinition in definition.parts) {
-			var part = create(shipPartDefinition.part, width, height, shipPartDefinition.rotation, shipPartDefinition.attachments, object);
+			var part = create(shipPartDefinition.id, shipPartDefinition.part, width, height, shipPartDefinition.rotation, shipPartDefinition.attachments, object);
 			part.x = shipPartDefinition.x * width - offsetX;
 			part.y = shipPartDefinition.y * height - offsetY;
 		}
@@ -44,21 +49,20 @@ class ShipVisuals {
 	}
 
 	public static function addAttachment(partVisual: h2d.Bitmap, attachmentDir: ShipPartAttachment) {
-		var attachment = createPartVisuals("attachment", 0.0, 0.0, partVisual.width, partVisual.height, 0, false, partVisual);
+		var rotation: Int = 0;
 
 		switch (attachmentDir) {
-			case ShipPartAttachment.Top:
-				attachment.rotate(Math.PI);
-				attachment.x += attachment.width;
-				attachment.y += attachment.height;
 			case ShipPartAttachment.Bottom:
+				rotation = 0;
 			case ShipPartAttachment.Left:
-				attachment.rotate(Math.PI * 0.5);
-				attachment.x += attachment.width;
+				rotation = 90;
+			case ShipPartAttachment.Top:
+				rotation = 180;
 			case ShipPartAttachment.Right:
-				attachment.rotate(Math.PI * 1.5);
-				attachment.y += attachment.height;
+				rotation = 270;
 		}
+
+		var attachment = createPartVisuals("attachment", partVisual.width * 0.5, partVisual.height * 0.5, partVisual.width, partVisual.height, rotation, 1.0, true, partVisual, "attachment");
 	}
 
 	public static function setAttachments(partVisual: h2d.Bitmap, attachments: Int) {
