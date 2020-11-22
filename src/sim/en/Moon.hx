@@ -17,7 +17,7 @@ import box2D.dynamics.B2Body;
 class Moon extends Entity {
 	var time: Float = 0.;
 
-	var r = 100;
+	public static var Radius = 100;
 
 	static var G = 10;
 
@@ -25,7 +25,7 @@ class Moon extends Entity {
 		super(x, y);
 		ignoreGravity = true;
 
-		var shape = new B2CircleShape(r/100);
+		var shape = new B2CircleShape(Radius/100);
 
 		var fixtureDef = new B2FixtureDef();
 		fixtureDef.density = 10;
@@ -41,7 +41,7 @@ class Moon extends Entity {
 
 		spr.set(Assets.background, "moon");
 		spr.setCenterRatio();
-		setScale((r*2.0) / spr.tile.width);
+		setScale((Radius*2.0) / spr.tile.width);
 	}
 
 	public function applyGravity(otherBody: B2Body) {

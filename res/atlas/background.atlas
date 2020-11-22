@@ -25,6 +25,13 @@ ground
   orig: 1923, 156
   offset: 0, 0
   index: -1
+house
+  rotate: false
+  xy: 1927, 1867
+  size: 81, 108
+  orig: 81, 108
+  offset: 0, 0
+  index: -1
 moon
   rotate: false
   xy: 2, 186
@@ -34,7 +41,7 @@ moon
   index: -1
 package
   rotate: false
-  xy: 1927, 1889
+  xy: 689, 764
   size: 86, 86
   orig: 86, 86
   offset: 0, 0

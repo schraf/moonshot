@@ -70,26 +70,26 @@ class Main extends dn.Process {
 		delayer.addF( showSplashScreens, 1 );
 	}
 
-	public function startGame(shipDefinition: ShipDefinition) {
+	public function startGame(gameMode: Data.GameMode, shipDefinition: ShipDefinition) {
 		if( Game.ME!=null ) {
 			Game.ME.destroy();
 			delayer.addF(function() {
-				new Game(shipDefinition);
+				new Game(gameMode, shipDefinition);
 			}, 1);
 		}
 		else
-			new Game(shipDefinition);
+			new Game(gameMode, shipDefinition);
 	}
 
-	public function startShipBuilding() {
+	public function startShipBuilding(gameMode: Data.GameMode) {
 		if( ShipBuilding.ME!=null ) {
 			ShipBuilding.ME.destroy();
 			delayer.addF(function() {
-				new ShipBuilding();
+				new ShipBuilding(gameMode);
 			}, 1);
 		}
 		else
-			new ShipBuilding();
+			new ShipBuilding(gameMode);
 	}
 
 	public function showMenu() {

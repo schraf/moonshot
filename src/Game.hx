@@ -1,5 +1,4 @@
-import sim.en.Package;
-import sim.en.Moon;
+
 import box2D.collision.B2Manifold;
 import hxsl.Types.Vec;
 import dn.Process;
@@ -23,8 +22,10 @@ import box2D.collision.shapes.B2PolygonShape;
 import box2D.collision.shapes.B2CircleShape;
 
 import sim.en.Ship;
-import sim.en.Thruster;
 import sim.en.Asteroid;
+import sim.en.Package;
+import sim.en.Moon;
+import sim.en.House;
 
 class ContactListener extends B2ContactListener {
 	var shipBody :B2Body;
@@ -57,18 +58,18 @@ class Game extends Process {
 	public var fx : Fx;
 	public var scroller : h2d.Layers;
 	public var hud : ui.Hud;
-
+	public var gameMode: Data.GameMode;
 	public var world:B2World;
+	public var moon: Moon;
+
 	var ship: Ship;
 	var up:B2Vec2;
 
-	public var moon: Moon;
-	var asteroid1: Asteroid;
-	var asteroid2: Asteroid;
-
-	public function new(shipDefinition: ShipDefinition) {
+	public function new(gameMode: Data.GameMode, shipDefinition: ShipDefinition) {
 		super(Main.ME);
 		ME = this;
+		this.gameMode = gameMode;
+
 		ca = Main.ME.controller.createAccess("game");
 		ca.setLeftDeadZone(0.2);
 		ca.setRightDeadZone(0.2);
@@ -126,18 +127,43 @@ class Game extends Process {
 		world.createJoint(jointDef);
 */
 
-		asteroid1 = new Asteroid(world, 2000, 300);
-		// new Asteroid(world, 400, -300);
-		// new Asteroid(world, -400, -300);
-		// new Asteroid(world, -20, -300);
-		asteroid2 = new Asteroid(world, 600, 700);
-		asteroid2.body.applyForce(new B2Vec2(-3000, 0), asteroid2.body.getPosition());
+		var moonPosition = new h2d.col.Point(bounds.width * 0.7, bounds.height * 0.25);
+		moon = new Moon(world, Math.floor(moonPosition.x), Math.floor(moonPosition.y));
 
-		moon = new Moon(world, Math.floor(bounds.width * 0.7), Math.floor(bounds.height * 0.25));
+		for (i in 0 ... this.gameMode.numAsteroids) {
+			var point = new h2d.col.Point(1.0, 0.0);
+			var angle = Math.random() * 2.0 * Math.PI;
+			var distance = (Math.random() * bounds.height * 0.75) + Moon.Radius;
 
-		// for (i in 1...8) {
-		// 	new Thruster(world, Math.round(Math.random() * 1000 - 500), Math.round(-Math.random() * 200) - 300, 3, AXIS_LEFT_Y_NEG);
-		// }
+			point.rotate(angle);
+			point.scale(distance);
+			point = point.add(moonPosition);
+
+			// clamp to bounds
+			point.x = Math.max(Math.min(point.x, bounds.width), 0.0);
+			point.y = Math.max(Math.min(point.y, bounds.height), 0.0);
+
+			// move towards moon
+			var dir = point.sub(moonPosition).normalized();
+			dir.scale(1000.0);
+
+			var asteroid = new Asteroid(world, Math.floor(point.x), Math.floor(point.y));
+			asteroid.body.applyForce(new B2Vec2(dir.x, dir.y), asteroid.body.getPosition());
+		}
+
+		var separationAngle = (2.0 * Math.PI) / this.gameMode.numHouses;
+
+		for (i in 0 ... this.gameMode.numHouses) {
+			var point = new h2d.col.Point(1.0, 0.0);
+			var angle = (i * separationAngle) + ((2.0 * Math.random() - 1.0) * separationAngle * 0.5);
+			var distance = Moon.Radius;
+
+			point.rotate(angle);
+			point.scale(distance);
+			point = point.add(moonPosition);
+
+			new House(Math.floor(point.x), Math.floor(point.y), angle);
+		}
 
 		var cl = new ContactListener(ship.body);
 		world.setContactListener(cl);
