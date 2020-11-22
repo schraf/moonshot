@@ -229,6 +229,13 @@ class Game extends Process {
 			}
 		}
 
+		if (Entity.HOUSES.length == 0) {
+			delayer.addF(function() {
+				destroy();
+			}, 1);
+			Main.ME.startShipBuilding(this.gameMode);
+		}
+
 		world.step(1 / 60,  3,  3);
 		world.clearForces();
 
