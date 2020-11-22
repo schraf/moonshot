@@ -147,7 +147,7 @@
 			"lines": [
 				{
 					"numAsteroids": 1,
-					"numHouses": 4,
+					"numHouses": 1,
 					"maxCost": 1000,
 					"maxWeight": 1000,
 					"Id": "ClassA"
