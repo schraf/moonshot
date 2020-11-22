@@ -9,11 +9,13 @@ enum abstract ShipPartAttachment(Int) to Int {
 class ShipPartDefinition {
 	public var x: Int;
 	public var y: Int;
+	public var id: String;
 	public var attachments: Int;
 	public var part: Data.ShipPart;
 	public var rotation: Int;
 
-	public function new (x: Int, y: Int, rotation: Int, part: Data.ShipPart, attachments: Int) {
+	public function new (id: String, x: Int, y: Int, rotation: Int, part: Data.ShipPart, attachments: Int) {
+		this.id = id;
 		this.x = x;
 		this.y = y;
 		this.rotation = rotation;
