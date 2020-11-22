@@ -91,14 +91,12 @@ class Ship extends Entity {
 
 
 		if (ca.xPressed()) {
-			//if(Package.PACKAGE == null) {
-				if (packageLauncherPower == 0) {
-					packageLauncherPower = 1;
-				} else {
-					launchPackage();
-					packageLauncherPower = 0;
-				}
-			//}
+			if (packageLauncherPower == 0) {
+				packageLauncherPower = 1;
+			} else {
+				launchPackage();
+				packageLauncherPower = 0;
+			}
 		}
 	}
 
@@ -121,10 +119,11 @@ class Ship extends Entity {
 		var packagePosition = body.getPosition();
 		var newPackage = new Package(Game.ME.world , cast packagePosition.x * 100, cast packagePosition.y * 100);
 
-		var moon = Game.ME.moon.body.getPosition();
+		var x = Main.ME.scene.mouseX / 100;
+		var y = Main.ME.scene.mouseY / 100;
 
-		var dx = moon.x - packagePosition.x;
-		var dy = moon.y - packagePosition.y;
+		var dx = x - packagePosition.x;
+		var dy = y - packagePosition.y;
 
 		var vec: B2Vec2 = new B2Vec2(dx, dy);
 		vec.normalize();
