@@ -17,8 +17,8 @@ class Ship extends Entity {
 	var ca:dn.heaps.Controller.ControllerAccess;
 	var time:Float = 0.;
 
-	var w = 100; // w and h sprite coords
-	var h = 200;
+	var shipPartWidth = 30;
+	var shipPartHeight = 30;
 
 	var packageLauncherPower = 0.0;
 	var packageLauncherPowerModifier = 0.1;
@@ -31,6 +31,12 @@ class Ship extends Entity {
 		super(x, y);
 
 		this.shipDefinition = shipDefinition;
+
+		visuals = ShipVisuals.createFromDefinition(this.shipDefinition, shipPartWidth, shipPartHeight, spr);
+
+		var size = visuals.getSize();
+		var w = size.xMax - size.xMin;
+		var h = size.yMax - size.yMin;
 
 		var shape = new B2PolygonShape();
 		shape.setAsBox(w/200, h/200); // div by 2 for halfwidth, div by 100 for b2 coords
@@ -51,8 +57,6 @@ class Ship extends Entity {
 
 		this.body = b2world.createBody(bodyDef);
 		this.body.createFixture(fixtureDef);
-
-		visuals = ShipVisuals.createFromDefinition(this.shipDefinition, 30, 30, spr);
 
 		ca = Main.ME.controller.createAccess("hero"); // creates an instance of controller
 	}
@@ -79,6 +83,7 @@ class Ship extends Entity {
 			var forceVec = this.body.getWorldVector(new B2Vec2(0, -5));
 			this.body.applyForce(forceVec, center);
 		}
+
 		// if (ca.downDown() || ca.isKeyboardDown(hxd.Key.DOWN)) {
 		//   var forceVec = this.body.getWorldVector(new B2Vec2(0, 100000));
 		//   this.body.applyForce(forceVec, center);
