@@ -35,8 +35,14 @@ class ShipLayoutCell extends h2d.Object {
 		gridFilter.matrix.colorSet(0xFFFFFF, 0.1);
 		grid.filter = gridFilter;
 
+		this.interactive.enableRightButton = true;
+
 		this.interactive.onPush = function (event: hxd.Event) {
-			setPart(ShipPartPanel.Instance.getSelectedPart());
+			if (event.button == 0) {
+				setPart(ShipPartPanel.Instance.getSelectedPart());
+			} else {
+				setPart(null);
+			}
 		}
 
 		this.interactive.onWheel = function (event: hxd.Event) {
@@ -70,9 +76,7 @@ class ShipLayoutCell extends h2d.Object {
 		// reset rotation
 		this.partRotation = 0;
 
-		if (part == null) {
-			this.visuals = null;
-		} else {
+		if (part != null) {
 			setVisuals(part);
 		}
 
