@@ -30,6 +30,10 @@
 				{
 					"typeStr": "3",
 					"name": "power_capacity"
+				},
+				{
+					"typeStr": "4",
+					"name": "rotation"
 				}
 			],
 			"lines": [
@@ -38,8 +42,36 @@
 					"mass": 100,
 					"tile_name": "thruster",
 					"power_usage": 80,
-					"id": "Booster",
-					"power_capacity": 0
+					"id": "BoosterRear",
+					"power_capacity": 0,
+					"rotation": 0
+				},
+				{
+					"cost": 20,
+					"mass": 100,
+					"tile_name": "thruster",
+					"power_usage": 80,
+					"id": "BoosterFront",
+					"power_capacity": 0,
+					"rotation": 180
+				},
+				{
+					"cost": 20,
+					"mass": 100,
+					"tile_name": "thruster",
+					"power_usage": 80,
+					"id": "BoosterLeft",
+					"power_capacity": 0,
+					"rotation": 90
+				},
+				{
+					"cost": 20,
+					"mass": 100,
+					"tile_name": "thruster",
+					"power_usage": 80,
+					"id": "BoosterRight",
+					"power_capacity": 0,
+					"rotation": 270
 				},
 				{
 					"cost": 100,

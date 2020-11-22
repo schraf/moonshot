@@ -18,7 +18,18 @@ class ShipVisuals {
 
 	public static function create(part: Data.ShipPart, width: Float, height: Float, attachments: Int, ?parent: h2d.Object): h2d.Bitmap {
 		var base = createPartVisuals("base", width, height, parent);
-		createPartVisuals(part.tile_name, width, height, base);
+		var top = createPartVisuals(part.tile_name, width, height, base);
+		top.rotation = part.rotation * Math.PI / 180;
+
+		if (part.rotation == 90) {
+			top.x += width;
+		} else if (part.rotation == 180) {
+			top.x += width;
+			top.y += height;
+		} else if (part.rotation == 270) {
+			top.y += height;
+		}
+
 		setAttachments(base, attachments);
 		return base;
 	}

@@ -57,7 +57,10 @@ class ShipBuilding extends Process {
 
 		var partSize = Math.floor(Const.SHIP_PANEL_WIDTH * 0.5);
 		panel.addPart(Data.shipPart.get(Data.ShipPartKind.Battery), partSize, partSize);
-		panel.addPart(Data.shipPart.get(Data.ShipPartKind.Booster), partSize, partSize);
+		panel.addPart(Data.shipPart.get(Data.ShipPartKind.BoosterRear), partSize, partSize);
+		panel.addPart(Data.shipPart.get(Data.ShipPartKind.BoosterFront), partSize, partSize);
+		panel.addPart(Data.shipPart.get(Data.ShipPartKind.BoosterRight), partSize, partSize);
+		panel.addPart(Data.shipPart.get(Data.ShipPartKind.BoosterLeft), partSize, partSize);
 		panel.addPart(Data.shipPart.get(Data.ShipPartKind.Package), partSize, partSize);
 		panel.addPart(Data.shipPart.get(Data.ShipPartKind.Laser), partSize, partSize);
 		panel.addPart(Data.shipPart.get(Data.ShipPartKind.SolarPanel), partSize, partSize);
