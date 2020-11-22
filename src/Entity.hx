@@ -130,6 +130,10 @@ class Entity {
 	public function dispose() {
 		ALL.remove(this);
 
+		if (body != null) {
+			body.getWorld().destroyBody(body);
+		}
+
 		colorAdd = null;
 
 		spr.remove();

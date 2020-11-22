@@ -31,7 +31,7 @@ class Moon extends Entity {
 		fixtureDef.density = 10;
 		fixtureDef.shape = shape;
 		fixtureDef.friction = 0;
-		fixtureDef.userData = ObjTypes.Moon;
+		fixtureDef.userData = this;
 
 		var bodyDef = new B2BodyDef();
 		bodyDef.type = B2BodyType.STATIC_BODY;

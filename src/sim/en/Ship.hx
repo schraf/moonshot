@@ -43,7 +43,7 @@ class Ship extends Entity {
 		fixtureDef.shape = shape;
 		fixtureDef.friction = 0;
 		fixtureDef.filter = filterData;
-		fixtureDef.userData = ObjTypes.Ship;
+		fixtureDef.userData = this;
 
 		var bodyDef = new B2BodyDef();
 		bodyDef.type = B2BodyType.DYNAMIC_BODY;

@@ -28,7 +28,7 @@ class Asteroid extends Entity {
 		fixtureDef.density = 10;
 		fixtureDef.shape = shape;
     fixtureDef.friction = 0;
-    fixtureDef.userData = ObjTypes.Asteroid;
+    fixtureDef.userData = this;
 
 		var bodyDef = new B2BodyDef();
 		bodyDef.type = B2BodyType.DYNAMIC_BODY;

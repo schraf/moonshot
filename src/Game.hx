@@ -1,5 +1,5 @@
 
-import sim.en.ObjTypes;
+import haxe.macro.Type.ClassType;
 import box2D.collision.B2Manifold;
 import hxsl.Types.Vec;
 import dn.Process;
@@ -29,22 +29,23 @@ import sim.en.Moon;
 import sim.en.House;
 
 class ContactListener extends B2ContactListener {
-	function isOnShip(fixture: B2Fixture) {
-		if (fixture.getUserData() != null && fixture.getUserData() == ObjTypes.Ship) return true;
-		return false;
+	function isOnType<T>(fixture: B2Fixture, classCheck: Class<T>) {
+		return fixture.getUserData() != null && Type.getClass(fixture.getUserData()) == classCheck;
 	}
-	function isOnPackage(fixture: B2Fixture) {
-		if (fixture.getUserData() != null && fixture.getUserData() == ObjTypes.Package) return true;
-		return false;
-	}
+
 	override function beginContact(contact:B2Contact):Void {
-		var bodyA = contact.getFixtureA();
-		var bodyB = contact.getFixtureB();
-		if (isOnShip(bodyA) || isOnShip(bodyB)) {
+		var fixtureA = contact.getFixtureA();
+		var fixtureB = contact.getFixtureB();
+		if (isOnType(fixtureA, sim.en.Ship) || isOnType(fixtureB, sim.en.Ship)) {
 			trace('ship collide');
 		}
-		if (isOnPackage(bodyA) || isOnPackage(bodyB)) {
-			trace('package collide');
+		if (isOnType(fixtureA, sim.en.Package) && isOnType(fixtureB, sim.en.House)) {
+			(fixtureA.getUserData() : Package).destroy();
+			(fixtureB.getUserData() : House).destroy();
+		}
+		if (isOnType(fixtureA, sim.en.House) && isOnType(fixtureB, sim.en.Package)) {
+			(fixtureA.getUserData() : House).destroy();
+			(fixtureB.getUserData() : Package).destroy();
 		}
 	}
 	override function endContact(contact:B2Contact):Void { }
@@ -183,9 +184,12 @@ class Game extends Process {
 		if( Entity.GC==null || Entity.GC.length==0 )
 			return;
 
-		for(e in Entity.GC)
-			e.dispose();
-		Entity.GC = [];
+		if (!world.isLocked()) {
+			for(e in Entity.GC) {
+				e.dispose();
+			}
+			Entity.GC = [];
+		}
 	}
 
 	override function onDispose() {
