@@ -1,4 +1,5 @@
 
+import sim.en.ObjTypes;
 import box2D.collision.B2Manifold;
 import hxsl.Types.Vec;
 import dn.Process;
@@ -28,22 +29,22 @@ import sim.en.Moon;
 import sim.en.House;
 
 class ContactListener extends B2ContactListener {
-	var shipBody :B2Body;
-
-
-	public function new(shipBody) {
-		super();
-		this.shipBody = shipBody;
+	function isOnShip(fixture: B2Fixture) {
+		if (fixture.getUserData() != null && fixture.getUserData() == ObjTypes.Ship) return true;
+		return false;
 	}
-	function isOnShip(body) {
-		if (body == shipBody) return true;
-		return !body.shouldCollide(shipBody);
+	function isOnPackage(fixture: B2Fixture) {
+		if (fixture.getUserData() != null && fixture.getUserData() == ObjTypes.Package) return true;
+		return false;
 	}
 	override function beginContact(contact:B2Contact):Void {
-		var bodyA = contact.getFixtureA().getBody();
-		var bodyB = contact.getFixtureB().getBody();
+		var bodyA = contact.getFixtureA();
+		var bodyB = contact.getFixtureB();
 		if (isOnShip(bodyA) || isOnShip(bodyB)) {
-			//trace(Math.random());
+			trace('ship collide');
+		}
+		if (isOnPackage(bodyA) || isOnPackage(bodyB)) {
+			trace('package collide');
 		}
 	}
 	override function endContact(contact:B2Contact):Void { }
@@ -133,7 +134,7 @@ class Game extends Process {
 		for (i in 0 ... this.gameMode.numAsteroids) {
 			var point = new h2d.col.Point(1.0, 0.0);
 			var angle = Math.random() * 2.0 * Math.PI;
-			var distance = (Math.random() * bounds.height * 0.75) + Moon.Radius;
+			var distance = (Math.random() * bounds.height * 0.75) + sim.en.Moon.Radius;
 
 			point.rotate(angle);
 			point.scale(distance);
@@ -156,16 +157,16 @@ class Game extends Process {
 		for (i in 0 ... this.gameMode.numHouses) {
 			var point = new h2d.col.Point(1.0, 0.0);
 			var angle = (i * separationAngle) + ((2.0 * Math.random() - 1.0) * separationAngle * 0.5);
-			var distance = Moon.Radius;
+			var distance = sim.en.Moon.Radius;
 
 			point.rotate(angle);
 			point.scale(distance);
 			point = point.add(moonPosition);
 
-			new House(Math.floor(point.x), Math.floor(point.y), angle);
+			new House(world, Math.floor(point.x), Math.floor(point.y), angle);
 		}
 
-		var cl = new ContactListener(ship.body);
+		var cl = new ContactListener();
 		world.setContactListener(cl);
 	}
 
