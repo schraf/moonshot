@@ -32,7 +32,7 @@ limitMemory=true
 useIndexes=true
 
 scaleFactors=[{suffix:"",factor:0.5,resampling:bicubic}]
-inputFiles=[{path:ship/attachment.png,type:Input,regionName:null},{path:ship/thruster.png,type:Input,regionName:null},{path:ship/base.png,type:Input,regionName:null},{path:ship/battery.png,type:Input,regionName:null},{path:ship/laser.png,type:Input,regionName:null},{path:ship/solar.png,type:Input,regionName:null},{path:ship/storage.png,type:Input,regionName:null},{path:ship/grid.png,type:Input,regionName:null}]
+inputFiles=[{path:ship/attachment.png,type:Input,regionName:null},{path:ship/thruster.png,type:Input,regionName:null},{path:ship/base.png,type:Input,regionName:null},{path:ship/battery.png,type:Input,regionName:null},{path:ship/laser.png,type:Input,regionName:null},{path:ship/solar.png,type:Input,regionName:null},{path:ship/storage.png,type:Input,regionName:null},{path:ship/grid.png,type:Input,regionName:null},{path:ship/core.png,type:Input,regionName:null},{path:ship/shield.png,type:Input,regionName:null}]
 
 
 ---
@@ -71,7 +71,7 @@ limitMemory=true
 useIndexes=true
 
 scaleFactors=[{suffix:"",factor:0.5,resampling:bicubic}]
-inputFiles=[{path:background/ground.png,type:Input,regionName:null},{path:background/tower.png,type:Input,regionName:null},{path:background/moon.png,type:Input,regionName:null}]
+inputFiles=[{path:background/ground.png,type:Input,regionName:null},{path:background/tower.png,type:Input,regionName:null},{path:background/moon.png,type:Input,regionName:null},{path:background/asteroid_b.png,type:Input,regionName:null},{path:background/asteroid_a.png,type:Input,regionName:null},{path:background/package.png,type:Input,regionName:null},{path:background/house.png,type:Input,regionName:null}]
 
 
 ---

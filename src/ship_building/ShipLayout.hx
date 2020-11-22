@@ -11,6 +11,7 @@ class ShipLayoutCell extends h2d.Object {
 	var interactive: h2d.Interactive;
 	var cellX: Int;
 	var cellY: Int;
+	var partRotation: Int;
 	var size: Float;
 	var layout: ShipLayout;
 
@@ -18,6 +19,7 @@ class ShipLayoutCell extends h2d.Object {
 		super(layout);
 		this.cellX = x;
 		this.cellY = y;
+		this.partRotation = 0;
 		this.size = size;
 		this.interactive = new h2d.Interactive(size, size, this);
 		this.layout = layout;
@@ -34,6 +36,20 @@ class ShipLayoutCell extends h2d.Object {
 		this.interactive.onPush = function (event: hxd.Event) {
 			setPart(ShipPartPanel.Instance.getSelectedPart());
 		}
+
+		this.interactive.onWheel = function (event: hxd.Event) {
+			if (part != null && part.flags.has(Data.ShipPart_flags.rotatable)) {
+				if (event.wheelDelta > 0) {
+					this.partRotation = (this.partRotation + 90) % 360;
+				} else if (event.wheelDelta < 0) {
+					this.partRotation = (this.partRotation + 360 - 90) % 360;
+				}
+
+				this.visuals.remove();
+				this.visuals = ShipVisuals.create(part, this.size, this.size, this.partRotation, 0, this);
+				ShipLayout.Instance.onCellModified(this.cellX, this.cellY);
+			}
+		}
 	}
 
 	public function setPart (part: Data.ShipPart) {
@@ -41,10 +57,14 @@ class ShipLayoutCell extends h2d.Object {
 			return;
 		}
 
+		if (this.visuals != null) {
+			this.visuals.remove();
+		}
+
 		if (part == null) {
 			this.visuals = null;
 		} else {
-			this.visuals = ShipVisuals.create(part, this.size, this.size, 0, this);
+			this.visuals = ShipVisuals.create(part, this.size, this.size, this.partRotation, 0, this);
 		}
 
 		this.part = part;
@@ -64,7 +84,7 @@ class ShipLayoutCell extends h2d.Object {
 	public function toDefinition (): ShipPartDefinition {
 		if (this.part != null) {
 			var attachments = ShipLayout.Instance.calculateAttachmentFlags(this.cellX, this.cellY);
-			return new ShipPartDefinition(this.cellX, this.cellY, this.part, attachments);
+			return new ShipPartDefinition(this.cellX, this.cellY, this.partRotation, this.part, attachments);
 		}
 
 		return null;

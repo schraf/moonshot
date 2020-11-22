@@ -32,8 +32,8 @@
 					"name": "power_capacity"
 				},
 				{
-					"typeStr": "4",
-					"name": "rotation"
+					"typeStr": "10:rotatable,showInPanel",
+					"name": "flags"
 				}
 			],
 			"lines": [
@@ -42,36 +42,9 @@
 					"mass": 100,
 					"tile_name": "thruster",
 					"power_usage": 80,
-					"id": "BoosterRear",
+					"id": "Booster",
 					"power_capacity": 0,
-					"rotation": 0
-				},
-				{
-					"cost": 20,
-					"mass": 100,
-					"tile_name": "thruster",
-					"power_usage": 80,
-					"id": "BoosterFront",
-					"power_capacity": 0,
-					"rotation": 180
-				},
-				{
-					"cost": 20,
-					"mass": 100,
-					"tile_name": "thruster",
-					"power_usage": 80,
-					"id": "BoosterLeft",
-					"power_capacity": 0,
-					"rotation": 90
-				},
-				{
-					"cost": 20,
-					"mass": 100,
-					"tile_name": "thruster",
-					"power_usage": 80,
-					"id": "BoosterRight",
-					"power_capacity": 0,
-					"rotation": 270
+					"flags": 3
 				},
 				{
 					"cost": 100,
@@ -79,7 +52,8 @@
 					"tile_name": "storage",
 					"power_usage": 0,
 					"id": "Package",
-					"power_capacity": 0
+					"power_capacity": 0,
+					"flags": 2
 				},
 				{
 					"cost": 75,
@@ -87,15 +61,17 @@
 					"tile_name": "battery",
 					"power_usage": 0,
 					"id": "Battery",
-					"power_capacity": 0
+					"power_capacity": 0,
+					"flags": 2
 				},
 				{
 					"cost": 60,
-					"mass": 76,
+					"mass": 75,
 					"tile_name": "laser",
 					"power_usage": 500,
 					"id": "Laser",
-					"power_capacity": 0
+					"power_capacity": 0,
+					"flags": 3
 				},
 				{
 					"cost": 50,
@@ -103,7 +79,17 @@
 					"tile_name": "solar",
 					"power_usage": 0,
 					"id": "SolarPanel",
-					"power_capacity": 1000
+					"power_capacity": 1000,
+					"flags": 2
+				},
+				{
+					"id": "Shield",
+					"cost": 60,
+					"mass": 80,
+					"tile_name": "shield",
+					"power_usage": 50,
+					"power_capacity": 0,
+					"flags": 2
 				}
 			],
 			"separators": [],
@@ -203,39 +189,6 @@
 			"props": {}
 		}
 	],
-	"customTypes": [
-		{
-			"name": "ShipStat",
-			"cases": [
-				{
-					"name": "Cost",
-					"args": [
-						{
-							"name": "value",
-							"typeStr": "3"
-						}
-					]
-				},
-				{
-					"name": "Mass",
-					"args": [
-						{
-							"name": "value",
-							"typeStr": "3"
-						}
-					]
-				},
-				{
-					"name": "Fuel",
-					"args": [
-						{
-							"name": "value",
-							"typeStr": "3"
-						}
-					]
-				}
-			]
-		}
-	],
+	"customTypes": [],
 	"compress": false
 }

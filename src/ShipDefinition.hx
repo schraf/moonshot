@@ -11,10 +11,12 @@ class ShipPartDefinition {
 	public var y: Int;
 	public var attachments: Int;
 	public var part: Data.ShipPart;
+	public var rotation: Int;
 
-	public function new (x: Int, y: Int, part: Data.ShipPart, attachments: Int) {
+	public function new (x: Int, y: Int, rotation: Int, part: Data.ShipPart, attachments: Int) {
 		this.x = x;
 		this.y = y;
+		this.rotation = rotation;
 		this.attachments = attachments;
 		this.part = part;
 	}

@@ -2,34 +2,29 @@ import ShipDefinition.ShipPartAttachment;
 
 class ShipVisuals {
 
-	static function createPartVisuals(tileName: String, width: Float, height: Float, ?parent: h2d.Object): h2d.Bitmap {
+	static function createPartVisuals(tileName: String, x: Float, y: Float, width: Float, height: Float, rotation: Int, center: Bool, ?parent: h2d.Object): h2d.Bitmap {
 		var part = new h2d.Bitmap(Assets.ship.getTile(tileName), parent);
+		part.x = x;
+		part.y = y;
 		part.width = width;
 		part.height = height;
 		part.name = tileName;
+
+		if (center) {
+			part.tile.dx = -(width * 0.5);
+			part.tile.dy = -(height * 0.5);
+		}
+
+		if (rotation != 0) {
+			part.rotation = hxd.Math.degToRad(rotation);
+		}
+
 		return part;
 	}
 
-	static function createSimpleShipPart(tileName: String, width: Float, height: Float, ?parent: h2d.Object): h2d.Bitmap {
-		var base = createPartVisuals("base", width, height, parent);
-		createPartVisuals(tileName, width, height, base);
-		return base;
-	}
-
-	public static function create(part: Data.ShipPart, width: Float, height: Float, attachments: Int, ?parent: h2d.Object): h2d.Bitmap {
-		var base = createPartVisuals("base", width, height, parent);
-		var top = createPartVisuals(part.tile_name, width, height, base);
-		top.rotation = part.rotation * Math.PI / 180;
-
-		if (part.rotation == 90) {
-			top.x += width;
-		} else if (part.rotation == 180) {
-			top.x += width;
-			top.y += height;
-		} else if (part.rotation == 270) {
-			top.y += height;
-		}
-
+	public static function create(part: Data.ShipPart, width: Float, height: Float, rotation: Int, attachments: Int, ?parent: h2d.Object): h2d.Bitmap {
+		var base = createPartVisuals("base", 0.0, 0.0, width, height, 0, false, parent);
+		createPartVisuals(part.tile_name, width * 0.5, height * 0.5, width, height, rotation, true, base);
 		setAttachments(base, attachments);
 		return base;
 	}
@@ -40,7 +35,7 @@ class ShipVisuals {
 		var offsetY = Const.SHIP_HEIGHT * height * 0.5;
 
 		for (shipPartDefinition in definition.parts) {
-			var part = create(shipPartDefinition.part, width, height, shipPartDefinition.attachments, object);
+			var part = create(shipPartDefinition.part, width, height, shipPartDefinition.rotation, shipPartDefinition.attachments, object);
 			part.x = shipPartDefinition.x * width - offsetX;
 			part.y = shipPartDefinition.y * height - offsetY;
 		}
@@ -49,7 +44,7 @@ class ShipVisuals {
 	}
 
 	public static function addAttachment(partVisual: h2d.Bitmap, attachmentDir: ShipPartAttachment) {
-		var attachment = createPartVisuals("attachment", partVisual.width, partVisual.height, partVisual);
+		var attachment = createPartVisuals("attachment", 0.0, 0.0, partVisual.width, partVisual.height, 0, false, partVisual);
 
 		switch (attachmentDir) {
 			case ShipPartAttachment.Top:
