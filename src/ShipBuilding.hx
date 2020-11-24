@@ -17,6 +17,9 @@ class ShipBuilding extends Process {
 
 		createRootInLayers(Main.ME.root, Const.DP_BG);
 
+		var leaderboards = new Leaderboards();
+		leaderboards.request(gameMode);
+
 		var bounds = new h2d.col.Bounds();
 		bounds.set(0.0, 0.0, Const.VIEWPORT_WIDTH, Const.VIEWPORT_HEIGHT);
 		var center = bounds.getCenter();
