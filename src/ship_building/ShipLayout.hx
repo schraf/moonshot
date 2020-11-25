@@ -6,7 +6,7 @@ import ShipDefinition.ShipPartAttachment;
 class ShipLayoutCell extends h2d.Object {
 
 	var root: h2d.Object;
-	var part: Null<Data.ShipPart>;
+	public var part: Null<Data.ShipPart>;
 	var visuals: h2d.Bitmap;
 	var interactive: h2d.Interactive;
 	var cellX: Int;
@@ -15,6 +15,8 @@ class ShipLayoutCell extends h2d.Object {
 	var size: Float;
 	var layout: ShipLayout;
 	var id: String;
+
+	public var grid: h2d.Bitmap;
 
 	public function new (x: Int, y: Int, size: Float, layout: ShipLayout) {
 		super(layout);
@@ -26,13 +28,13 @@ class ShipLayoutCell extends h2d.Object {
 		this.layout = layout;
 		this.id = '${this.cellX}.${this.cellY}';
 
-		var grid = new h2d.Bitmap(Assets.ship.getTile("grid"), this);
+		grid = new h2d.Bitmap(Assets.ship.getTile("grid"), this);
 		grid.width = size;
 		grid.height = size;
 
 		var gridFilter = new h2d.filter.ColorMatrix();
 		gridFilter.matrix.identity();
-		gridFilter.matrix.colorSet(0xFFFFFF, 0.1);
+		gridFilter.matrix.colorSet(0xFF0000, 0.1);
 		grid.filter = gridFilter;
 
 		this.interactive.enableRightButton = true;
@@ -67,6 +69,11 @@ class ShipLayoutCell extends h2d.Object {
 		if (this.part != null && this.part.flags.has(Data.ShipPart_flags.locked)) {
 			return;
 		}
+		
+		if ((part != null && !part.flags.has(Data.ShipPart_flags.locked)) &&
+			!ShipLayout.Instance.isCellConnected(cellX, cellY)) {
+				return;
+			}
 
 		if (this.visuals != null) {
 			this.visuals.remove();
@@ -153,6 +160,11 @@ class ShipLayout extends h2d.Flow {
 		setAttachmentsForCell(x + 1, y);
 		setAttachmentsForCell(x, y - 1);
 		setAttachmentsForCell(x, y + 1);
+
+		updateColorForCell(x - 1, y);
+		updateColorForCell(x + 1, y);
+		updateColorForCell(x, y - 1);
+		updateColorForCell(x, y + 1);
 	}
 
 	function setAttachmentsForCell (x: Int, y: Int) {
@@ -162,6 +174,34 @@ class ShipLayout extends h2d.Flow {
 			var attachments = calculateAttachmentFlags(x, y);
 			ShipVisuals.setAttachments(cell.getVisuals(), attachments);
 		}
+	}
+
+	function updateColorForCell(x: Int, y: Int) {
+		var cell = getShipPartCell(x, y);
+
+		if (cell != null) {
+			var c = isCellConnected(x, y) ? 0xFFFFFF : 0xFF0000;
+
+			var gridFilter = new h2d.filter.ColorMatrix();
+			gridFilter.matrix.identity();
+			gridFilter.matrix.colorSet(c, 0.1);
+			cell.grid.filter = gridFilter;
+		}
+	}
+
+	public function isCellConnected(x: Int, y: Int) {
+		var left = getShipPartCell(x - 1, y);
+		var right = getShipPartCell(x + 1, y);
+		var up = getShipPartCell(x, y - 1);
+		var down = getShipPartCell(x, y + 1);
+
+		if ((left == null || left.part == null) &&
+			(right == null || right.part == null) &&
+			(up == null || up.part == null) &&
+			(down == null || down.part == null)) {
+				return false;
+			}
+		return true;
 	}
 
 	public function calculateAttachmentFlags (x: Int, y: Int): Int {

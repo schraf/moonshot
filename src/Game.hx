@@ -1,4 +1,5 @@
 
+import haxe.macro.Type.ClassType;
 import box2D.collision.B2Manifold;
 import hxsl.Types.Vec;
 import dn.Process;
@@ -28,22 +29,23 @@ import sim.en.Moon;
 import sim.en.House;
 
 class ContactListener extends B2ContactListener {
-	var shipBody :B2Body;
-
-
-	public function new(shipBody) {
-		super();
-		this.shipBody = shipBody;
+	function isOnType<T>(fixture: B2Fixture, classCheck: Class<T>) {
+		return fixture.getUserData() != null && Type.getClass(fixture.getUserData()) == classCheck;
 	}
-	function isOnShip(body) {
-		if (body == shipBody) return true;
-		return !body.shouldCollide(shipBody);
-	}
+
 	override function beginContact(contact:B2Contact):Void {
-		var bodyA = contact.getFixtureA().getBody();
-		var bodyB = contact.getFixtureB().getBody();
-		if (isOnShip(bodyA) || isOnShip(bodyB)) {
-			//trace(Math.random());
+		var fixtureA = contact.getFixtureA();
+		var fixtureB = contact.getFixtureB();
+		if (isOnType(fixtureA, sim.en.Ship) || isOnType(fixtureB, sim.en.Ship)) {
+			trace('ship collide');
+		}
+		if (isOnType(fixtureA, sim.en.Package) && isOnType(fixtureB, sim.en.House)) {
+			(fixtureA.getUserData() : Package).destroy();
+			(fixtureB.getUserData() : House).destroy();
+		}
+		if (isOnType(fixtureA, sim.en.House) && isOnType(fixtureB, sim.en.Package)) {
+			(fixtureA.getUserData() : House).destroy();
+			(fixtureB.getUserData() : Package).destroy();
 		}
 	}
 	override function endContact(contact:B2Contact):Void { }
@@ -133,7 +135,7 @@ class Game extends Process {
 		for (i in 0 ... this.gameMode.numAsteroids) {
 			var point = new h2d.col.Point(1.0, 0.0);
 			var angle = Math.random() * 2.0 * Math.PI;
-			var distance = (Math.random() * bounds.height * 0.75) + Moon.Radius;
+			var distance = (Math.random() * bounds.height * 0.75) + sim.en.Moon.Radius;
 
 			point.rotate(angle);
 			point.scale(distance);
@@ -156,16 +158,16 @@ class Game extends Process {
 		for (i in 0 ... this.gameMode.numHouses) {
 			var point = new h2d.col.Point(1.0, 0.0);
 			var angle = (i * separationAngle) + ((2.0 * Math.random() - 1.0) * separationAngle * 0.5);
-			var distance = Moon.Radius;
+			var distance = sim.en.Moon.Radius;
 
 			point.rotate(angle);
 			point.scale(distance);
 			point = point.add(moonPosition);
 
-			new House(Math.floor(point.x), Math.floor(point.y), angle);
+			new House(world, Math.floor(point.x), Math.floor(point.y), angle);
 		}
 
-		var cl = new ContactListener(ship.body);
+		var cl = new ContactListener();
 		world.setContactListener(cl);
 	}
 
@@ -182,9 +184,12 @@ class Game extends Process {
 		if( Entity.GC==null || Entity.GC.length==0 )
 			return;
 
-		for(e in Entity.GC)
-			e.dispose();
-		Entity.GC = [];
+		if (!world.isLocked()) {
+			for(e in Entity.GC) {
+				e.dispose();
+			}
+			Entity.GC = [];
+		}
 	}
 
 	override function onDispose() {
@@ -222,6 +227,13 @@ class Game extends Process {
 			if (e.body != null && !e.ignoreGravity) {
 				moon.applyGravity(e.body);
 			}
+		}
+
+		if (Entity.HOUSES.length == 0) {
+			delayer.addF(function() {
+				destroy();
+			}, 1);
+			Main.ME.startShipBuilding(this.gameMode);
 		}
 
 		world.step(1 / 60,  3,  3);
