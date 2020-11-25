@@ -59,7 +59,7 @@ class ShipBuilding extends Process {
 		panel.x = Const.VIEWPORT_WIDTH - Const.SHIP_PANEL_WIDTH - 100;
 		panel.y = 100;
 
-		var partSize = Math.floor(Const.SHIP_PANEL_WIDTH * 0.5);
+		var partSize = Math.floor(Const.SHIP_PANEL_WIDTH * 0.25);
 
 		for (part in Data.shipPart.all) {
 			if (part.flags.has(Data.ShipPart_flags.showInPanel)) {

@@ -1,5 +1,10 @@
 package ship_building;
 
+import h2d.Bitmap;
+import h2d.Flow.FlowLayout;
+import h2d.Flow.FlowAlign;
+import h2d.Text;
+
 class ShipPartButton extends h2d.Object {
 	static var HOVER_COLOR = 0xFFD0D0D0;
 	static var HOVER_SIZE = 2.0;
@@ -8,15 +13,28 @@ class ShipPartButton extends h2d.Object {
 
 	var part: Data.ShipPart;
 	var visuals: h2d.Drawable;
+	var base: Bitmap;
 	var interactive: h2d.Interactive;
 	var outline: h2d.filter.Outline;
 	var selected: Bool;
 	var panel: ShipPartPanel;
+	var partWidth: Float;
 
 	public function new (part: Data.ShipPart, width: Float, height: Float, panel: ShipPartPanel) {
 		super(panel);
+		this.partWidth = width;
 		this.part = part;
+		this.base = new h2d.Bitmap(Assets.fx.getTile("empty"), this);
+		this.base.width = width;
+		this.base.height = height;
+		this.base.x = width;
+
 		this.visuals = ShipVisuals.create(this.part.id.toString(), this.part, width, height, 0, 0, this);
+
+		addDescriptionText(part.tile_name, 0);
+		addDescriptionText("$" + part.cost, 30);
+		addDescriptionText(part.mass + "kg", 60);
+
 		this.interactive = new h2d.Interactive(width, height, this.visuals);
 		this.outline = new h2d.filter.Outline();
 		this.selected = false;
@@ -56,6 +74,12 @@ class ShipPartButton extends h2d.Object {
 			this.selected = false;
 			this.visuals.filter = null;
 		}
+	}
+
+	public function addDescriptionText(text: String, y: Float) {
+		var textObj = new Text(Assets.fontSmall, this.base);
+		textObj.text = text;
+		textObj.y += y;
 	}
 }
 

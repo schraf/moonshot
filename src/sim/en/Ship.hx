@@ -106,11 +106,11 @@ class Ship extends Entity {
 			case 0:
 				forwardBoosters.push(origin);
 			case 90:
-				leftBoosters.push(origin);
+				rightBoosters.push(origin);
 			case 180:
 				backwardsBoosters.push(origin);
 			case 270:
-				rightBoosters.push(origin);
+				leftBoosters.push(origin);
 		}
 	}
 
