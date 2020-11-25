@@ -67,6 +67,19 @@ class ShipLayoutCell extends h2d.Object {
 		if (this.part != null && this.part.flags.has(Data.ShipPart_flags.locked)) {
 			return;
 		}
+		
+		var left = ShipLayout.Instance.getShipPartCell(cellX - 1, cellY);
+		var right = ShipLayout.Instance.getShipPartCell(cellX + 1, cellY);
+		var up = ShipLayout.Instance.getShipPartCell(cellX, cellY - 1);
+		var down = ShipLayout.Instance.getShipPartCell(cellX, cellY + 1);
+
+		if ((part != null && !part.flags.has(Data.ShipPart_flags.locked)) &&
+			(left == null || left.part == null) &&
+			(right == null || right.part == null) &&
+			(up == null || up.part == null) &&
+			(down == null || down.part == null)) {
+				return;
+			}
 
 		if (this.visuals != null) {
 			this.visuals.remove();
