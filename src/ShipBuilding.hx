@@ -1,3 +1,6 @@
+import h3d.Vector;
+import h2d.Text;
+import ui.Modal;
 import ship_building.*;
 import dn.Process;
 
@@ -37,8 +40,23 @@ class ShipBuilding extends Process {
 		launchButton.x = 30;
 		launchButton.y = 800;
 
+		var notEnoughtPackagesWarning = new Text(Assets.fontSmall, root);
+		notEnoughtPackagesWarning.x = 30;
+		notEnoughtPackagesWarning.y = 750;
+		notEnoughtPackagesWarning.color = new Vector(1,0,0);
+
 		launchButton.onPush = function (event: hxd.Event) {
 			var shipDefinition = layout.toShipDefinition();
+			var packages = 0;
+			for (shipPart in shipDefinition.parts) {
+				if (shipPart.part.id == Data.ShipPartKind.Package) {
+					packages++;
+				}
+			}
+			if (this.gameMode.numHouses > packages) {
+				notEnoughtPackagesWarning.text = "Need " + (this.gameMode.numHouses - packages) + " more storage units";
+				return;
+			}
 			destroy();
 			Main.ME.startGame(this.gameMode, shipDefinition);
 		}
