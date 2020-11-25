@@ -146,7 +146,8 @@ class Game extends Process {
 			point.y = Math.max(Math.min(point.y, bounds.height), 0.0);
 
 			// move towards moon
-			var dir = point.sub(moonPosition).normalized();
+			var dir = point.sub(moonPosition);
+			dir.normalize();
 			dir.scale(1000.0);
 
 			var asteroid = new Asteroid(world, Math.floor(point.x), Math.floor(point.y));

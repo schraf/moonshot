@@ -176,6 +176,10 @@
 					"typeStr": "3",
 					"name": "maxWeight",
 					"display": null
+				},
+				{
+					"typeStr": "1",
+					"name": "leaderboard"
 				}
 			],
 			"lines": [
@@ -184,21 +188,24 @@
 					"numHouses": 1,
 					"maxCost": 1000,
 					"maxWeight": 1000,
-					"Id": "ClassA"
+					"Id": "ClassA",
+					"leaderboard": "ClassA"
 				},
 				{
 					"Id": "ClassB",
 					"numAsteroids": 3,
 					"numHouses": 2,
 					"maxCost": 700,
-					"maxWeight": 500
+					"maxWeight": 500,
+					"leaderboard": "ClassB"
 				},
 				{
 					"Id": "ClassC",
 					"numAsteroids": 5,
 					"numHouses": 3,
 					"maxCost": 500,
-					"maxWeight": 250
+					"maxWeight": 250,
+					"leaderboard": "ClassC"
 				}
 			],
 			"separators": [],
