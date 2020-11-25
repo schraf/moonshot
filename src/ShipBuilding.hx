@@ -10,6 +10,7 @@ class ShipBuilding extends Process {
 	public var layout: ShipLayout;
 	public var panel: ShipPartPanel;
 	public var gameMode: Data.GameMode;
+	public var warningMessage: Text;
 
 	var stats: ShipStats;
 
@@ -40,10 +41,10 @@ class ShipBuilding extends Process {
 		launchButton.x = 30;
 		launchButton.y = 800;
 
-		var notEnoughtPackagesWarning = new Text(Assets.fontSmall, root);
-		notEnoughtPackagesWarning.x = 30;
-		notEnoughtPackagesWarning.y = 750;
-		notEnoughtPackagesWarning.color = new Vector(1,0,0);
+		warningMessage = new Text(Assets.fontSmall, root);
+		warningMessage.x = 30;
+		warningMessage.y = 750;
+		warningMessage.color = new Vector(1,0,0);
 
 		launchButton.onPush = function (event: hxd.Event) {
 			var shipDefinition = layout.toShipDefinition();
@@ -54,7 +55,7 @@ class ShipBuilding extends Process {
 				}
 			}
 			if (this.gameMode.numHouses > packages) {
-				notEnoughtPackagesWarning.text = "Need " + (this.gameMode.numHouses - packages) + " more storage units";
+				warningMessage.text = "Need " + (this.gameMode.numHouses - packages) + " more storage units";
 				return;
 			}
 			destroy();
@@ -64,9 +65,12 @@ class ShipBuilding extends Process {
 		initPanel();
 
 		stats = new ShipStats();
-		calculateStats();
 
 		Process.resizeAll();
+	}
+
+	private function warn(text: String) {
+		warningMessage.text = text;
 	}
 
 	private function initPanel () {
@@ -86,23 +90,41 @@ class ShipBuilding extends Process {
 		}
 	}
 
-	public function calculateStats() {
-		if (stats != null && layout != null) {
-			stats.clear();
+	public function checkBuildPart(part: Data.ShipPart) {
+		if (stats == null || layout == null || part == null) {
+			return true;
+		}
+		if (part.mass + stats.mass > gameMode.maxWeight) {
+			warningMessage.text = "Mass cannot exceed " + gameMode.maxWeight;
+			return false;
+		}
+		if (part.cost + stats.cost > gameMode.maxCost) {
+			warningMessage.text = "Cost cannot exceed " + gameMode.maxCost;
+			return false;
+		}
+		return true;
+	}
 
+	public function buildPart(partToAdd: Data.ShipPart) {
+		if (stats == null || layout == null) {
+			return;
+		}
+		if (partToAdd == null) {
+			stats.clear();
 			for (cell in layout.cells) {
 				var part = cell.getPart();
-
 				if (part != null) {
-					stats.addMass(part.mass);
-					stats.addCost(part.cost);
-
-					if (part.power_capacity > 0) {
-						stats.addFuel(part.power_capacity);
-					}
+					stats.mass += part.mass;
+					stats.cost += part.cost;
+					stats.fuel += part.power_capacity;
 				}
 			}
+		} else {
+			stats.mass += partToAdd.mass;
+			stats.cost += partToAdd.cost;
+			stats.fuel += partToAdd.power_capacity;
 		}
+		stats.refresh();
 	}
 
 	override function fixedUpdate() {
