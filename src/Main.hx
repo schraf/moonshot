@@ -5,8 +5,8 @@ class Main extends dn.Process {
 	public static var ME : Main;
 	public var controller : dn.heaps.Controller;
 	public var ca : dn.heaps.Controller.ControllerAccess;
-
 	public var scene : h2d.Scene;
+	public var leaderboards: Leaderboards;
 
 	public function new(s:h2d.Scene) {
 		super();
@@ -64,6 +64,8 @@ class Main extends dn.Process {
 
 		// Post FX
 		PostFX.init(s);
+
+		this.leaderboards = new Leaderboards();
 
 		// Start
 		new dn.heaps.GameFocusHelper(Boot.ME.s2d, Assets.fontMedium);
