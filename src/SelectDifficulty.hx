@@ -23,7 +23,7 @@ class Difficulty {
             case (ClassB):
                 desc.push("Cyber Monday has come and gone.");
                 desc.push("Deliver 2 twin space zebras.");
-                desc.push("And hurry it up, will you?");
+                desc.push("And don't take too long, would you kindly?");
             case (ClassC):
                 desc.push("It is DEFCON 1 and supplies are dwindling.");
                 desc.push("You have 2 minutes in total to fabricate your craft and");
@@ -160,7 +160,6 @@ class SelectDifficulty extends Process {
         if (ca.upPressed()) {
             var x = Main.ME.scene.mouseX;
             var y = Main.ME.scene.mouseY;
-            trace('X: $x Y: $y');
             select(selectedOption - 1);
         }
         else if (ca.downPressed()) {
