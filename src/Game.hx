@@ -37,15 +37,21 @@ class ContactListener extends B2ContactListener {
 		var fixtureA = contact.getFixtureA();
 		var fixtureB = contact.getFixtureB();
 		if (isOnType(fixtureA, sim.en.Ship) || isOnType(fixtureB, sim.en.Ship)) {
-			trace('ship collide');
+			Main.ME.leaderboards.removeFromScore(10);
+
+			if (Main.ME.leaderboards.getCurrentScore() == 0) {
+				Game.ME.endGame();
+			}
 		}
 		if (isOnType(fixtureA, sim.en.Package) && isOnType(fixtureB, sim.en.House)) {
 			(fixtureA.getUserData() : Package).destroy();
 			(fixtureB.getUserData() : House).destroy();
+			Main.ME.leaderboards.addToScore(500);
 		}
 		if (isOnType(fixtureA, sim.en.House) && isOnType(fixtureB, sim.en.Package)) {
 			(fixtureA.getUserData() : House).destroy();
 			(fixtureB.getUserData() : Package).destroy();
+			Main.ME.leaderboards.addToScore(500);
 		}
 	}
 	override function endContact(contact:B2Contact):Void { }
@@ -97,37 +103,11 @@ class Game extends Process {
 		scroller.add(background, Const.DP_BG);
 
 		Process.resizeAll();
-		trace(Lang.t._("Game is ready."));
 
 		world = new B2World(new B2Vec2(0, 0), true);
 		up = new B2Vec2(0, -50);
 
 		ship = new Ship(shipDefinition, world, Const.VIEWPORT_HEIGHT - 300, 300);
-
-/* NOTE:
-	These are ship parts and probably should not be their own entity.
-	I would use the ship definition passed into the Ship entity to
-	access what parts are where relative to the ship origin.
-
-		var thruster = new Thruster(world, 50, -80, 5, AXIS_LEFT_X_NEG);
-		var thruster2 = new Thruster(world, -50, -80, -5, AXIS_LEFT_X_POS);
-
-		var thruster3 = new Thruster(world, 50, 80, -2, AXIS_LEFT_X_POS);
-		var thruster4 = new Thruster(world, -50, 80, 2, AXIS_LEFT_X_NEG);
-
-		var jointDef = new B2WeldJointDef();
-		jointDef.initialize(ship.body, thruster.body, ship.body.getPosition());
-		world.createJoint(jointDef);
-
-		jointDef.initialize(ship.body, thruster2.body, ship.body.getPosition());
-		world.createJoint(jointDef);
-
-		jointDef.initialize(ship.body, thruster3.body, ship.body.getPosition());
-		world.createJoint(jointDef);
-
-		jointDef.initialize(ship.body, thruster4.body, ship.body.getPosition());
-		world.createJoint(jointDef);
-*/
 
 		var moonPosition = new h2d.col.Point(bounds.width * 0.7, bounds.height * 0.25);
 		moon = new Moon(world, Math.floor(moonPosition.x), Math.floor(moonPosition.y));
@@ -221,6 +201,14 @@ class Game extends Process {
 		for(e in Entity.ALL) if( !e.destroyed ) e.fixedUpdate();
 	}
 
+	public function endGame () {
+		delayer.addF(function() {
+			destroy();
+		}, 1);
+
+		Main.ME.startPostGame(this.gameMode);
+	}
+
 	override function update() {
 		super.update();
 		for(e in Entity.ALL) if( !e.destroyed ) {
@@ -231,10 +219,7 @@ class Game extends Process {
 		}
 
 		if (Entity.HOUSES.length == 0) {
-			delayer.addF(function() {
-				destroy();
-			}, 1);
-			Main.ME.startShipBuilding(this.gameMode);
+			endGame();
 		}
 
 		world.step(1 / 60,  3,  3);

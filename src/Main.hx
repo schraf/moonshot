@@ -94,6 +94,19 @@ class Main extends dn.Process {
 			new ShipBuilding(gameMode);
 	}
 
+	public function startPostGame(gameMode: Data.GameMode) {
+		if(PostGame.ME != null) {
+			PostGame.ME.destroy();
+
+			delayer.addF(function() {
+				new PostGame(gameMode.Id);
+			}, 1);
+		}
+		else {
+			new PostGame(gameMode.Id);
+		}
+	}
+
 	public function showMenu() {
 		if( Menu.ME!=null ) {
 			Menu.ME.destroy();

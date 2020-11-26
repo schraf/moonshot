@@ -30,13 +30,36 @@ class Leaderboards {
 
 	var name: String;
 	var leaderboards: Array<Leaderboard>;
+	var currentScore: Int;
 
 	public function new () {
 		this.leaderboards = new Array<Leaderboard>();
+		resetScore();
+		generateName();
+	}
+
+	public function getName (): String {
+		return this.name;
 	}
 
 	public function setName (name: String) {
 		this.name = name;
+	}
+
+	public function getCurrentScore() {
+		return this.currentScore;
+	}
+
+	public function resetScore () {
+		this.currentScore = 0;
+	}
+
+	public function addToScore (points: Int) {
+		this.currentScore += points;
+	}
+
+	public function removeFromScore (points: Int) {
+		this.currentScore = Math.floor(Math.max(0, this.currentScore - points));
 	}
 
 	public function getLeaderboard (gameMode: Data.GameModeKind): Leaderboard {
@@ -49,7 +72,7 @@ class Leaderboards {
 		return null;
 	}
 
-	public function setScore (gameMode: Data.GameModeKind, score: Int) {
+	public function finalizeScore (gameMode: Data.GameModeKind) {
 		var leaderboard = getLeaderboard(gameMode);
 
 		if (leaderboard == null) {
@@ -61,7 +84,7 @@ class Leaderboards {
 		params['action'] = 'set';
 		params['name'] = this.name;
 		params['leaderboard'] = Data.gameMode.get(gameMode).leaderboard;
-		params['score'] = Std.string(score);
+		params['score'] = Std.string(this.currentScore);
 
 		leaderboard.isLoading = true;
 
@@ -117,5 +140,15 @@ class Leaderboards {
 				trace('failed to load leaderboard ${gameMode} for ${this.name}');
 			}
 		});
+	}
+
+	function generateName () {
+		var name = '';
+
+		while (name.length < 5) {
+			name += String.fromCharCode(Math.floor(Math.random() * 26) + 65);
+		}
+
+		this.name = name;
 	}
 }
