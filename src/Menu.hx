@@ -19,7 +19,7 @@ class Menu extends Process {
 	var gameMode: Data.GameMode;
 
 	public function new() {
-
+		ME = this;
 		// TODO: add game mode selection
 		this.gameMode = Data.gameMode.get(Data.GameModeKind.ClassA);
 
@@ -104,9 +104,13 @@ class Menu extends Process {
 				destroy();
 				Main.ME.showCredits();
 			}
-			if (options[selectedOption] == NEW_GAME) {
+			else if (options[selectedOption] == NEW_GAME) {
 				destroy();
 				Main.ME.startShipBuilding(this.gameMode);
+			}
+			else if (options[selectedOption] == HOW_TO_PLAY) {
+				destroy();
+				Main.ME.showTutorial();
 			}
 		}
 	}

@@ -116,6 +116,17 @@ class Main extends dn.Process {
 			new Credits();
 	}
 
+	public function showTutorial() {
+		if( Tutorial.ME!=null ) {
+			Tutorial.ME.destroy();
+			delayer.addF(function() {
+				new Tutorial();
+			}, 1);
+		}
+		else
+			new Tutorial();
+	}
+
 	public function showSplashScreens() {
 		new SplashScreens();
 	}
