@@ -6,6 +6,10 @@ class Http {
 	static var redirectHREF = ~/HREF="([^"]+)"/im;
 
 	static public function get (url: String, params: HttpParameters, callback: HttpCallback) {
+		#if hl
+		sys.ssl.Socket.DEFAULT_VERIFY_CERT = false;
+		#end
+
 		var http = new haxe.Http(url);
 		var redirect: Bool = false;
 		var success: Bool = false;
@@ -38,7 +42,7 @@ class Http {
 			http.setParameter(key, params[key]);
 		}
 
-		http.request(false);
+		http.request();
 	}
 
 	static function redirectGet (url: String, callback: HttpCallback) {

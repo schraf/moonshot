@@ -26,7 +26,7 @@ class Leaderboard {
 }
 
 class Leaderboards {
-	static var url = 'https://script.google.com/macros/s/AKfycbwqak9eqr9H_tszMvdRPtBOO8pYAQ6ahaIkFkSqNUVYpzaxtt-r/exec';
+	static var url = 'https://script.google.com/a/schraffenberger.com/macros/s/AKfycbzWIp97IjYUDRvPAzFYS25m-yf08VkP-GBV3oBXhA/exec';
 
 	var name: String;
 	var leaderboards: Array<Leaderboard>;
@@ -49,6 +49,38 @@ class Leaderboards {
 		return null;
 	}
 
+	public function setScore (gameMode: Data.GameModeKind, score: Int) {
+		var leaderboard = getLeaderboard(gameMode);
+
+		if (leaderboard == null) {
+			leaderboard = new Leaderboard(gameMode);
+			this.leaderboards.push(leaderboard);
+		}
+
+		var params = new Http.HttpParameters();
+		params['action'] = 'set';
+		params['name'] = this.name;
+		params['leaderboard'] = Data.gameMode.get(gameMode).leaderboard;
+		params['score'] = Std.string(score);
+
+		leaderboard.isLoading = true;
+
+		Http.get(url, params, function (success: Bool, data: String): Void {
+			if (success) {
+				var result = haxe.Json.parse(data);
+
+				if (result.status == 'OK') {
+					leaderboard.rank = result.rank;
+					loadLeaderboard(gameMode);
+				} else {
+					trace('error from leaderboard service for ${gameMode} for ${this.name}');
+				}
+			} else {
+				trace('failed to set leaderboard ${gameMode} for ${this.name}');
+			}
+		});
+	}
+
 	public function loadLeaderboard (gameMode: Data.GameModeKind) {
 		var leaderboard = getLeaderboard(gameMode);
 
@@ -68,6 +100,18 @@ class Leaderboards {
 			if (success) {
 				var result = haxe.Json.parse(data);
 				leaderboard.rank = result.rank;
+				leaderboard.rankings = [];
+
+				var rankings: Array<Dynamic> = result.rankings;
+
+				for (ranking in rankings) {
+					var rank: Int = ranking[0];
+					var name: String = ranking[1];
+					var score: Int = ranking[2];
+
+					leaderboard.rankings.push(new LeaderboardRanking(name, rank, score));
+				}
+
 				leaderboard.isLoading = false;
 			} else {
 				trace('failed to load leaderboard ${gameMode} for ${this.name}');
@@ -75,4 +119,3 @@ class Leaderboards {
 		});
 	}
 }
-
