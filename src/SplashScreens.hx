@@ -1,3 +1,4 @@
+import h2d.Bitmap;
 import h2d.Flow.FlowAlign;
 import dn.Process;
 
@@ -35,26 +36,8 @@ class SplashScreens extends Process {
 			fadeOut();
 			1000;
 			removeText();
-			addText("In association with Shae's Youth Group");
-			fadeIn();
-			1500;
-			fadeOut();
-			1000;
-			removeText();
-			addText("An Edric Yu Joint");
-			fadeIn();
-			1500;
-			fadeOut();
-			1000;
-			removeText();
-			addText("Not sponsered by UPS, FedEx, or the USPS in any way");
-			fadeIn();
-			1500;
-			fadeOut();
-			1000;
-			removeText();
-			addText("SPACE MAIL");
-			addText("the game");
+			addLogo();
+			addText("Lunar Postal Service");
 			fadeIn();
 			3000;
 			fadeOut();
@@ -65,6 +48,11 @@ class SplashScreens extends Process {
 		});
 
 		Process.resizeAll();
+	}
+
+	function addLogo() {
+		var logo = new h2d.Bitmap(Assets.background.getTile('package'), flow);
+		logo.setScale(2);
 	}
 
 	function addText(str:String, c=0xFFFFFF) {
