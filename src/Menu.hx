@@ -19,13 +19,9 @@ class Menu extends Process {
 	var gameMode: Data.GameMode;
 
 	public function new() {
-
-		// TODO: add game mode selection
-		this.gameMode = Data.gameMode.get(Data.GameModeKind.ClassA);
-
 		#if skip_menu
 		destroy();
-		Main.ME.startShipBuilding(this.gameMode);
+		Main.ME.startShipBuilding(Data.gameMode.get(Data.GameModeKind.ClassA));
 		return;
 		#end
 
@@ -106,7 +102,7 @@ class Menu extends Process {
 			}
 			if (options[selectedOption] == NEW_GAME) {
 				destroy();
-				Main.ME.startShipBuilding(this.gameMode);
+				Main.ME.showSelectDifficulty();
 			}
 		}
 	}

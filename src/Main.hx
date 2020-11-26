@@ -69,7 +69,8 @@ class Main extends dn.Process {
 
 		// Start
 		new dn.heaps.GameFocusHelper(Boot.ME.s2d, Assets.fontMedium);
-		delayer.addF( showSplashScreens, 1 );
+		// delayer.addF( showSplashScreens, 1 );
+		delayer.addF( showMenu, 1 );
 	}
 
 	public function startGame(gameMode: Data.GameMode, shipDefinition: ShipDefinition) {
@@ -114,6 +115,17 @@ class Main extends dn.Process {
 		}
 		else
 			new Credits();
+	}
+
+	public function showSelectDifficulty() {
+		if( SelectDifficulty.ME!=null ) {
+			SelectDifficulty.ME.destroy();
+			delayer.addF(function() {
+				new SelectDifficulty();
+			}, 1);
+		}
+		else
+			new SelectDifficulty();
 	}
 
 	public function showSplashScreens() {
