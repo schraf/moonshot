@@ -1,7 +1,7 @@
+import hxd.Key;
 import h2d.Object;
 import h2d.Tile;
 import h2d.Bitmap;
-import h2d.Flow.FlowAlign;
 import dn.Process;
 
 class Tutorial extends Process {
@@ -38,7 +38,6 @@ class Tutorial extends Process {
 		background.addStars(bounds);
 		background.addMoon(Const.VIEWPORT_WIDTH * 0.8, Const.VIEWPORT_HEIGHT * 0.1, 0.3);
 
-		var colWidth = Const.VIEWPORT_WIDTH / 2;
 		addSection("Welcome to the Lunar Postal Service!", Assets.background.getTile('package'), Const.VIEWPORT_WIDTH, 0.75);
 		addSection("Your mission is to delevier packages to houses on the moon for as cheap as possible.", Assets.background.getTile('house'), Const.VIEWPORT_WIDTH, 0.75);
 		flow.addSpacing(20);
@@ -89,7 +88,7 @@ class Tutorial extends Process {
 	}
 
 	override function update() {
-        if (ca.bPressed()) {
+        if (ca.aPressed() || ca.bPressed() || ca.xPressed() || ca.yPressed() || ca.isKeyboardPressed(Key.ESCAPE)|| ca.isKeyboardPressed(Key.MOUSE_LEFT)) {
             destroy();
             Main.ME.showMenu();
         }

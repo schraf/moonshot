@@ -59,19 +59,26 @@ class ShipBuilding extends Process {
 				warningMessage.text = "Need " + (this.gameMode.numHouses - storageCount) + " more storage units";
 				return;
 			}
+
 			destroy();
 			Main.ME.startGame(this.gameMode, shipDefinition);
-		}
+		};
 
 		initPanel();
 
 		stats = new ShipStats();
 
 		Process.resizeAll();
+
+		Main.ME.leaderboards.resetScore();
 	}
 
 	private function warn(text: String) {
 		warningMessage.text = text;
+		delayer.cancelById('warningMessage');
+		delayer.addS('warningMessage', function() {
+			warningMessage.text = '';
+		}, 5);
 	}
 
 	private function initPanel () {
@@ -96,11 +103,11 @@ class ShipBuilding extends Process {
 			return true;
 		}
 		if (part.mass + stats.mass > gameMode.maxWeight) {
-			warningMessage.text = "Mass cannot exceed " + gameMode.maxWeight;
+			warn("Mass cannot exceed " + gameMode.maxWeight);
 			return false;
 		}
 		if (part.cost + stats.cost > gameMode.maxCost) {
-			warningMessage.text = "Cost cannot exceed " + gameMode.maxCost;
+			warn("Cost cannot exceed " + gameMode.maxCost);
 			return false;
 		}
 		if (part.id == Data.ShipPartKind.Package) {

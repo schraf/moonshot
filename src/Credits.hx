@@ -1,3 +1,4 @@
+import hxd.Key;
 import h2d.Text;
 import h2d.Flow.FlowAlign;
 import dn.Process;
@@ -15,6 +16,17 @@ class Credits extends Process {
 
         ca = Main.ME.controller.createAccess("credits");
 
+        var bounds = new h2d.col.Bounds();
+		bounds.set(0.0, 0.0, Const.VIEWPORT_WIDTH, Const.VIEWPORT_HEIGHT);
+		var center = bounds.getCenter();
+		var camera = Boot.ME.s2d.camera;
+		camera.setAnchor(0.5, 0.5);
+		camera.setPosition(center.x, center.y);
+
+		var background = new Background(root);
+		background.addStars(bounds);
+		background.addMoon(Const.VIEWPORT_WIDTH * 0.8, Const.VIEWPORT_HEIGHT * 0.1, 0.3);
+
         flow = new h2d.Flow(root);
 		flow.layout = Vertical;
 		flow.fillWidth = true;
@@ -30,7 +42,10 @@ class Credits extends Process {
         addText("Marc Scraffenberger");
         addText("Luke Brom");
         flow.addSpacing(50);
-        addText("(press enter button to go back)");
+
+        var tf = new h2d.Text(Assets.fontSmall, flow);
+		tf.text = "Press Any Key";
+        tf.textColor = 0xFFFFFF;
 
 		Process.resizeAll();
 	}
@@ -61,7 +76,7 @@ class Credits extends Process {
     }
 
     override function update() {
-        if (ca.bPressed()) {
+        if (ca.aPressed() || ca.bPressed() || ca.xPressed() || ca.yPressed() || ca.isKeyboardPressed(Key.ESCAPE) || ca.isKeyboardPressed(Key.MOUSE_LEFT)) {
             destroy();
             Main.ME.showMenu();
         }

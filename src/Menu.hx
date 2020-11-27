@@ -1,3 +1,4 @@
+import h2d.Interactive;
 import h2d.Text;
 import h2d.Flow.FlowAlign;
 import dn.Process;
@@ -32,6 +33,17 @@ class Menu extends Process {
 
 		ca = Main.ME.controller.createAccess("menu");
 
+		var bounds = new h2d.col.Bounds();
+		bounds.set(0.0, 0.0, Const.VIEWPORT_WIDTH, Const.VIEWPORT_HEIGHT);
+		var center = bounds.getCenter();
+		var camera = Boot.ME.s2d.camera;
+		camera.setAnchor(0.5, 0.5);
+		camera.setPosition(center.x, center.y);
+
+		var background = new Background(root);
+		background.addStars(bounds);
+		background.addMoon(Const.VIEWPORT_WIDTH * 0.8, Const.VIEWPORT_HEIGHT * 0.1, 0.3);
+
 		flow = new h2d.Flow(root);
 		flow.layout = Vertical;
 		flow.fillWidth = true;
@@ -41,10 +53,10 @@ class Menu extends Process {
 
 		addText("MAIN MENU");
 		flow.addSpacing(50);
-		addText("New Game");
-		addText("How To Play");
-		addText("Leaderboards");
-		addText("Credits");
+		addButton("New Game", 0);
+		addButton("How To Play", 1);
+		addButton("Leaderboards", 2);
+		addButton("Credits", 3);
 
 		options = [NEW_GAME, HOW_TO_PLAY, LEADERBOARD, CREDITS];
 		selectedOption = 0;
@@ -57,6 +69,24 @@ class Menu extends Process {
 		var tf = new h2d.Text(Assets.fontLarge, flow);
 		tf.text = str;
 		tf.textColor = c;
+		return tf;
+	}
+
+	function addButton(str:String, option: Int) {
+		var tf = addText(str);
+		var interactive = new Interactive(tf.calcTextWidth(str), tf.textHeight, tf);
+		interactive.enableRightButton = true;
+
+		interactive.onPush = function (event: hxd.Event) {
+			if (event.button == 0) {
+				selectedOption = option;
+				buttonPressed();
+			}
+		}
+
+		interactive.onOver = function (event: hxd.Event) {
+			select(option);
+		}
 	}
 
 	function select(optionToSelect: Int) {
@@ -110,6 +140,26 @@ class Menu extends Process {
 				destroy();
 				Main.ME.showTutorial();
 			}
+			buttonPressed();
+		}
+	}
+
+	function buttonPressed() {
+		if (options[selectedOption] == CREDITS) {
+			destroy();
+			Main.ME.showCredits();
+		}
+		else if (options[selectedOption] == NEW_GAME) {
+			destroy();
+			Main.ME.showSelectDifficulty();
+		}
+		else if (options[selectedOption] == HOW_TO_PLAY) {
+			destroy();
+			Main.ME.showTutorial();
+		}
+		else if (options[selectedOption] == LEADERBOARD) {
+			destroy();
+			Main.ME.startLeaderboards(Data.gameMode.get(Data.GameModeKind.ClassA));
 		}
 	}
 }
