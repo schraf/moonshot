@@ -69,11 +69,11 @@ class ShipLayoutCell extends h2d.Object {
 		if (this.part == part) {
 			return;
 		}
-		
+
 		if (this.part != null && this.part.flags.has(Data.ShipPart_flags.locked)) {
 			return;
 		}
-		
+
 		if ((part != null && !part.flags.has(Data.ShipPart_flags.locked)) &&
 			!ShipLayout.Instance.isCellConnected(cellX, cellY)) {
 				return;
@@ -93,7 +93,7 @@ class ShipLayoutCell extends h2d.Object {
 
 		this.part = part;
 
-		ShipBuilding.ME.buildPart(part);
+		ShipBuilding.ME.onBuildPart();
 		ShipLayout.Instance.onCellModified(this.cellX, this.cellY);
 	}
 
@@ -144,7 +144,9 @@ class ShipLayout extends h2d.Flow {
 			}
 
 		}
+	}
 
+	public function addCore () {
 		getShipPartCell(Math.floor(Const.SHIP_WIDTH / 2), Math.floor(Const.SHIP_HEIGHT / 2)).setPart(Data.shipPart.get(Data.ShipPartKind.Core));
 	}
 

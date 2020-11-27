@@ -68,7 +68,7 @@ class ShipBuilding extends Process {
 		stats = new ShipStats();
 
 		Process.resizeAll();
-
+		layout.addCore();
 		Main.ME.leaderboards.resetScore();
 	}
 
@@ -112,25 +112,23 @@ class ShipBuilding extends Process {
 		return true;
 	}
 
-	public function buildPart(partToAdd: Data.ShipPart) {
+	public function onBuildPart() {
 		if (stats == null || layout == null) {
 			return;
 		}
-		if (partToAdd == null) {
-			stats.clear();
-			for (cell in layout.cells) {
-				var part = cell.getPart();
-				if (part != null) {
-					stats.mass += part.mass;
-					stats.cost += part.cost;
-					stats.fuel += part.power_capacity;
-				}
+
+		stats.clear();
+
+		for (cell in layout.cells) {
+			var part = cell.getPart();
+
+			if (part != null) {
+				stats.mass += part.mass;
+				stats.cost += part.cost;
+				stats.fuel += Math.round(part.power_capacity);
 			}
-		} else {
-			stats.mass += partToAdd.mass;
-			stats.cost += partToAdd.cost;
-			stats.fuel += partToAdd.power_capacity;
 		}
+
 		stats.refresh();
 	}
 

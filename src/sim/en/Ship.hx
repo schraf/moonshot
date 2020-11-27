@@ -1,5 +1,6 @@
 package sim.en;
 
+import sim.components.PowerSupply;
 import ShipDefinition.ShipPartDefinition;
 import box2D.dynamics.B2FilterData;
 import hxd.res.Font;
@@ -28,12 +29,14 @@ class Ship extends Entity {
 
 	var shipDefinition: ShipDefinition;
 	var visuals: h2d.Object;
+	var powerSupply: sim.components.PowerSupply;
 
 	var numPackages = 0;
 	var energyIncome = 0;
 	var energyCapacity = 0;
 	var shieldIncome = 0;
 	var shieldCapacity = 0;
+	var mass: Int;
 	var forwardBoosters: Array<B2Vec2> = [];
 	var backwardsBoosters: Array<B2Vec2> = [];
 	var leftBoosters: Array<B2Vec2> = [];
@@ -50,7 +53,7 @@ class Ship extends Entity {
 		this.shipDefinition = shipDefinition;
 
 		visuals = ShipVisuals.createFromDefinition(this.shipDefinition, shipPartWidth, shipPartHeight, spr);
-		
+
 		var shape = new B2PolygonShape();
 
 		var filterData = new B2FilterData();
@@ -72,8 +75,16 @@ class Ship extends Entity {
 		bodyDef.position.set(x/100, y/100); // div by 100 for b2 coords
 
 		this.body = b2world.createBody(bodyDef);
-		
+		this.mass = 0;
+
+		var powerCapacity: Float = 0.0;
+		var powerRechargeRate: Float = 0.0;
+
 		for(shipPart in shipDefinition.parts) {
+			powerCapacity += shipPart.part.power_capacity;
+			powerRechargeRate += shipPart.part.recharge_rate;
+			this.mass += shipPart.part.mass;
+
 			switch shipPart.part.id {
 				case Data.ShipPartKind.Booster:
 					addBooster(shipPart);
@@ -94,6 +105,7 @@ class Ship extends Entity {
 			this.body.createFixture(fixtureDef);
 		}
 
+		this.powerSupply = new sim.components.PowerSupply(powerCapacity, powerRechargeRate);
 		ca = Main.ME.controller.createAccess("hero"); // creates an instance of controller
 	}
 
@@ -101,7 +113,7 @@ class Ship extends Entity {
 		var origin = new B2Vec2();
 		origin.x += shipPart.x * shipPartWidth - shipPartOffsetX;
 		origin.y += shipPart.y * shipPartHeight - shipPartOffsetY;
-		
+
 		switch shipPart.rotation {
 			case 0:
 				forwardBoosters.push(origin);
@@ -153,35 +165,67 @@ class Ship extends Entity {
 		ca.dispose(); // release on destruction
 	}
 
+	function calculateForce (boosters: Int): Float {
+		var powerUsage: Float = boosters * Data.shipPart.get(Data.ShipPartKind.Booster).power_usage;
+		var force: Float = 0.0;
+
+		if (this.powerSupply.consumePower(powerUsage)) {
+			force = boosters * (this.mass / 1000.0);
+		}
+
+		return force;
+	}
+
 	override function update() {
 		super.update();
+
+		this.powerSupply.update();
+		game.hud.powerSupply.setValue(this.powerSupply.getCurrentPowerPercentage());
+
 		var theta = body.getAngle();
 		var p = body.getPosition();
 		setPosPixel(p.x * 100, p.y * 100);
 		spr.rotation = theta;
 
 		var center = this.body.getPosition();
-		if (ca.upDown() || ca.isKeyboardDown(hxd.Key.UP)) {		
-			var forceVec = this.body.getWorldVector(new B2Vec2(0, forwardBoosters.length *-1));
-			this.body.applyForce(forceVec, center);
-			fireBoosterParticles(forwardBoosters, theta);
+		if (ca.upDown() || ca.isKeyboardDown(hxd.Key.UP)) {
+			var force = this.calculateForce(forwardBoosters.length);
+
+			if (force > 0.0) {
+				var forceVec = this.body.getWorldVector(new B2Vec2(0, force *-1));
+				this.body.applyForce(forceVec, center);
+				fireBoosterParticles(forwardBoosters, theta);
+			}
 		}
 
 		if (ca.downDown() || ca.isKeyboardDown(hxd.Key.DOWN)) {
-		  var forceVec = this.body.getWorldVector(new B2Vec2(0, backwardsBoosters.length));
-		  this.body.applyForce(forceVec, center);
-		  fireBoosterParticles(backwardsBoosters, theta + Math.PI);
+			var force = this.calculateForce(backwardsBoosters.length);
+
+			if (force > 0.0) {
+				var forceVec = this.body.getWorldVector(new B2Vec2(0, force));
+				this.body.applyForce(forceVec, center);
+				fireBoosterParticles(backwardsBoosters, theta + Math.PI);
+			}
 		}
 
 		if (ca.leftDown() || ca.isKeyboardDown(hxd.Key.LEFT)) {
-			var forceVec = this.body.getWorldVector(new B2Vec2(leftBoosters.length *-1, 0));
-			this.body.applyForce(forceVec, center);
-			fireBoosterParticles(leftBoosters, theta + Math.PI + Math.PI/2);
+			var force = this.calculateForce(leftBoosters.length);
+
+			if (force > 0.0) {
+				var forceVec = this.body.getWorldVector(new B2Vec2(force *-1, 0));
+				this.body.applyForce(forceVec, center);
+				fireBoosterParticles(leftBoosters, theta + Math.PI + Math.PI/2);
+			}
 		}
+
 		if (ca.rightDown() || ca.isKeyboardDown(hxd.Key.RIGHT)) {
-			var forceVec = this.body.getWorldVector(new B2Vec2(rightBoosters.length, 0));
-			this.body.applyForce(forceVec, center);
-			fireBoosterParticles(rightBoosters, theta + Math.PI/2);
+			var force = this.calculateForce(rightBoosters.length);
+
+			if (force > 0.0) {
+				var forceVec = this.body.getWorldVector(new B2Vec2(force, 0));
+				this.body.applyForce(forceVec, center);
+				fireBoosterParticles(rightBoosters, theta + Math.PI/2);
+			}
 		}
 
 

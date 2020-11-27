@@ -40,7 +40,7 @@ class ShipStats {
 	}
 
 	public function refresh() {
-		fuelText.text = "Fuel: " + fuel;
+		fuelText.text = "Power: " + fuel;
 		costText.text = "Cost: " + cost;
 		massText.text = "Mass: " + mass;
 	}

@@ -211,10 +211,13 @@ class Game extends Process {
 
 	override function update() {
 		super.update();
-		for(e in Entity.ALL) if( !e.destroyed ) {
-			e.update();
-			if (e.body != null && !e.ignoreGravity) {
-				moon.applyGravity(e.body);
+
+		if (!ui.Console.ME.hasFlag('nogravity')) {
+			for(e in Entity.ALL) if( !e.destroyed ) {
+				e.update();
+				if (e.body != null && !e.ignoreGravity) {
+					moon.applyGravity(e.body);
+				}
 			}
 		}
 

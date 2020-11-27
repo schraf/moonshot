@@ -24,11 +24,11 @@
 					"display": null
 				},
 				{
-					"typeStr": "3",
+					"typeStr": "4",
 					"name": "power_usage"
 				},
 				{
-					"typeStr": "3",
+					"typeStr": "4",
 					"name": "power_capacity"
 				},
 				{
@@ -40,6 +40,11 @@
 					"name": "scale",
 					"opt": true,
 					"display": null
+				},
+				{
+					"typeStr": "4",
+					"name": "recharge_rate",
+					"display": null
 				}
 			],
 			"lines": [
@@ -47,10 +52,11 @@
 					"cost": 20,
 					"mass": 100,
 					"tile_name": "thruster",
-					"power_usage": 80,
+					"power_usage": 1,
 					"id": "Booster",
 					"power_capacity": 0,
-					"flags": 3
+					"flags": 3,
+					"recharge_rate": 0
 				},
 				{
 					"cost": 100,
@@ -59,7 +65,8 @@
 					"power_usage": 0,
 					"id": "Package",
 					"power_capacity": 0,
-					"flags": 2
+					"flags": 2,
+					"recharge_rate": 0
 				},
 				{
 					"cost": 75,
@@ -68,16 +75,18 @@
 					"power_usage": 0,
 					"id": "Battery",
 					"power_capacity": 0,
-					"flags": 2
+					"flags": 2,
+					"recharge_rate": 0
 				},
 				{
 					"cost": 60,
 					"mass": 75,
 					"tile_name": "laser",
-					"power_usage": 500,
+					"power_usage": 5,
 					"id": "Laser",
 					"power_capacity": 0,
-					"flags": 3
+					"flags": 3,
+					"recharge_rate": 0
 				},
 				{
 					"cost": 50,
@@ -85,17 +94,19 @@
 					"tile_name": "solar",
 					"power_usage": 0,
 					"id": "SolarPanel",
-					"power_capacity": 1000,
-					"flags": 2
+					"power_capacity": 100,
+					"flags": 2,
+					"recharge_rate": 0.1
 				},
 				{
 					"id": "Shield",
 					"cost": 60,
 					"mass": 80,
 					"tile_name": "shield",
-					"power_usage": 50,
+					"power_usage": 5,
 					"power_capacity": 0,
-					"flags": 2
+					"flags": 2,
+					"recharge_rate": 0
 				},
 				{
 					"id": "Core",
@@ -103,9 +114,10 @@
 					"mass": 50,
 					"tile_name": "core",
 					"power_usage": 0,
-					"power_capacity": 0,
+					"power_capacity": 25,
 					"flags": 12,
-					"scale": 0.7
+					"scale": 0.7,
+					"recharge_rate": 0.1
 				}
 			],
 			"separators": [],
