@@ -102,10 +102,6 @@ class ShipBuilding extends Process {
 		if (stats == null || layout == null || part == null) {
 			return true;
 		}
-		if (part.mass + stats.mass > gameMode.maxWeight) {
-			warn("Mass cannot exceed " + gameMode.maxWeight);
-			return false;
-		}
 		if (part.cost + stats.cost > gameMode.maxCost) {
 			warn("Cost cannot exceed " + gameMode.maxCost);
 			return false;

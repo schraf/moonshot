@@ -1,3 +1,5 @@
+import cdb.DiffFile;
+import h2d.Interactive;
 import h2d.Bitmap;
 import sim.en.House;
 import h2d.Flow;
@@ -16,7 +18,7 @@ class Difficulty {
     }
 
     public function description() {
-        var desc = ['Budget: ' + gameMode().maxCost + ' Weight: ' + gameMode().maxWeight];
+        var desc = ['Budget: ' + gameMode().maxCost];
         switch (gameModeKind) {
             case (ClassA):
                 desc.push("This one is easy. In fact, the customer doesn't");
@@ -109,8 +111,9 @@ class SelectDifficulty extends Process {
 
         addText("Difficulty");
         flow.addSpacing(50);
-        for (o in options)
-            addText(o.title);
+        addButton(Difficulty.EASY.title, 0);
+        addButton(Difficulty.MEDIUM.title, 1);
+        addButton(Difficulty.HARD.title, 2);
         flow.addSpacing(50);
 
         selectedOption = 0;
@@ -132,6 +135,24 @@ class SelectDifficulty extends Process {
         var tf = new h2d.Text(Assets.fontLarge, flow);
         tf.text = str;
         tf.textColor = c;
+        return tf;
+    }
+
+    function addButton(str:String, option: Int) {
+		var tf = addText(str);
+		var interactive = new Interactive(tf.calcTextWidth(str), tf.textHeight, tf);
+		interactive.enableRightButton = true;
+
+		interactive.onPush = function (event: hxd.Event) {
+			if (event.button == 0) {
+				selectedOption = option;
+				buttonPressed();
+			}
+		}
+
+		interactive.onOver = function (event: hxd.Event) {
+			select(option);
+		}
     }
 
     function setDescription(diff: Difficulty) {
@@ -190,9 +211,13 @@ class SelectDifficulty extends Process {
         else if (ca.downPressed()) {
             select(selectedOption + 1);
         } else if (ca.bPressed()) {
-            destroy();
-            Main.ME.startShipBuilding(options[selectedOption].gameMode());
+            buttonPressed();
         }
+    }
+
+    function buttonPressed() {
+        destroy();
+        Main.ME.startShipBuilding(options[selectedOption].gameMode());
     }
 }
 
