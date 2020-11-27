@@ -37,11 +37,7 @@ class ContactListener extends B2ContactListener {
 		var fixtureA = contact.getFixtureA();
 		var fixtureB = contact.getFixtureB();
 		if (isOnType(fixtureA, sim.en.Ship) || isOnType(fixtureB, sim.en.Ship)) {
-			Main.ME.leaderboards.removeFromScore(10);
-
-			if (Main.ME.leaderboards.getCurrentScore() == 0) {
-				Game.ME.endGame();
-			}
+			Game.ME.ship.onCollision();
 		}
 		if (isOnType(fixtureA, sim.en.Package) && isOnType(fixtureB, sim.en.House)) {
 			(fixtureA.getUserData() : Package).destroy();
@@ -70,7 +66,7 @@ class Game extends Process {
 	public var world:B2World;
 	public var moon: Moon;
 
-	var ship: Ship;
+	public var ship: Ship;
 	var up:B2Vec2;
 
 	public function new(gameMode: Data.GameMode, shipDefinition: ShipDefinition) {

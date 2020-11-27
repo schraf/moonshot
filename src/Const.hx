@@ -26,6 +26,7 @@ class Const {
 	public static var SHIP_HEIGHT = 9;
 	public static var SHIP_PART_SCALE = 0.1;
 	public static var SHIP_PART_ROTATE_SPEED = 0.001;
+	public static var SHIP_HULL_STRENGTH = 1000.0;
 
 	public static var SHIP_PANEL_WIDTH = 400;
 }

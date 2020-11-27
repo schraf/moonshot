@@ -32,10 +32,8 @@ class Ship extends Entity {
 	var powerSupply: sim.components.PowerSupply;
 
 	var numPackages = 0;
-	var energyIncome = 0;
-	var energyCapacity = 0;
-	var shieldIncome = 0;
-	var shieldCapacity = 0;
+	var numShields = 0;
+	var hullStrength: Float = Const.SHIP_HULL_STRENGTH;
 	var mass: Int;
 	var forwardBoosters: Array<B2Vec2> = [];
 	var backwardsBoosters: Array<B2Vec2> = [];
@@ -93,9 +91,7 @@ class Ship extends Entity {
 				case Data.ShipPartKind.Shield:
 					addShield(shipPart);
 				case Data.ShipPartKind.SolarPanel:
-					addSolarPanel(shipPart);
 				case Data.ShipPartKind.Battery:
-					addBattery(shipPart);
 				case Data.ShipPartKind.Package:
 					addPackage(shipPart);
 				case Data.ShipPartKind.Core:
@@ -144,16 +140,7 @@ class Ship extends Entity {
 	}
 
 	function addShield(shipPart: ShipPartDefinition) {
-		shieldIncome += 5;
-		shieldCapacity += 100;
-	}
-
-	function addSolarPanel(shipPart: ShipPartDefinition) {
-		energyIncome += 10;
-	}
-
-	function addBattery(shipPart: ShipPartDefinition) {
-		energyCapacity += 100;
+		numShields += 1;
 	}
 
 	function addPackage(shipPart: ShipPartDefinition) {
@@ -163,6 +150,33 @@ class Ship extends Entity {
 	override function dispose() {
 		super.dispose();
 		ca.dispose(); // release on destruction
+	}
+
+	public function onCollision () {
+		if (cd.has('shipCollision')) {
+			return;
+		}
+
+		cd.setS('shipCollision', 0.5);
+
+		var damage: Float = 100.0;
+
+		if (numShields >= 1) {
+			if (this.powerSupply.consumePower(Data.shipPart.get(Data.ShipPartKind.Shield).power_usage)) {
+				damage -= 10.0;
+			}
+		}
+
+		if (damage > 0) {
+			this.hullStrength = Math.max(0, this.hullStrength - damage);
+			game.hud.hull.setValue(this.hullStrength / Const.SHIP_HULL_STRENGTH);
+			Main.ME.leaderboards.removeFromScore(1);
+
+			if (this.hullStrength <= 0) {
+				// POLISH: explosion
+				Game.ME.endGame();
+			}
+		}
 	}
 
 	function calculateForce (boosters: Int): Float {

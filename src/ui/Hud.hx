@@ -8,6 +8,7 @@ class Hud extends dn.Process {
 	var invalidated = true;
 
 	public var powerSupply: ProgressBar;
+	public var hull: ProgressBar;
 
 	public function new() {
 		super(Game.ME);
@@ -20,8 +21,13 @@ class Hud extends dn.Process {
 		flow.paddingTop = 50;
 
 		var panel = new Panel('Ship Systems', flow);
+
 		powerSupply = new ProgressBar('Power', 300, 50);
 		panel.addRow(powerSupply);
+
+		hull = new ProgressBar('Hull', 300, 50);
+		panel.addRow(hull);
+
 		panel.addFooter();
 	}
 
