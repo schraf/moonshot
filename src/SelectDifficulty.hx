@@ -1,10 +1,8 @@
-import cdb.DiffFile;
 import h2d.Interactive;
-import h2d.Bitmap;
-import sim.en.House;
 import h2d.Flow;
 import h2d.Text;
 import dn.Process;
+
 class Difficulty {
     public var title: String;
     public var gameModeKind: Data.GameModeKind;
@@ -177,7 +175,7 @@ class SelectDifficulty extends Process {
         flow.getChildAt(options[optionToSelect].id).alpha = 0.5;
         setDescription(options[optionToSelect]);
         // updateHouses(options[selectedOption]);
-        
+
         selectedOption = optionToSelect;
     }
 
