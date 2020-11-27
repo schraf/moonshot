@@ -1,3 +1,4 @@
+import hxd.Key;
 import dn.Process;
 
 enum PostGameState {
@@ -16,13 +17,13 @@ class PostGame extends Process {
 	var gameMode: Data.GameModeKind;
 	var loadingText: h2d.Object;
 
-	public function new(gameMode: Data.GameModeKind) {
+	public function new(gameMode: Data.GameModeKind, postGameState: PostGameState = PostGameState.FINALIZE_SCORE) {
 		super(Main.ME);
 		createRoot(Main.ME.root);
 		ME = this;
 
 		this.gameMode = gameMode;
-		this.state = PostGameState.FINALIZE_SCORE;
+		this.state = postGameState;
 		this.ca = Main.ME.controller.createAccess("postgame");
 
 		var bounds = new h2d.col.Bounds();
@@ -43,7 +44,7 @@ class PostGame extends Process {
 		background.addStars(bounds);
 		background.addMoon(Const.VIEWPORT_WIDTH * 0.8, Const.VIEWPORT_HEIGHT * 0.1, 0.3);
 
-		addTitle('GAME OVER');
+		this.state == PostGameState.FINALIZE_SCORE ? addTitle('GAME OVER') : addTitle('LEADERBOARDS');
 		flow.addSpacing(100);
 		this.loadingText = addText('Loading leaderboards ...');
 
@@ -93,6 +94,11 @@ class PostGame extends Process {
 			case PostGameState.LOAD_LEADERBOARD: {
 				var leaderboard = Main.ME.leaderboards.getLeaderboard(this.gameMode);
 
+				if (leaderboard == null) {
+					Main.ME.leaderboards.loadLeaderboard(this.gameMode);
+					leaderboard = Main.ME.leaderboards.getLeaderboard(this.gameMode);
+				}
+
 				if (!leaderboard.isLoading) {
 					this.loadingText.remove();
 
@@ -114,7 +120,7 @@ class PostGame extends Process {
 			}
 
 			case PostGameState.READY: {
-				if (ca.aPressed() || ca.bPressed() || ca.xPressed() || ca.yPressed()) {
+				if (ca.aPressed() || ca.bPressed() || ca.xPressed() || ca.yPressed() || ca.isKeyboardPressed(Key.ESCAPE)) {
 					destroy();
 					Main.ME.showMenu();
 				}

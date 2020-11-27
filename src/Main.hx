@@ -1,3 +1,4 @@
+import PostGame.PostGameState;
 import Data;
 import hxd.Key;
 
@@ -104,6 +105,19 @@ class Main extends dn.Process {
 		}
 		else {
 			new PostGame(gameMode.Id);
+		}
+	}
+
+	public function startLeaderboards(gameMode: Data.GameMode) {
+		if(PostGame.ME != null) {
+			PostGame.ME.destroy();
+
+			delayer.addF(function() {
+				new PostGame(gameMode.Id, PostGameState.LOAD_LEADERBOARD);
+			}, 1);
+		}
+		else {
+			new PostGame(gameMode.Id, PostGameState.LOAD_LEADERBOARD);
 		}
 	}
 

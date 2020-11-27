@@ -34,6 +34,17 @@ class Menu extends Process {
 
 		ca = Main.ME.controller.createAccess("menu");
 
+		var bounds = new h2d.col.Bounds();
+		bounds.set(0.0, 0.0, Const.VIEWPORT_WIDTH, Const.VIEWPORT_HEIGHT);
+		var center = bounds.getCenter();
+		var camera = Boot.ME.s2d.camera;
+		camera.setAnchor(0.5, 0.5);
+		camera.setPosition(center.x, center.y);
+
+		var background = new Background(root);
+		background.addStars(bounds);
+		background.addMoon(Const.VIEWPORT_WIDTH * 0.8, Const.VIEWPORT_HEIGHT * 0.1, 0.3);
+
 		flow = new h2d.Flow(root);
 		flow.layout = Vertical;
 		flow.fillWidth = true;
@@ -111,6 +122,10 @@ class Menu extends Process {
 			else if (options[selectedOption] == HOW_TO_PLAY) {
 				destroy();
 				Main.ME.showTutorial();
+			}
+			else if (options[selectedOption] == LEADERBOARD) {
+				destroy();
+				Main.ME.startLeaderboards(this.gameMode);
 			}
 		}
 	}
