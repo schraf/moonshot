@@ -16,19 +16,14 @@ class Menu extends Process {
 	var options: Array<Int>;
 
 	var selectedOption: Int;
-	var gameMode: Data.GameMode;
 
 	public function new() {
-<<<<<<< HEAD
-=======
 		ME = this;
-		// TODO: add game mode selection
-		this.gameMode = Data.gameMode.get(Data.GameModeKind.ClassA);
 
->>>>>>> 88b258f705ad4b3fddc97118d882d0788fb1efb0
 		#if skip_menu
 		destroy();
-		Main.ME.startShipBuilding(Data.gameMode.get(Data.GameModeKind.ClassA));
+		// Main.ME.startShipBuilding(Data.gameMode.get(Data.GameModeKind.ClassA));
+		Main.ME.showSelectDifficulty();
 		return;
 		#end
 

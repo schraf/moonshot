@@ -117,7 +117,6 @@ class Main extends dn.Process {
 			new Credits();
 	}
 
-<<<<<<< HEAD
 	public function showSelectDifficulty() {
 		if( SelectDifficulty.ME!=null ) {
 			SelectDifficulty.ME.destroy();
@@ -127,7 +126,8 @@ class Main extends dn.Process {
 		}
 		else
 			new SelectDifficulty();
-=======
+	}
+	
 	public function showTutorial() {
 		if( Tutorial.ME!=null ) {
 			Tutorial.ME.destroy();
@@ -137,7 +137,6 @@ class Main extends dn.Process {
 		}
 		else
 			new Tutorial();
->>>>>>> 88b258f705ad4b3fddc97118d882d0788fb1efb0
 	}
 
 	public function showSplashScreens() {
