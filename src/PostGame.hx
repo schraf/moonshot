@@ -120,7 +120,7 @@ class PostGame extends Process {
 			}
 
 			case PostGameState.READY: {
-				if (ca.aPressed() || ca.bPressed() || ca.xPressed() || ca.yPressed() || ca.isKeyboardPressed(Key.ESCAPE)) {
+				if (ca.aPressed() || ca.bPressed() || ca.xPressed() || ca.yPressed() || ca.isKeyboardPressed(Key.ESCAPE)|| ca.isKeyboardPressed(Key.MOUSE_LEFT)) {
 					destroy();
 					Main.ME.showMenu();
 				}

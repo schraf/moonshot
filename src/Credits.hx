@@ -42,7 +42,10 @@ class Credits extends Process {
         addText("Marc Scraffenberger");
         addText("Luke Brom");
         flow.addSpacing(50);
-        addText("(press enter button to go back)");
+
+        var tf = new h2d.Text(Assets.fontSmall, flow);
+		tf.text = "Press Any Key";
+        tf.textColor = 0xFFFFFF;
 
 		Process.resizeAll();
 	}
@@ -73,7 +76,7 @@ class Credits extends Process {
     }
 
     override function update() {
-        if (ca.aPressed() || ca.bPressed() || ca.xPressed() || ca.yPressed() || ca.isKeyboardPressed(Key.ESCAPE)) {
+        if (ca.aPressed() || ca.bPressed() || ca.xPressed() || ca.yPressed() || ca.isKeyboardPressed(Key.ESCAPE) || ca.isKeyboardPressed(Key.MOUSE_LEFT)) {
             destroy();
             Main.ME.showMenu();
         }
