@@ -1,3 +1,5 @@
+import h2d.Bitmap;
+import dn.Rand;
 
 class Background extends h2d.Layers
 {

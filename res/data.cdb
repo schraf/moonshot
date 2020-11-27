@@ -59,8 +59,8 @@
 					"recharge_rate": 0
 				},
 				{
-					"cost": 100,
-					"mass": 200,
+					"cost": 0,
+					"mass": 50,
 					"tile_name": "storage",
 					"power_usage": 0,
 					"id": "Package",
@@ -198,7 +198,7 @@
 				{
 					"numAsteroids": 1,
 					"numHouses": 1,
-					"maxCost": 1000,
+					"maxCost": 1500,
 					"maxWeight": 1000,
 					"Id": "ClassA",
 					"leaderboard": "ClassA"
@@ -215,7 +215,7 @@
 					"Id": "ClassC",
 					"numAsteroids": 5,
 					"numHouses": 3,
-					"maxCost": 500,
+					"maxCost": 300,
 					"maxWeight": 250,
 					"leaderboard": "ClassC"
 				}

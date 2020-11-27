@@ -13,6 +13,7 @@ class ShipBuilding extends Process {
 	public var warningMessage: Text;
 
 	var stats: ShipStats;
+	var storageCount: Int = 0;
 
 	public function new(gameMode: Data.GameMode) {
 		super(Main.ME);
@@ -48,14 +49,14 @@ class ShipBuilding extends Process {
 
 		launchButton.onPush = function (event: hxd.Event) {
 			var shipDefinition = layout.toShipDefinition();
-			var packages = 0;
+			storageCount = 0;
 			for (shipPart in shipDefinition.parts) {
 				if (shipPart.part.id == Data.ShipPartKind.Package) {
-					packages++;
+					storageCount++;
 				}
 			}
-			if (this.gameMode.numHouses > packages) {
-				warn('Need ${this.gameMode.numHouses - packages} more storage units');
+			if (this.gameMode.numHouses > storageCount) {
+				warningMessage.text = "Need " + (this.gameMode.numHouses - storageCount) + " more storage units";
 				return;
 			}
 
@@ -101,13 +102,21 @@ class ShipBuilding extends Process {
 		if (stats == null || layout == null || part == null) {
 			return true;
 		}
-		if (part.mass + stats.mass > gameMode.maxWeight) {
-			warn("Mass cannot exceed " + gameMode.maxWeight);
-			return false;
-		}
 		if (part.cost + stats.cost > gameMode.maxCost) {
 			warn("Cost cannot exceed " + gameMode.maxCost);
 			return false;
+		}
+		if (part.id == Data.ShipPartKind.Package) {
+			storageCount = 1;
+			for (shipPart in layout.toShipDefinition().parts) {
+				if (shipPart.part.id == Data.ShipPartKind.Package) {
+					storageCount++;
+				}
+			}
+			if (storageCount > gameMode.numHouses) {
+				warningMessage.text = "You only need " + gameMode.numHouses + " storage units.";
+				return false;
+			}
 		}
 		return true;
 	}

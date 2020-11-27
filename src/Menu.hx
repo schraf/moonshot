@@ -17,16 +17,14 @@ class Menu extends Process {
 	var options: Array<Int>;
 
 	var selectedOption: Int;
-	var gameMode: Data.GameMode;
 
 	public function new() {
 		ME = this;
-		// TODO: add game mode selection
-		this.gameMode = Data.gameMode.get(Data.GameModeKind.ClassA);
 
 		#if skip_menu
 		destroy();
-		Main.ME.startShipBuilding(this.gameMode);
+		// Main.ME.startShipBuilding(Data.gameMode.get(Data.GameModeKind.ClassA));
+		Main.ME.showSelectDifficulty();
 		return;
 		#end
 
@@ -141,7 +139,7 @@ class Menu extends Process {
 		}
 		else if (options[selectedOption] == NEW_GAME) {
 			destroy();
-			Main.ME.startShipBuilding(this.gameMode);
+			Main.ME.showSelectDifficulty();
 		}
 		else if (options[selectedOption] == HOW_TO_PLAY) {
 			destroy();
@@ -149,7 +147,7 @@ class Menu extends Process {
 		}
 		else if (options[selectedOption] == LEADERBOARD) {
 			destroy();
-			Main.ME.startLeaderboards(this.gameMode);
+			Main.ME.startLeaderboards(Data.gameMode.get(Data.GameModeKind.ClassA));
 		}
 	}
 }
