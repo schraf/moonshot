@@ -50,7 +50,7 @@
 			"lines": [
 				{
 					"cost": 20,
-					"mass": 100,
+					"mass": 80,
 					"tile_name": "thruster",
 					"power_usage": 1,
 					"id": "Booster",
@@ -74,7 +74,7 @@
 					"tile_name": "battery",
 					"power_usage": 0,
 					"id": "Battery",
-					"power_capacity": 0,
+					"power_capacity": 100,
 					"flags": 2,
 					"recharge_rate": 0
 				},
@@ -94,14 +94,14 @@
 					"tile_name": "solar",
 					"power_usage": 0,
 					"id": "SolarPanel",
-					"power_capacity": 100,
+					"power_capacity": 0,
 					"flags": 2,
 					"recharge_rate": 0.1
 				},
 				{
 					"id": "Shield",
 					"cost": 60,
-					"mass": 80,
+					"mass": 75,
 					"tile_name": "shield",
 					"power_usage": 5,
 					"power_capacity": 0,

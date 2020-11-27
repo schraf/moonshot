@@ -170,7 +170,7 @@ class Ship extends Entity {
 		var force: Float = 0.0;
 
 		if (this.powerSupply.consumePower(powerUsage)) {
-			force = boosters * (this.mass / 1000.0);
+			force = Math.max(0, boosters - (this.mass / 500.0));
 		}
 
 		return force;
