@@ -74,9 +74,8 @@ class Main extends dn.Process {
 
 		// Start
 		new dn.heaps.GameFocusHelper(Boot.ME.s2d, Assets.fontMedium);
-		// delayer.addF( showSplashScreens, 1 );
+		delayer.addF( showSplashScreens, 1 );
 		delayer.addF( playMusic, 1 );
-		delayer.addF( showMenu, 1 );
 	}
 
 	public function playMusic() {
