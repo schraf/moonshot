@@ -9,6 +9,7 @@ class Hud extends dn.Process {
 
 	public var powerSupply: ProgressBar;
 	public var hull: ProgressBar;
+	public var launcher: ProgressBar;
 
 	public function new() {
 		super(Game.ME);
@@ -27,6 +28,9 @@ class Hud extends dn.Process {
 
 		hull = new ProgressBar('Hull', 300, 50);
 		panel.addRow(hull);
+
+		launcher = new ProgressBar('Launcher Stregth', 300, 50);
+		panel.addRow(launcher);
 
 		panel.addFooter();
 	}
