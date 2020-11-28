@@ -48,7 +48,7 @@ class Ship extends Entity {
 	var rightLasers: Array<B2Vec2> = [];
 	var lasers: Array<Laser>;
 
-	public static var componentShape: B2PolygonShape;
+	public static var shape: B2PolygonShape;
 	public static var filterData: B2FilterData;
 	public static var b2world: B2World;
 
@@ -67,12 +67,12 @@ class Ship extends Entity {
 		Ship.filterData = new B2FilterData();
 		Ship.filterData.groupIndex = -1;
 
-		Ship.componentShape = new B2PolygonShape();
-		componentShape.setAsBox(shipPartSize/200, shipPartSize/200);
+		Ship.shape = new B2PolygonShape();
+		shape.setAsBox(shipPartSize/200, shipPartSize/200);
 
 		var fixtureDef = new B2FixtureDef();
 		fixtureDef.density = 1;
-		fixtureDef.shape = componentShape;
+		fixtureDef.shape = shape;
 		fixtureDef.friction = 0;
 		fixtureDef.filter = Ship.filterData;
 		fixtureDef.userData = this;
@@ -91,31 +91,31 @@ class Ship extends Entity {
 			powerCapacity += shipPart.part.power_capacity;
 			powerRechargeRate += shipPart.part.recharge_rate;
 
-			if (shipPart.part.id != Data.ShipPartKind.Core) {
-				var bodyPosition = this.body.getPosition();
-				var offsetX = shipPart.x * shipPartSize - shipPartOffsetX + shipPartSize * 0.5;
-				var offsetY = shipPart.y * shipPartSize - shipPartOffsetY + shipPartSize * 0.5;
-				var bodyDef = new B2BodyDef();
-				bodyDef.type = B2BodyType.DYNAMIC_BODY;
-				bodyDef.position.set(bodyPosition.x + offsetX/100, bodyPosition.y + offsetY/100);
+			var offsetX = shipPart.x * shipPartSize - shipPartOffsetX + shipPartSize * 0.5;
+			var offsetY = shipPart.y * shipPartSize - shipPartOffsetY + shipPartSize * 0.5;
+			var componentShape = new B2PolygonShape();
+			componentShape.setAsOrientedBox(shipPartSize / 200, shipPartSize / 200, new B2Vec2(offsetX/100, offsetY/100));
 
-				var componentBody = b2world.createBody(bodyDef);
-				componentBody.createFixture(fixtureDef);
-				createJoint(componentBody);
+			var componentFixtureDef = new B2FixtureDef();
+			componentFixtureDef.density = 1;
+			componentFixtureDef.shape = componentShape;
+			componentFixtureDef.friction = 0;
+			componentFixtureDef.filter = Ship.filterData;
+			componentFixtureDef.userData = this;
+			this.body.createFixture(componentFixtureDef);
 
-				switch shipPart.part.id {
-					case Data.ShipPartKind.Booster:
-						addBooster(shipPart, componentBody);
-					case Data.ShipPartKind.Laser:
-						addLaser(shipPart);
-					case Data.ShipPartKind.Shield:
-						addShield(shipPart);
-					case Data.ShipPartKind.SolarPanel:
-					case Data.ShipPartKind.Battery:
-					case Data.ShipPartKind.Package:
-						addPackage(shipPart);
-					case Data.ShipPartKind.Core:
-				}
+			switch shipPart.part.id {
+				case Data.ShipPartKind.Booster:
+					addBooster(shipPart);
+				case Data.ShipPartKind.Laser:
+					addLaser(shipPart);
+				case Data.ShipPartKind.Shield:
+					addShield(shipPart);
+				case Data.ShipPartKind.SolarPanel:
+				case Data.ShipPartKind.Battery:
+				case Data.ShipPartKind.Package:
+					addPackage(shipPart);
+				case Data.ShipPartKind.Core:
 			}
 		}
 
@@ -129,7 +129,24 @@ class Ship extends Entity {
 		Ship.b2world.createJoint(jointDef);
 	}
 
-	function addBooster(shipPart, boosterBody) {
+	function addBooster(shipPart) {
+		var fixtureDef = new B2FixtureDef();
+		fixtureDef.density = 1;
+		fixtureDef.shape = shape;
+		fixtureDef.friction = 0;
+		fixtureDef.filter = Ship.filterData;
+		fixtureDef.userData = this;
+		var bodyPosition = this.body.getPosition();
+		var offsetX = shipPart.x * shipPartSize - shipPartOffsetX + shipPartSize * 0.5;
+		var offsetY = shipPart.y * shipPartSize - shipPartOffsetY + shipPartSize * 0.5;
+		var bodyDef = new B2BodyDef();
+		bodyDef.type = B2BodyType.DYNAMIC_BODY;
+		bodyDef.position.set(bodyPosition.x + offsetX/100, bodyPosition.y + offsetY/100);
+
+		var boosterBody = b2world.createBody(bodyDef);
+		boosterBody.createFixture(fixtureDef);
+		createJoint(boosterBody);
+
 		switch shipPart.rotation {
 			case 0:
 				forwardBoosters.push(boosterBody);
@@ -287,6 +304,9 @@ class Ship extends Entity {
 	}
 
 	function fireBooster(boosterBody: B2Body, theta) {
+		if (!this.powerSupply.consumePower(Data.shipPart.get(Data.ShipPartKind.Booster).power_usage)) {
+			return;
+		}
 		var position = boosterBody.getPosition().copy();
 		position.multiply(100);
 		var thrustAngle = this.body.getAngle() + Math.PI / 2 + theta;
