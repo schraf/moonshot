@@ -271,6 +271,9 @@ class Ship extends Entity {
 	}
 
 	function fireBooster(boosterBody: B2Body, theta) {
+		if (!this.powerSupply.consumePower(Data.shipPart.get(Data.ShipPartKind.Booster).power_usage)) {
+			return;
+		}
 		var position = boosterBody.getPosition().copy();
 		position.multiply(100);
 		var thrustAngle = this.body.getAngle() + Math.PI / 2 + theta;
