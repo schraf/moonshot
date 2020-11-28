@@ -123,7 +123,7 @@ class ShipBuilding extends Process {
 	}
 
 	public function onBuildPart() {
-		Res.audio.place.play(false, 0.5);
+		Res.audio.place.play(false, 0.1);
 
 		if (stats == null || layout == null) {
 			return;
