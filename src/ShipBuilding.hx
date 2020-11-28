@@ -1,10 +1,8 @@
 import ui.Button;
 import h2d.Bitmap;
-import format.gif.Data.Block;
 import hxd.Res;
 import h3d.Vector;
 import h2d.Text;
-import ui.Modal;
 import ship_building.*;
 import dn.Process;
 
@@ -76,7 +74,7 @@ class ShipBuilding extends Process {
 			moonBackground = new Background(root);
 			moonBackground.addStars(bounds);
 			moon = moonBackground.addMoon(0,0,startingMoonScale);
-			Assets.rocketLaunch.play(true);
+			Res.audio.rocketLaunch.play(true);
 			launching = true;
 		};
 		
@@ -189,7 +187,7 @@ class ShipBuilding extends Process {
 	}
 
 	function finish() {
-		Assets.rocketLaunch.stop();
+		Res.audio.rocketLaunch.stop();
 		destroy();
 		Main.ME.startGame(this.gameMode, shipDefinition);
 	}
