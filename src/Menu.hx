@@ -1,3 +1,4 @@
+import hxd.Res;
 import h2d.Interactive;
 import h2d.Text;
 import h2d.Flow.FlowAlign;
@@ -60,7 +61,7 @@ class Menu extends Process {
 
 		options = [NEW_GAME, HOW_TO_PLAY, LEADERBOARD, CREDITS];
 		selectedOption = 0;
-		select(0);
+		select(0, false);
 
 		Process.resizeAll();
 	}
@@ -89,7 +90,11 @@ class Menu extends Process {
 		}
 	}
 
-	function select(optionToSelect: Int) {
+	function select(optionToSelect: Int, play: Bool = true) {
+		if(play) {
+			Res.audio.select.play(false, 0.1);
+		}
+
 		if (optionToSelect >= options.length) {
 			optionToSelect = 0;
 		} else if (optionToSelect < 0) {

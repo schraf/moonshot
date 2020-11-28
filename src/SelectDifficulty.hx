@@ -1,3 +1,4 @@
+import hxd.Res;
 import h2d.Interactive;
 import h2d.Flow;
 import h2d.Text;
@@ -124,7 +125,7 @@ class SelectDifficulty extends Process {
         }
 
         setDescription(options[selectedOption]);
-        select(0);
+        select(0, false);
 
         Process.resizeAll();
     }
@@ -164,7 +165,11 @@ class SelectDifficulty extends Process {
         }
     }
 
-    function select(optionToSelect: Int) {
+    function select(optionToSelect: Int, play: Bool = true) {
+        if(play) {
+			Res.audio.select.play(false, 0.1);
+		}
+
         if (optionToSelect >= options.length) {
             optionToSelect = 0;
         } else if (optionToSelect < 0) {
