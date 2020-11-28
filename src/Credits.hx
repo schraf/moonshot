@@ -34,26 +34,27 @@ class Credits extends Process {
 		flow.horizontalAlign = Middle;
 		flow.verticalAlign = Middle;
 
-        addText("CREDITS");
+        addText("CREDITS", Assets.fontLarge);
+        flow.addSpacing(25);
+        addText("Developed by", Assets.fontLarge);
+        addText("Edric Yu", Assets.fontMedium);
+        addText("James White", Assets.fontMedium);
+        addText("Marc Scraffenberger", Assets.fontMedium);
+        addText("Luke Brom", Assets.fontMedium);
+        flow.addSpacing(25);
+        addText("Music", Assets.fontLarge);
+        addText("Eric Skiff - Digital Native - Resistor Anthems", Assets.fontMedium);
+        addText("Available at http://EricSkiff.com/music", Assets.fontMedium);
         flow.addSpacing(50);
-        addText("Developed by");
-        addText("Edric Yu");
-        addText("James White");
-        addText("Marc Scraffenberger");
-        addText("Luke Brom");
-        flow.addSpacing(50);
-
-        var tf = new h2d.Text(Assets.fontSmall, flow);
-		tf.text = "Press Any Key";
-        tf.textColor = 0xFFFFFF;
+        addText("Press Any Key", Assets.fontSmall);
 
 		Process.resizeAll();
 	}
 
-	function addText(str:String, c=0xFFFFFF) {
-		var tf = new h2d.Text(Assets.fontLarge, flow);
+	function addText(str:String, font: h2d.Font) {
+		var tf = new h2d.Text(font, flow);
 		tf.text = str;
-		tf.textColor = c;
+		tf.textColor = 0xFFFFFF;
     }
 
 	override function onResize() {
