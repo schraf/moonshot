@@ -5,6 +5,7 @@ import box2D.dynamics.B2BodyType;
 import box2D.dynamics.B2BodyDef;
 import box2D.collision.shapes.B2PolygonShape;
 import box2D.dynamics.B2FixtureDef;
+import hxd.Res;
 
 class House extends Entity {
 	static var SIZE = 25;
@@ -41,6 +42,7 @@ class House extends Entity {
 	override function onCollision (entity: Entity) {
 		if (entity.isA(EntityTypeFlags.PACKAGE)) {
 			Main.ME.leaderboards.addToScore(500);
+			Res.audio.delivered.play(false, 0.1);
 			destroy();
 		}
 	}

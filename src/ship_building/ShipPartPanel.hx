@@ -1,5 +1,6 @@
 package ship_building;
 
+import hxd.Res;
 import h2d.Bitmap;
 import h2d.Flow.FlowLayout;
 import h2d.Flow.FlowAlign;
@@ -106,6 +107,8 @@ class ShipPartPanel extends h2d.Flow {
 	}
 
 	public function onSelected (part: ShipPartButton) {
+		Res.audio.select.play(false, 0.1);
+
 		if (part == this.selectedPart) {
 			return;
 		}

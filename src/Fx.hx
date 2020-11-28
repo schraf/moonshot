@@ -67,7 +67,7 @@ class Fx extends dn.Process {
 		return pool.alloc(bgNormalSb, t,x,y);
 	}
 
-	public function spray(x:Float, y:Float, angle:Float, spread:Float = 1) {
+	public function spray(x:Float, y:Float, angle:Float, spread:Float = .5) {
 		var n = 8;
 		for(i in 0...n) {
 			var p = allocTopNormal(getTile("fxCircle"), x + rnd(-1, 1), y + rnd(-1, 1));
@@ -79,11 +79,11 @@ class Fx extends dn.Process {
 			var theta = angle + rnd(-1, 1) * spread;
 			p.moveAng(theta, 5 + rnd(0, 5));
 			// p.frict = 0.99;
-			p.lifeS = rnd(0.1,0.2);
+			p.lifeS = rnd(0.05,0.1);
 
 			//spread out origin points
 			p.x += p.dx * 3;
-			// p.y += p.dy * 3;
+			p.y += p.dy * 3;
 		}
 	}
 

@@ -1,4 +1,5 @@
 
+import hxd.Res;
 import haxe.macro.Type.ClassType;
 import box2D.collision.B2Manifold;
 import hxsl.Types.Vec;

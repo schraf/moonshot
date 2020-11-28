@@ -16,6 +16,7 @@ jobs:
           haxe-version: 4.1.4
       - name: Install Dependencies
         run: |
+          sudo apt-get install lame
           haxe -version
           haxelib install --always js.hxml
           haxelib git deepnightLibs https://github.com/deepnight/deepnightLibs.git

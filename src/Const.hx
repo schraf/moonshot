@@ -34,4 +34,7 @@ class Const {
 
 	public static var ASTEROID_SPEED = 0.1;
 	public static var ASTEROID_ROTATION_SPEED = 2.0;
+
+	public static var THRUST_FORCE = .1;
+	public static var SHIPBUILDING_FADEOUT_SECONDS = 10;
 }
