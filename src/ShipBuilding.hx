@@ -182,6 +182,7 @@ class ShipBuilding extends Process {
 	function finish() {
 		Res.audio.rocketLaunch.stop();
 		destroy();
+		Main.ME.stopMusic();
 		Main.ME.playMusic();
 		Main.ME.startGame(this.gameMode, shipDefinition);
 	}

@@ -59,6 +59,17 @@ class ShipLayoutCell extends h2d.Object {
 				ShipLayout.Instance.onCellModified(this.cellX, this.cellY);
 			}
 		}
+
+		this.interactive.onKeyDown = function (event: hxd.Event) {
+			if (part != null && part.flags.has(Data.ShipPart_flags.rotatable)) {
+				switch (event.keyCode) {
+					case 82: // The R Key
+						this.partRotation = (this.partRotation + 90) % 360;
+						setVisuals(part);
+						ShipLayout.Instance.onCellModified(this.cellX, this.cellY);
+				}
+			}
+		}
 	}
 
 	public function setPart (part: Data.ShipPart) {
@@ -83,6 +94,8 @@ class ShipLayoutCell extends h2d.Object {
 			this.visuals.remove();
 			this.visuals = null;
 		}
+
+
 
 		// reset rotation
 		this.partRotation = 0;

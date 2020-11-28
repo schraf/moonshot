@@ -29,7 +29,7 @@ class Hud extends dn.Process {
 		hull = new ProgressBar('Hull', 300, 50);
 		panel.addRow(hull);
 
-		launcher = new ProgressBar('Launcher Stregth', 300, 50);
+		launcher = new ProgressBar('Launcher Strength', 300, 50);
 		panel.addRow(launcher);
 
 		panel.addFooter();
