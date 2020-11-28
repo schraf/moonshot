@@ -29,4 +29,6 @@ class Const {
 	public static var SHIP_HULL_STRENGTH = 1000.0;
 
 	public static var SHIP_PANEL_WIDTH = 400;
+
+	public static var SHIPBUILDING_FADEOUT_SECONDS = 10;
 }
