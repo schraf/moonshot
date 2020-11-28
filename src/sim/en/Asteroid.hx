@@ -1,5 +1,6 @@
 package sim.en;
 
+import Entity.EntityTypeFlags;
 import box2D.collision.shapes.B2CircleShape;
 import h2d.Bitmap;
 import box2D.dynamics.B2World;
@@ -17,20 +18,21 @@ import box2D.dynamics.B2Body;
 class Asteroid extends Entity {
   var time: Float = 0.;
 
-	var r = 60;
+	var r = 20;
 
 	public function new(b2world, x, y) {
 		super(x, y);
+		this.typeFlags |= EntityTypeFlags.ASTEROID;
 
 		Entity.ASTEROIDS.push(this);
-                
+
 		var shape = new B2CircleShape(r/100);
 
 		var fixtureDef = new B2FixtureDef();
 		fixtureDef.density = 10;
 		fixtureDef.shape = shape;
-    fixtureDef.friction = 0;
-    fixtureDef.userData = this;
+		fixtureDef.friction = 0;
+		fixtureDef.userData = this;
 
 		var bodyDef = new B2BodyDef();
 		bodyDef.type = B2BodyType.DYNAMIC_BODY;
@@ -43,18 +45,34 @@ class Asteroid extends Entity {
 		spr.setCenterRatio();
 		setScale((r<<1) / spr.tile.width);
 
-		this.body.applyTorque(Math.random() - Math.random() * 1000);
+		this.body.applyTorque((Math.random() - Math.random()) * Const.ASTEROID_ROTATION_SPEED);
+		this.collider = new h2d.col.Circle(x, y, r);
 	}
 
 	override function dispose() {
 		Entity.ASTEROIDS.remove(this);
 		super.dispose();
 	}
-    
+
+	override function onCollision(entity:Entity) {
+		// POLISH: explosion fx
+		if (entity.isA(EntityTypeFlags.PROJECTILE)) {
+			destroy();
+		}
+	}
+
 	override function update() {
 		var theta = body.getAngle();
-		var p = body.getPosition();
-		setPosPixel(p.x * 100, p.y * 100);
+		var pos = getBodyPosition();
+		setPosPixel(pos.x, pos.y);
 		spr.rotation = body.getAngle();
+
+		var collider = cast(this.collider, h2d.col.Circle);
+		collider.x = pos.x;
+		collider.y = pos.y;
+
+		if (pos.x < 0.0 || pos.x > Const.VIEWPORT_WIDTH || pos.y < 0.0 || pos.y > Const.VIEWPORT_HEIGHT) {
+			destroy();
+		}
 	}
 }

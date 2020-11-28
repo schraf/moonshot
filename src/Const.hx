@@ -29,6 +29,9 @@ class Const {
 	public static var SHIP_HULL_STRENGTH = 1000.0;
 
 	public static var SHIP_PANEL_WIDTH = 400;
-	
-	public static var PROJECTILE_SPEED = 0.01;
+
+	public static var PROJECTILE_SPEED = 10;
+
+	public static var ASTEROID_SPEED = 0.1;
+	public static var ASTEROID_ROTATION_SPEED = 2.0;
 }

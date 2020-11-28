@@ -29,27 +29,18 @@ import sim.en.Moon;
 import sim.en.House;
 
 class ContactListener extends B2ContactListener {
-	function isOnType<T>(fixture: B2Fixture, classCheck: Class<T>) {
-		return fixture.getUserData() != null && Type.getClass(fixture.getUserData()) == classCheck;
+	override function beginContact(contact:B2Contact):Void {
+		var entityA = cast (contact.getFixtureA().getUserData(), Entity);
+		var entityB = cast (contact.getFixtureB().getUserData(), Entity);
+
+		if (entityA == null || entityB == null) {
+			return;
+		}
+
+		entityA.onCollision(entityB);
+		entityB.onCollision(entityA);
 	}
 
-	override function beginContact(contact:B2Contact):Void {
-		var fixtureA = contact.getFixtureA();
-		var fixtureB = contact.getFixtureB();
-		if (isOnType(fixtureA, sim.en.Ship) || isOnType(fixtureB, sim.en.Ship)) {
-			Game.ME.ship.onCollision();
-		}
-		if (isOnType(fixtureA, sim.en.Package) && isOnType(fixtureB, sim.en.House)) {
-			(fixtureA.getUserData() : Package).destroy();
-			(fixtureB.getUserData() : House).destroy();
-			Main.ME.leaderboards.addToScore(500);
-		}
-		if (isOnType(fixtureA, sim.en.House) && isOnType(fixtureB, sim.en.Package)) {
-			(fixtureA.getUserData() : House).destroy();
-			(fixtureB.getUserData() : Package).destroy();
-			Main.ME.leaderboards.addToScore(500);
-		}
-	}
 	override function endContact(contact:B2Contact):Void { }
 	override function preSolve(contact:B2Contact, oldManifold):Void {}
 	override function postSolve(contact:B2Contact, impulse):Void { }
@@ -124,10 +115,10 @@ class Game extends Process {
 			// move towards moon
 			var dir = point.sub(moonPosition);
 			dir.normalize();
-			dir.scale(1000.0);
+			dir.scale(Const.ASTEROID_SPEED);
 
 			var asteroid = new Asteroid(world, Math.floor(point.x), Math.floor(point.y));
-			asteroid.body.applyForce(new B2Vec2(dir.x, dir.y), asteroid.body.getPosition());
+			asteroid.body.applyImpulse(new B2Vec2(dir.x, dir.y), asteroid.body.getPosition());
 		}
 
 		var separationAngle = (2.0 * Math.PI) / this.gameMode.numHouses;

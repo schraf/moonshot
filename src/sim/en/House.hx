@@ -1,5 +1,6 @@
 package sim.en;
 
+import Entity.EntityTypeFlags;
 import box2D.dynamics.B2BodyType;
 import box2D.dynamics.B2BodyDef;
 import box2D.collision.shapes.B2PolygonShape;
@@ -7,9 +8,10 @@ import box2D.dynamics.B2FixtureDef;
 
 class House extends Entity {
 	static var SIZE = 25;
-	
+
 	public function new(b2world, x, y, angle) {
 		super(0, 0);
+		this.typeFlags |= EntityTypeFlags.HOUSE;
 
 		Entity.HOUSES.push(this);
 
@@ -34,6 +36,13 @@ class House extends Entity {
 
 		this.body = b2world.createBody(bodyDef);
 		this.body.createFixture(fixtureDef);
+	}
+
+	override function onCollision (entity: Entity) {
+		if (entity.isA(EntityTypeFlags.PACKAGE)) {
+			Main.ME.leaderboards.addToScore(500);
+			destroy();
+		}
 	}
 
 	override function dispose() {

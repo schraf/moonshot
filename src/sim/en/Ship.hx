@@ -2,7 +2,7 @@ package sim.en;
 
 import sim.components.PowerSupply;
 import sim.components.Laser;
-
+import Entity.EntityTypeFlags;
 import ShipDefinition.ShipPartDefinition;
 import box2D.dynamics.B2FilterData;
 import hxd.res.Font;
@@ -44,14 +44,16 @@ class Ship extends Entity {
 	var rearLasers: Array<B2Vec2> = [];
 	var leftLasers: Array<B2Vec2> = [];
 	var rightLasers: Array<B2Vec2> = [];
-    var lasers: Array<Laser>;
+	var lasers: Array<Laser>;
 
 	// x and y in sprite coords
 	public function new(shipDefinition: ShipDefinition, b2world, x, y) {
 		super(x, y);
 
+		this.typeFlags |= EntityTypeFlags.SHIP;
+
 		this.shipDefinition = shipDefinition;
-        this.lasers = new Array<Laser>();
+		this.lasers = new Array<Laser>();
 
 		visuals = ShipVisuals.createFromDefinition(this.shipDefinition, shipPartSize, shipPartSize, spr);
 
@@ -100,7 +102,7 @@ class Ship extends Entity {
 				case Data.ShipPartKind.Core:
 			}
 
-			shape.setAsOrientedBox(shipPartWidth / 200, shipPartHeight / 200, new B2Vec2((shipPart.x * shipPartWidth - shipPartOffsetX + (shipPartWidth / 2)) / 100, (shipPart.y * shipPartHeight - shipPartOffsetY + (shipPartHeight / 2)) / 100));
+			shape.setAsOrientedBox(shipPartSize / 200, shipPartSize / 200, new B2Vec2((shipPart.x * shipPartSize - shipPartOffsetX + (shipPartSize / 2)) / 100, (shipPart.y * shipPartSize - shipPartOffsetY + (shipPartSize / 2)) / 100));
 			this.body.createFixture(fixtureDef);
 		}
 
@@ -110,8 +112,8 @@ class Ship extends Entity {
 
 	function addBooster(shipPart: ShipPartDefinition) {
 		var origin = new B2Vec2();
-		origin.x += shipPart.x * shipPartWidth - shipPartOffsetX;
-		origin.y += shipPart.y * shipPartHeight - shipPartOffsetY;
+		origin.x += shipPart.x * shipPartSize - shipPartOffsetX;
+		origin.y += shipPart.y * shipPartSize - shipPartOffsetY;
 
 		switch shipPart.rotation {
 			case 0:
@@ -127,10 +129,10 @@ class Ship extends Entity {
 
 	function addLaser(shipPart: ShipPartDefinition) {
 		var origin = new B2Vec2();
-		origin.x += shipPart.x * shipPartWidth - shipPartOffsetX;
-		origin.y += shipPart.y * shipPartHeight - shipPartOffsetY;
+		origin.x += shipPart.x * shipPartSize - shipPartOffsetX;
+		origin.y += shipPart.y * shipPartSize - shipPartOffsetY;
 
-        this.lasers.push(new Laser(origin.x, origin.y, this));
+		this.lasers.push(new Laser(origin.x, origin.y, spr));
 
 		switch shipPart.rotation {
 			case 0:
@@ -157,7 +159,11 @@ class Ship extends Entity {
 		ca.dispose(); // release on destruction
 	}
 
-	public function onCollision () {
+	override function onCollision (entity: Entity) {
+		if (entity.isA(EntityTypeFlags.PROJECTILE) || entity.isA(EntityTypeFlags.PACKAGE)) {
+			return;
+		}
+
 		if (cd.has('shipCollision')) {
 			return;
 		}
@@ -185,11 +191,15 @@ class Ship extends Entity {
 	}
 
 	function calculateForce (boosters: Int): Float {
+		if (boosters == 0) {
+			return 0.0;
+		}
+
 		var powerUsage: Float = boosters * Data.shipPart.get(Data.ShipPartKind.Booster).power_usage;
 		var force: Float = 0.0;
 
 		if (this.powerSupply.consumePower(powerUsage)) {
-			force = Math.max(0, boosters - (this.mass / 500.0));
+			force = Math.max(0.5, boosters - (this.mass / 500.0));
 		}
 
 		return force;
@@ -258,17 +268,18 @@ class Ship extends Entity {
 		}
 
 		for (asteroid in Entity.ASTEROIDS) {
+			var asteroidPosition = asteroid.getBodyPosition();
 			for (laser in this.lasers) {
-				if (laser.canFireAt(asteroid.localToGlobal())) {
+				if (laser.canFireAt(asteroidPosition)) {
 					var power = Data.shipPart.get(Data.ShipPartKind.Laser).power_usage;
-					
+
 					if (this.powerSupply.consumePower(power)) {
 						laser.resetCooldown();
 						var pos = laser.localToGlobal();
-						var vel = asteroid.sub(pos).normalized().multiply(Const.PROJECTILE_SPEED);;
+						var vel = asteroidPosition.sub(pos).normalized().multiply(Const.PROJECTILE_SPEED);
 						new Projectile(pos.x, pos.y, vel.x, vel.y);
 					}
-				}        
+				}
 			}
 		}
 	}

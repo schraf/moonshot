@@ -1,5 +1,14 @@
 import box2D.dynamics.B2Body;
 
+enum abstract EntityTypeFlags(Int) to Int  {
+	var ASTEROID	= 1 << 0;
+	var HOUSE		= 1 << 1;
+	var MOON		= 1 << 2;
+	var PACKAGE		= 1 << 3;
+	var PROJECTILE	= 1 << 4;
+	var SHIP		= 1 << 5;
+}
+
 class Entity {
 	public static var ALL : Array<Entity> = [];
 	public static var HOUSES : Array<sim.en.House> = [];
@@ -8,6 +17,8 @@ class Entity {
 
 	public var body: B2Body = null;
 	public var ignoreGravity: Bool = false;
+	public var collider: h2d.col.Collider = null;
+	public var typeFlags: Int = 0;
 
 	public var game(get,never) : Game; inline function get_game() return Game.ME;
 	public var fx(get,never) : Fx; inline function get_fx() return Game.ME.fx;
@@ -74,6 +85,10 @@ class Entity {
 		return !destroyed;
 	}
 
+	public function isA(flag: EntityTypeFlags): Bool {
+		return this.typeFlags & flag != 0;
+	}
+
 	public function kill(by:Null<Entity>) {
 		destroy();
 	}
@@ -133,6 +148,7 @@ class Entity {
 
 		if (body != null) {
 			body.getWorld().destroyBody(body);
+			body = null;
 		}
 
 		colorAdd = null;
@@ -187,6 +203,9 @@ class Entity {
 		return false;
 	}
 
+	public function onCollision(entity:Entity) {
+	}
+
 	public function cancelAction(?id:String) {
 		if( id==null )
 			actions = [];
@@ -237,6 +256,12 @@ class Entity {
 			debugLabel.x = Std.int(footX - debugLabel.textWidth*0.5);
 			debugLabel.y = Std.int(footY+1);
 		}
+	}
+
+
+	public function getBodyPosition (): h2d.col.Point {
+		var pos = body.getPosition();
+		return new h2d.col.Point(pos.x * 100, pos.y * 100);
 	}
 
 	public function fixedUpdate() {} // runs at a "guaranteed" 30 fps
