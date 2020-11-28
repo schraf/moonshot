@@ -26,7 +26,7 @@ class Ship extends Entity {
 	var shipPartOffsetY = Const.SHIP_HEIGHT * 30 * 0.5;
 
 	var packageLauncherPower = 0.0;
-	var packageLauncherPowerModifier = 0.1;
+	var packageLauncherPowerModifier = 0.5;
 
 	var shipDefinition: ShipDefinition;
 	var visuals: h2d.Object;
@@ -252,6 +252,7 @@ class Ship extends Entity {
 				packageLauncherPower = 0;
 			}
 		}
+		game.hud.launcher.setValue(packageLauncherPower / 10);
 	}
 
 	function fireBooster(boosterBody: B2Body, theta) {
@@ -272,10 +273,10 @@ class Ship extends Entity {
 		if (packageLauncherPower != 0) {
 			packageLauncherPower += packageLauncherPowerModifier;
 			if (packageLauncherPower >= 10) {
-				packageLauncherPowerModifier = -0.1;
+				packageLauncherPowerModifier = -0.5;
 			}
 			if (packageLauncherPower <= 1) {
-				packageLauncherPowerModifier = 0.1;
+				packageLauncherPowerModifier = 0.5;
 			}
 		}
 
