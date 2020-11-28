@@ -3,7 +3,7 @@ package ship_building;
 import h2d.Text;
 
 class ShipStats {
-	var panel: ui.Panel;
+	public var panel: ui.Panel;
 
 	public var mass: Int = 0;
 	public var cost: Int = 0;

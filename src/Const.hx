@@ -31,4 +31,5 @@ class Const {
 	public static var SHIP_PANEL_WIDTH = 400;
 
 	public static var THRUST_FORCE = .1;
+	public static var SHIPBUILDING_FADEOUT_SECONDS = 10;
 }
