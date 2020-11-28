@@ -59,7 +59,7 @@
 					"recharge_rate": 0
 				},
 				{
-					"cost": 0,
+					"cost": 20,
 					"mass": 50,
 					"tile_name": "storage",
 					"power_usage": 0,

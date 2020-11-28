@@ -70,12 +70,16 @@ class ShipBuilding extends Process {
 				return;
 			}
 
-			for (cell in layout.cells) cell.alpha = 0.0;
-			moonBackground = new Background(root);
-			moonBackground.addStars(bounds);
-			moon = moonBackground.addMoon(0,0,startingMoonScale);
-			Res.audio.rocketLaunch.play(true);
-			launching = true;
+			#if debug
+				finish();
+			#else
+				for (cell in layout.cells) cell.alpha = 0.0;
+				moonBackground = new Background(root);
+				moonBackground.addStars(bounds);
+				moon = moonBackground.addMoon(0,0,startingMoonScale);
+				Res.audio.rocketLaunch.play(true);
+				launching = true;
+			#end
 		};
 		
 		initPanel();
@@ -119,18 +123,6 @@ class ShipBuilding extends Process {
 		if (part.cost + stats.cost > gameMode.maxCost) {
 			warn("Cost cannot exceed " + gameMode.maxCost);
 			return false;
-		}
-		if (part.id == Data.ShipPartKind.Package) {
-			storageCount = 1;
-			for (shipPart in layout.toShipDefinition().parts) {
-				if (shipPart.part.id == Data.ShipPartKind.Package) {
-					storageCount++;
-				}
-			}
-			if (storageCount > gameMode.numHouses) {
-				warningMessage.text = "You only need " + gameMode.numHouses + " storage units.";
-				return false;
-			}
 		}
 		return true;
 	}
