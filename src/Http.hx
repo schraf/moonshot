@@ -10,6 +10,7 @@ class Http {
 		sys.ssl.Socket.DEFAULT_VERIFY_CERT = false;
 		#end
 
+		// POLISH: this seems to be synchronous (at least on hashlink), but I read Http is async by default. not sure what is going on.
 		var http = new haxe.Http(url);
 		var redirect: Bool = false;
 		var success: Bool = false;

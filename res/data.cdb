@@ -82,7 +82,7 @@
 					"cost": 50,
 					"mass": 75,
 					"tile_name": "laser",
-					"power_usage": 5,
+					"power_usage": 20,
 					"id": "Laser",
 					"power_capacity": 0,
 					"flags": 3,
@@ -103,7 +103,7 @@
 					"cost": 75,
 					"mass": 75,
 					"tile_name": "shield",
-					"power_usage": 5,
+					"power_usage": 15,
 					"power_capacity": 0,
 					"flags": 2,
 					"recharge_rate": 0
@@ -196,7 +196,7 @@
 			],
 			"lines": [
 				{
-					"numAsteroids": 1,
+					"numAsteroids": 3,
 					"numHouses": 1,
 					"maxCost": 1500,
 					"maxWeight": 1000,
@@ -205,7 +205,7 @@
 				},
 				{
 					"Id": "ClassB",
-					"numAsteroids": 3,
+					"numAsteroids": 5,
 					"numHouses": 2,
 					"maxCost": 700,
 					"maxWeight": 500,
@@ -213,7 +213,7 @@
 				},
 				{
 					"Id": "ClassC",
-					"numAsteroids": 5,
+					"numAsteroids": 10,
 					"numHouses": 3,
 					"maxCost": 300,
 					"maxWeight": 250,

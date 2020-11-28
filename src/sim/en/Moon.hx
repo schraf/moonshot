@@ -1,5 +1,6 @@
 package sim.en;
 
+import Entity.EntityTypeFlags;
 import box2D.collision.shapes.B2CircleShape;
 import h2d.Bitmap;
 import box2D.dynamics.B2World;
@@ -23,6 +24,9 @@ class Moon extends Entity {
 
 	public function new(b2world, x, y) {
 		super(x, y);
+		this.typeFlags |= EntityTypeFlags.MOON;
+		this.collider = new h2d.col.Circle(x, y, Radius);
+
 		ignoreGravity = true;
 
 		var shape = new B2CircleShape(Radius/100);
