@@ -49,7 +49,7 @@
 			],
 			"lines": [
 				{
-					"cost": 20,
+					"cost": 30,
 					"mass": 80,
 					"tile_name": "thruster",
 					"power_usage": 1,
@@ -79,7 +79,7 @@
 					"recharge_rate": 0
 				},
 				{
-					"cost": 60,
+					"cost": 50,
 					"mass": 75,
 					"tile_name": "laser",
 					"power_usage": 5,
@@ -100,7 +100,7 @@
 				},
 				{
 					"id": "Shield",
-					"cost": 60,
+					"cost": 75,
 					"mass": 75,
 					"tile_name": "shield",
 					"power_usage": 5,
