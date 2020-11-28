@@ -1,6 +1,7 @@
 import ui.Button;
 import h2d.Bitmap;
 import format.gif.Data.Block;
+import hxd.Res;
 import h3d.Vector;
 import h2d.Text;
 import ui.Modal;
@@ -137,6 +138,8 @@ class ShipBuilding extends Process {
 	}
 
 	public function onBuildPart() {
+		Res.audio.place.play(false, 0.1);
+
 		if (stats == null || layout == null) {
 			return;
 		}

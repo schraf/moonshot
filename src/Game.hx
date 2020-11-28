@@ -1,4 +1,5 @@
 
+import hxd.Res;
 import haxe.macro.Type.ClassType;
 import box2D.collision.B2Manifold;
 import hxsl.Types.Vec;
@@ -38,16 +39,19 @@ class ContactListener extends B2ContactListener {
 		var fixtureB = contact.getFixtureB();
 		if (isOnType(fixtureA, sim.en.Ship) || isOnType(fixtureB, sim.en.Ship)) {
 			Game.ME.ship.onCollision();
+			Res.audio.hit.play(false, 0.1);
 		}
 		if (isOnType(fixtureA, sim.en.Package) && isOnType(fixtureB, sim.en.House)) {
 			(fixtureA.getUserData() : Package).destroy();
 			(fixtureB.getUserData() : House).destroy();
 			Main.ME.leaderboards.addToScore(500);
+			Res.audio.delivered.play(false, 0.1);
 		}
 		if (isOnType(fixtureA, sim.en.House) && isOnType(fixtureB, sim.en.Package)) {
 			(fixtureA.getUserData() : House).destroy();
 			(fixtureB.getUserData() : Package).destroy();
 			Main.ME.leaderboards.addToScore(500);
+			Res.audio.delivered.play(false, 0.1);
 		}
 	}
 	override function endContact(contact:B2Contact):Void { }
