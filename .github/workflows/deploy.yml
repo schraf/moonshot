@@ -31,7 +31,7 @@ jobs:
           mkdir build
           mkdir build/bin
           mv js.html build/index.html
-          mv bin/client.hl build/bin/client.hl
+          mv bin/client.js build/bin/client.js
           mv res build/res
 
       - name: Deploy 🚀
