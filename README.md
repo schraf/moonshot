@@ -1,3 +1,3 @@
 # Moonshot
 
-[Play Game](index.html)
+Talk about game development here.

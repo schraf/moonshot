@@ -30,6 +30,7 @@ jobs:
           haxe js.hxml
           mkdir build
           mkdir build/bin
+          mv index.md build/index.md
           mv js.html build/index.html
           mv bin/client.js build/bin/client.js
           mv res build/res
