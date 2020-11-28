@@ -1,0 +1,43 @@
+name: Build and Deploy
+on:
+  push:
+    branches: [ release ]
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2.3.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Haxe 🪓
+        uses: krdlab/setup-haxe@v1
+        with:
+          haxe-version: 4.1.4
+
+      - name: Install Dependencies 💾
+        run: |
+          sudo apt-get install lame
+          haxe -version
+          haxelib install --always js.hxml
+          haxelib git deepnightLibs https://github.com/deepnight/deepnightLibs.git
+          haxelib git heaps https://github.com/HeapsIO/heaps.git
+          haxelib git box2d https://github.com/openfl/box2d.git
+
+      - name: Build 🔧
+        run: |
+          haxe js.hxml
+          mkdir build
+          mkdir build/bin
+          mv js.html build/index.html
+          mv bin/client.js build/bin/client.js
+          mv res build/res
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: build
+          CLEAN: true
