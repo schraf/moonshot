@@ -1,0 +1,55 @@
+
+ui.png
+size: 1024,128
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+BlockPrimary
+  rotate: false
+  xy: 635, 53
+  size: 49, 50
+  orig: 49, 50
+  offset: 0, 0
+  index: -1
+BlockSecondary
+  rotate: false
+  xy: 134, 2
+  size: 49, 50
+  orig: 49, 50
+  offset: 0, 0
+  index: -1
+ButtonPrimary
+  rotate: false
+  xy: 348, 13
+  size: 214, 90
+  orig: 214, 90
+  offset: 0, 0
+  index: -1
+LargeEndCap
+  rotate: false
+  xy: 564, 13
+  size: 69, 90
+  orig: 69, 90
+  offset: 0, 0
+  index: -1
+LongCorner
+  rotate: false
+  xy: 2, 54
+  size: 344, 49
+  orig: 344, 49
+  offset: 0, 0
+  index: -1
+ShortCorner
+  rotate: false
+  xy: 2, 2
+  size: 130, 50
+  orig: 130, 50
+  offset: 0, 0
+  index: -1
+SmallEndCap
+  rotate: false
+  xy: 185, 19
+  size: 25, 33
+  orig: 25, 33
+  offset: 0, 0
+  index: -1

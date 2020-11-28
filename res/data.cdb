@@ -1,0 +1,229 @@
+{
+	"sheets": [
+		{
+			"name": "shipPart",
+			"columns": [
+				{
+					"typeStr": "0",
+					"name": "id",
+					"kind": "localizable"
+				},
+				{
+					"typeStr": "3",
+					"name": "cost",
+					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "mass",
+					"display": null
+				},
+				{
+					"typeStr": "1",
+					"name": "tile_name",
+					"display": null
+				},
+				{
+					"typeStr": "4",
+					"name": "power_usage"
+				},
+				{
+					"typeStr": "4",
+					"name": "power_capacity"
+				},
+				{
+					"typeStr": "10:rotatable,showInPanel,locked,rotateAnimation",
+					"name": "flags"
+				},
+				{
+					"typeStr": "4",
+					"name": "scale",
+					"opt": true,
+					"display": null
+				},
+				{
+					"typeStr": "4",
+					"name": "recharge_rate",
+					"display": null
+				}
+			],
+			"lines": [
+				{
+					"cost": 30,
+					"mass": 80,
+					"tile_name": "thruster",
+					"power_usage": 1,
+					"id": "Booster",
+					"power_capacity": 0,
+					"flags": 3,
+					"recharge_rate": 0
+				},
+				{
+					"cost": 20,
+					"mass": 50,
+					"tile_name": "storage",
+					"power_usage": 0,
+					"id": "Package",
+					"power_capacity": 0,
+					"flags": 2,
+					"recharge_rate": 0
+				},
+				{
+					"cost": 75,
+					"mass": 50,
+					"tile_name": "battery",
+					"power_usage": 0,
+					"id": "Battery",
+					"power_capacity": 100,
+					"flags": 2,
+					"recharge_rate": 0
+				},
+				{
+					"cost": 50,
+					"mass": 75,
+					"tile_name": "laser",
+					"power_usage": 20,
+					"id": "Laser",
+					"power_capacity": 0,
+					"flags": 3,
+					"recharge_rate": 0
+				},
+				{
+					"cost": 50,
+					"mass": 35,
+					"tile_name": "solar",
+					"power_usage": 0,
+					"id": "SolarPanel",
+					"power_capacity": 0,
+					"flags": 2,
+					"recharge_rate": 0.1
+				},
+				{
+					"id": "Shield",
+					"cost": 75,
+					"mass": 75,
+					"tile_name": "shield",
+					"power_usage": 15,
+					"power_capacity": 0,
+					"flags": 2,
+					"recharge_rate": 0
+				},
+				{
+					"id": "Core",
+					"cost": 0,
+					"mass": 50,
+					"tile_name": "core",
+					"power_usage": 0,
+					"power_capacity": 25,
+					"flags": 12,
+					"scale": 0.7,
+					"recharge_rate": 0.1
+				}
+			],
+			"separators": [],
+			"props": {}
+		},
+		{
+			"name": "shipStats",
+			"columns": [
+				{
+					"typeStr": "0",
+					"name": "id"
+				},
+				{
+					"typeStr": "1",
+					"name": "name",
+					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "maxValue",
+					"opt": true,
+					"display": null
+				}
+			],
+			"lines": [
+				{
+					"id": "cost",
+					"name": "Cost",
+					"maxValue": 1000
+				},
+				{
+					"id": "mass",
+					"name": "Mass",
+					"maxValue": 5000
+				},
+				{
+					"id": "fuel",
+					"name": "Fuel",
+					"maxValue": 10000
+				}
+			],
+			"separators": [],
+			"props": {}
+		},
+		{
+			"name": "gameMode",
+			"columns": [
+				{
+					"typeStr": "0",
+					"name": "Id"
+				},
+				{
+					"typeStr": "3",
+					"name": "numAsteroids",
+					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "numHouses",
+					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "maxCost",
+					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "maxWeight",
+					"display": null
+				},
+				{
+					"typeStr": "1",
+					"name": "leaderboard"
+				}
+			],
+			"lines": [
+				{
+					"numAsteroids": 3,
+					"numHouses": 1,
+					"maxCost": 1500,
+					"maxWeight": 1000,
+					"Id": "ClassA",
+					"leaderboard": "ClassA"
+				},
+				{
+					"Id": "ClassB",
+					"numAsteroids": 5,
+					"numHouses": 2,
+					"maxCost": 700,
+					"maxWeight": 500,
+					"leaderboard": "ClassB"
+				},
+				{
+					"Id": "ClassC",
+					"numAsteroids": 10,
+					"numHouses": 3,
+					"maxCost": 300,
+					"maxWeight": 250,
+					"leaderboard": "ClassC"
+				}
+			],
+			"separators": [],
+			"props": {}
+		}
+	],
+	"customTypes": [],
+	"compress": false
+}
