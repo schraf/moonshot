@@ -1,5 +1,6 @@
 package sim.en;
 
+import Entity.EntityTypeFlags;
 import box2D.dynamics.B2FilterData;
 import box2D.common.math.B2Vec2;
 import box2D.dynamics.B2BodyDef;
@@ -17,6 +18,7 @@ class Package extends Entity {
 	// x and y in sprite coords
 	public function new(b2world, x, y) {
 		super(x, y);
+		this.typeFlags |= EntityTypeFlags.PACKAGE;
 
 		var shape = new B2PolygonShape();
 		shape.setAsBox(w/200, h/200); // div by 2 for halfwidth, div by 100 for b2 coords
@@ -41,6 +43,12 @@ class Package extends Entity {
 		spr.set(Assets.background, "package");
 		spr.setCenterRatio();
 		setScale(40 / spr.tile.width);
+	}
+
+	override function onCollision (entity: Entity) {
+		if (entity.isA(EntityTypeFlags.HOUSE)) {
+			destroy();
+		}
 	}
 
 	override function update() {

@@ -78,6 +78,7 @@ class ShipBuilding extends Process {
 				moonBackground.addStars(bounds);
 				moon = moonBackground.addMoon(0,0,startingMoonScale);
 				Res.audio.rocketLaunch.play(true);
+				Main.ME.stopMusic();
 				launching = true;
 			#end
 		};
@@ -181,6 +182,7 @@ class ShipBuilding extends Process {
 	function finish() {
 		Res.audio.rocketLaunch.stop();
 		destroy();
+		Main.ME.playMusic();
 		Main.ME.startGame(this.gameMode, shipDefinition);
 	}
 }
