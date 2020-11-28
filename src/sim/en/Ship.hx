@@ -14,6 +14,7 @@ import box2D.dynamics.B2BodyType;
 import box2D.dynamics.B2Fixture;
 import box2D.dynamics.B2FixtureDef;
 import box2D.collision.shapes.B2PolygonShape;
+import box2D.dynamics.joints.B2WeldJointDef;
 
 class Ship extends Entity {
 	var ca:dn.heaps.Controller.ControllerAccess;
@@ -35,14 +36,18 @@ class Ship extends Entity {
 	var numShields = 0;
 	var hullStrength: Float = Const.SHIP_HULL_STRENGTH;
 	var mass: Int;
-	var forwardBoosters: Array<B2Vec2> = [];
-	var backwardsBoosters: Array<B2Vec2> = [];
-	var leftBoosters: Array<B2Vec2> = [];
-	var rightBoosters: Array<B2Vec2> = [];
+	var forwardBoosters: Array<B2Body> = [];
+	var backwardsBoosters: Array<B2Body> = [];
+	var leftBoosters: Array<B2Body> = [];
+	var rightBoosters: Array<B2Body> = [];
 	var forwardLasers: Array<B2Vec2> = [];
 	var rearLasers: Array<B2Vec2> = [];
 	var leftLasers: Array<B2Vec2> = [];
 	var rightLasers: Array<B2Vec2> = [];
+
+	public static var componentShape: B2PolygonShape;
+	public static var filterData: B2FilterData;
+	public static var b2world: B2World;
 
 	// x and y in sprite coords
 	public function new(shipDefinition: ShipDefinition, b2world, x, y) {
@@ -52,28 +57,26 @@ class Ship extends Entity {
 
 		visuals = ShipVisuals.createFromDefinition(this.shipDefinition, shipPartWidth, shipPartHeight, spr);
 
-		var shape = new B2PolygonShape();
+		Ship.b2world = b2world;
+		Ship.filterData = new B2FilterData();
+		Ship.filterData.groupIndex = -1;
 
-		var filterData = new B2FilterData();
-		filterData.groupIndex = -1;
+		Ship.componentShape = new B2PolygonShape();
+		componentShape.setAsBox(shipPartWidth/200, shipPartHeight/200);
 
 		var fixtureDef = new B2FixtureDef();
 		fixtureDef.density = 1;
-		fixtureDef.shape = shape;
+		fixtureDef.shape = componentShape;
 		fixtureDef.friction = 0;
-		fixtureDef.filter = filterData;
+		fixtureDef.filter = Ship.filterData;
 		fixtureDef.userData = this;
 
 		var bodyDef = new B2BodyDef();
 		bodyDef.type = B2BodyType.DYNAMIC_BODY;
-
-		// trace(Xoffset);
-		// trace(Yoffset);
-
 		bodyDef.position.set(x/100, y/100); // div by 100 for b2 coords
 
 		this.body = b2world.createBody(bodyDef);
-		this.mass = 0;
+		this.body.createFixture(fixtureDef);
 
 		var powerCapacity: Float = 0.0;
 		var powerRechargeRate: Float = 0.0;
@@ -81,61 +84,74 @@ class Ship extends Entity {
 		for(shipPart in shipDefinition.parts) {
 			powerCapacity += shipPart.part.power_capacity;
 			powerRechargeRate += shipPart.part.recharge_rate;
-			this.mass += shipPart.part.mass;
 
-			switch shipPart.part.id {
-				case Data.ShipPartKind.Booster:
-					addBooster(shipPart);
-				case Data.ShipPartKind.Laser:
-					addLaser(shipPart);
-				case Data.ShipPartKind.Shield:
-					addShield(shipPart);
-				case Data.ShipPartKind.SolarPanel:
-				case Data.ShipPartKind.Battery:
-				case Data.ShipPartKind.Package:
-					addPackage(shipPart);
-				case Data.ShipPartKind.Core:
+			trace(shipPart);
+
+			if (shipPart.part.id != Data.ShipPartKind.Core) {
+				var bodyPosition = this.body.getPosition();
+				var offsetX = shipPart.x * shipPartWidth - shipPartOffsetX + shipPartWidth * 0.5;
+				var offsetY = shipPart.y * shipPartHeight - shipPartOffsetY + shipPartHeight * 0.5;
+				var bodyDef = new B2BodyDef();
+				bodyDef.type = B2BodyType.DYNAMIC_BODY;
+				bodyDef.position.set(bodyPosition.x + offsetX/100, bodyPosition.y + offsetY/100);
+		
+				var componentBody = b2world.createBody(bodyDef);
+				componentBody.createFixture(fixtureDef);
+				createJoint(componentBody);
+
+				switch shipPart.part.id {
+					case Data.ShipPartKind.Booster:
+						addBooster(shipPart, componentBody);
+					case Data.ShipPartKind.Laser:
+						addLaser(shipPart);
+					case Data.ShipPartKind.Shield:
+						addShield(shipPart);
+					case Data.ShipPartKind.SolarPanel:
+					case Data.ShipPartKind.Battery:
+					case Data.ShipPartKind.Package:
+						addPackage(shipPart);
+					case Data.ShipPartKind.Core:
+				}
 			}
-
-			shape.setAsOrientedBox(shipPartWidth / 200, shipPartHeight / 200, new B2Vec2((shipPart.x * shipPartWidth - shipPartOffsetX + (shipPartWidth / 2)) / 100, (shipPart.y * shipPartHeight - shipPartOffsetY + (shipPartHeight / 2)) / 100));
-			this.body.createFixture(fixtureDef);
 		}
 
 		this.powerSupply = new sim.components.PowerSupply(powerCapacity, powerRechargeRate);
 		ca = Main.ME.controller.createAccess("hero"); // creates an instance of controller
 	}
 
-	function addBooster(shipPart: ShipPartDefinition) {
-		var origin = new B2Vec2();
-		origin.x += shipPart.x * shipPartWidth - shipPartOffsetX;
-		origin.y += shipPart.y * shipPartHeight - shipPartOffsetY;
+	function createJoint(componentBody) {
+		var jointDef = new B2WeldJointDef();
+		jointDef.initialize(this.body, componentBody, this.body.getPosition());
+		Ship.b2world.createJoint(jointDef);
+	}
 
+	function addBooster(shipPart, boosterBody) {
 		switch shipPart.rotation {
 			case 0:
-				forwardBoosters.push(origin);
+				forwardBoosters.push(boosterBody);
 			case 90:
-				rightBoosters.push(origin);
+				rightBoosters.push(boosterBody);
 			case 180:
-				backwardsBoosters.push(origin);
+				backwardsBoosters.push(boosterBody);
 			case 270:
-				leftBoosters.push(origin);
+				leftBoosters.push(boosterBody);
 		}
 	}
 
 	function addLaser(shipPart: ShipPartDefinition) {
-		var origin = new B2Vec2();
-		origin.x += shipPart.x * shipPartWidth - shipPartOffsetX;
-		origin.y += shipPart.y * shipPartHeight - shipPartOffsetY;
+		var offset = new B2Vec2();
+		offset.x += shipPart.x * shipPartWidth - shipPartOffsetX;
+		offset.y += shipPart.y * shipPartHeight - shipPartOffsetY;
 
 		switch shipPart.rotation {
 			case 0:
-				forwardLasers.push(origin);
+				forwardLasers.push(offset);
 			case 90:
-				leftLasers.push(origin);
+				leftLasers.push(offset);
 			case 180:
-				rearLasers.push(origin);
+				rearLasers.push(offset);
 			case 270:
-				rightLasers.push(origin);
+				rightLasers.push(offset);
 		}
 	}
 
@@ -202,43 +218,28 @@ class Ship extends Entity {
 		spr.rotation = theta;
 
 		var center = this.body.getPosition();
-		if (ca.upDown() || ca.isKeyboardDown(hxd.Key.UP)) {
-			var force = this.calculateForce(forwardBoosters.length);
 
-			if (force > 0.0) {
-				var forceVec = this.body.getWorldVector(new B2Vec2(0, force *-1));
-				this.body.applyForce(forceVec, center);
-				fireBoosterParticles(forwardBoosters, theta);
+		if (ca.upDown() || ca.isKeyboardDown(hxd.Key.UP)) {
+			for (body in forwardBoosters) {
+				fireBooster(body, 0);
 			}
 		}
 
 		if (ca.downDown() || ca.isKeyboardDown(hxd.Key.DOWN)) {
-			var force = this.calculateForce(backwardsBoosters.length);
-
-			if (force > 0.0) {
-				var forceVec = this.body.getWorldVector(new B2Vec2(0, force));
-				this.body.applyForce(forceVec, center);
-				fireBoosterParticles(backwardsBoosters, theta + Math.PI);
+			for (body in backwardsBoosters) {
+				fireBooster(body, Math.PI);
 			}
 		}
 
 		if (ca.leftDown() || ca.isKeyboardDown(hxd.Key.LEFT)) {
-			var force = this.calculateForce(leftBoosters.length);
-
-			if (force > 0.0) {
-				var forceVec = this.body.getWorldVector(new B2Vec2(force *-1, 0));
-				this.body.applyForce(forceVec, center);
-				fireBoosterParticles(leftBoosters, theta + Math.PI + Math.PI/2);
+			for (body in leftBoosters) {
+				fireBooster(body, Math.PI * 3 / 2);
 			}
 		}
-
+		
 		if (ca.rightDown() || ca.isKeyboardDown(hxd.Key.RIGHT)) {
-			var force = this.calculateForce(rightBoosters.length);
-
-			if (force > 0.0) {
-				var forceVec = this.body.getWorldVector(new B2Vec2(force, 0));
-				this.body.applyForce(forceVec, center);
-				fireBoosterParticles(rightBoosters, theta + Math.PI/2);
+			for (body in rightBoosters) {
+				fireBooster(body, Math.PI / 2);
 			}
 		}
 
@@ -253,12 +254,17 @@ class Ship extends Entity {
 		}
 	}
 
-	function fireBoosterParticles(origins: Array<B2Vec2>, theta: Float) {
-		var position = this.body.getPosition().copy();
+	function fireBooster(boosterBody: B2Body, theta) {
+		var position = boosterBody.getPosition().copy();
 		position.multiply(100);
-		for (origin in origins) {
-			Game.ME.fx.spray(position.x + origin.x,position.y + origin.y, theta + Math.PI/2);
-		}
+		var thrustAngle = this.body.getAngle() + Math.PI / 2 + theta;
+		Game.ME.fx.spray(position.x, position.y, thrustAngle);
+		
+		var dir = new B2Vec2(Math.cos(thrustAngle), Math.sin(thrustAngle));
+		var forceVec = dir.copy();
+		forceVec.multiply(-1 * Const.THRUST_FORCE);
+
+		boosterBody.applyForce(forceVec, boosterBody.getPosition());
 	}
 
 	override function fixedUpdate() {
