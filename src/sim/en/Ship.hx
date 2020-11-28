@@ -1,6 +1,8 @@
 package sim.en;
 
 import sim.components.PowerSupply;
+import sim.components.Laser;
+
 import ShipDefinition.ShipPartDefinition;
 import box2D.dynamics.B2FilterData;
 import hxd.res.Font;
@@ -19,8 +21,7 @@ class Ship extends Entity {
 	var ca:dn.heaps.Controller.ControllerAccess;
 	var time:Float = 0.;
 
-	var shipPartWidth = 30;
-	var shipPartHeight = 30;
+	var shipPartSize = 30;
 	var shipPartOffsetX = Const.SHIP_WIDTH * 30 * 0.5;
 	var shipPartOffsetY = Const.SHIP_HEIGHT * 30 * 0.5;
 
@@ -43,14 +44,16 @@ class Ship extends Entity {
 	var rearLasers: Array<B2Vec2> = [];
 	var leftLasers: Array<B2Vec2> = [];
 	var rightLasers: Array<B2Vec2> = [];
+    var lasers: Array<Laser>;
 
 	// x and y in sprite coords
 	public function new(shipDefinition: ShipDefinition, b2world, x, y) {
 		super(x, y);
 
 		this.shipDefinition = shipDefinition;
+        this.lasers = new Array<Laser>();
 
-		visuals = ShipVisuals.createFromDefinition(this.shipDefinition, shipPartWidth, shipPartHeight, spr);
+		visuals = ShipVisuals.createFromDefinition(this.shipDefinition, shipPartSize, shipPartSize, spr);
 
 		var shape = new B2PolygonShape();
 
@@ -126,6 +129,8 @@ class Ship extends Entity {
 		var origin = new B2Vec2();
 		origin.x += shipPart.x * shipPartWidth - shipPartOffsetX;
 		origin.y += shipPart.y * shipPartHeight - shipPartOffsetY;
+
+        this.lasers.push(new Laser(origin.x, origin.y, this));
 
 		switch shipPart.rotation {
 			case 0:
@@ -249,6 +254,21 @@ class Ship extends Entity {
 			} else {
 				launchPackage();
 				packageLauncherPower = 0;
+			}
+		}
+
+		for (asteroid in Entity.ASTEROIDS) {
+			for (laser in this.lasers) {
+				if (laser.canFireAt(asteroid.localToGlobal())) {
+					var power = Data.shipPart.get(Data.ShipPartKind.Laser).power_usage;
+					
+					if (this.powerSupply.consumePower(power)) {
+						laser.resetCooldown();
+						var pos = laser.localToGlobal();
+						var vel = asteroid.sub(pos).normalized().multiply(Const.PROJECTILE_SPEED);;
+						new Projectile(pos.x, pos.y, vel.x, vel.y);
+					}
+				}        
 			}
 		}
 	}

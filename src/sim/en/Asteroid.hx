@@ -22,6 +22,8 @@ class Asteroid extends Entity {
 	public function new(b2world, x, y) {
 		super(x, y);
 
+		Entity.ASTEROIDS.push(this);
+                
 		var shape = new B2CircleShape(r/100);
 
 		var fixtureDef = new B2FixtureDef();
@@ -44,6 +46,11 @@ class Asteroid extends Entity {
 		this.body.applyTorque(Math.random() - Math.random() * 1000);
 	}
 
+	override function dispose() {
+		Entity.ASTEROIDS.remove(this);
+		super.dispose();
+	}
+    
 	override function update() {
 		var theta = body.getAngle();
 		var p = body.getPosition();
