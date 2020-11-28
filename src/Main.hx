@@ -82,6 +82,10 @@ class Main extends dn.Process {
 		Res.audio.DigitalNative.play(true, 0.09);
 	}
 
+	public function stopMusic() {
+		Res.audio.DigitalNative.stop();
+	}
+
 	public function startGame(gameMode: Data.GameMode, shipDefinition: ShipDefinition) {
 		if( Game.ME!=null ) {
 			Game.ME.destroy();
