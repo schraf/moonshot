@@ -70,6 +70,13 @@ class ShipBuilding extends Process {
 				warningMessage.text = "Need " + (this.gameMode.numHouses - storageCount) + " more storage units";
 				return;
 			}
+
+			for (cell in layout.cells) cell.alpha = 0.0;
+			moonBackground = new Background(root);
+			moonBackground.addStars(bounds);
+			moon = moonBackground.addMoon(0,0,startingMoonScale);
+			Assets.rocketLaunch.play(true);
+			launching = true;
 		};
 		
 		initPanel();
@@ -79,13 +86,6 @@ class ShipBuilding extends Process {
 		Process.resizeAll();
 		layout.addCore();
 		Main.ME.leaderboards.resetScore();
-
-		// Generate moon
-		for (cell in layout.cells) cell.alpha = 0.0;
-		moonBackground = new Background(root);
-		moon = moonBackground.addMoon(Const.VIEWPORT_WIDTH / 2 - (685 * startingMoonScale / 2),Const.VIEWPORT_HEIGHT/ 2 - (664 * .05 / 2),startingMoonScale);
-		Assets.rocketLaunch.play(true);
-		launching = true;
 	}
 
 	private function warn(text: String) {
@@ -156,28 +156,74 @@ class ShipBuilding extends Process {
 		stats.refresh();
 	}
 
+
+// import h3d.Engine;
+// import h2d.Tile;
+// import h2d.TileGroup;
+// import h3d.mat.*;
+// import h3d.scene.*;
+
+// class MoonScene {
+//   static var PW = 200;
+//   static var PH = 200;
+//   var scene: Scene;
+//   public var root: Object;
+//   var renderTarget : Texture;
+
+//   public function new() {
+//     scene = new Scene();
+//     root = new Object(scene);
+//     var prim = new h3d.prim.Sphere(1, 128, 128);
+//     prim.translate( 0, 0, 0);
+//     prim.addNormals();
+//     prim.addUVs();
+//     var tex = hxd.Res.img.moon_nasa.toTexture();
+//     var obj = new Mesh(prim, h3d.mat.Material.create(tex), root);
+//     obj.material.shadows = false;
+//     var light = new h3d.scene.fwd.DirLight(new h3d.Vector(0, 1, 0), scene);
+//     scene.lightSystem.ambientLight.set(0.3, 0.3, 0.3);
+//     // scene.camera.pos.set(x, y, 0);
+
+//     renderTarget = new Texture(PW, PH, [ Target ]);
+//     renderTarget.depthBuffer = new DepthBuffer(PW, PH);
+
+//   }
+
+//   public function getTexture(x, y) {
+//     scene.camera.pos.set(x, y, 0);
+//     var engine = Game.ME.engine;
+//     engine.pushTarget(renderTarget);
+//     engine.clear(0, 1); // Clears the render target texture and depth buffer
+//     scene.render(engine);
+//     engine.popTarget();
+
+//     return renderTarget;
+//   }
+
 	var alpha = 1.0;
+	var moonAlpha = 0.0;
 	var currentScale: Float = .05;
 	var moonScale: Float = 1;
 	override function fixedUpdate() {
 		super.fixedUpdate();
 		layout.update();
 
-
 		if (launching) {
-			alpha -= 1 / Const.SHIPBUILDING_FADEOUT_SECONDS / Const.FPS;
-			moonScale += .015 / Const.SHIPBUILDING_FADEOUT_SECONDS / Const.FPS;
+			alpha -= 1 / Const.SHIPBUILDING_FADEOUT_SECONDS / 30 * 2;
+			warningMessage.alpha = launchButton.alpha = background.alpha = panel.alpha = stats.panel.alpha = alpha;
+
+			moonAlpha = Math.min(1,(1 - alpha) * 2);
+			moonBackground.alpha = moonAlpha;
+			
+			moonScale += .04 / Const.SHIPBUILDING_FADEOUT_SECONDS / Const.FPS;
 			currentScale *= moonScale;
 			moon.scale(moonScale);
-			moon.x = Const.VIEWPORT_WIDTH / 2 - (685 * currentScale / 2);
-			moon.y = Const.VIEWPORT_HEIGHT / 2 - (664 * currentScale / 2);
-			// moon.x = Const.VIEWPORT_WIDTH / 2 - (moon.width / 2);
-			// moon.y = Const.VIEWPORT_HEIGHT / 2 - (moon.height / 2);
-			// trace(moon.x);
+			moon.x = Const.VIEWPORT_WIDTH * .95 - (685 * currentScale / 2);
+			moon.y = Const.VIEWPORT_HEIGHT * .5 - (664 * currentScale / 2);
 
-			// FADE OUT
-			launchButton.alpha = background.alpha = panel.alpha = stats.panel.alpha = alpha;
-			if (alpha <= 0) {
+			moon.rotate(.006);
+
+			if (alpha <= -1) {
 				finish();
 			}
 		}

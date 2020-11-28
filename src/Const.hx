@@ -30,5 +30,5 @@ class Const {
 
 	public static var SHIP_PANEL_WIDTH = 400;
 
-	public static var SHIPBUILDING_FADEOUT_SECONDS = 8;
+	public static var SHIPBUILDING_FADEOUT_SECONDS = 10;
 }
