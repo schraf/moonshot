@@ -11,6 +11,9 @@ class Assets {
 	public static var fx : SpriteLib;
 	public static var ship : SpriteLib;
 	public static var ui : SpriteLib;
+	
+	public static var rocketLaunch: dn.heaps.Sfx;
+	public static var thruster: dn.heaps.Sfx;
 
 	static var initDone = false;
 	public static function init() {
@@ -27,5 +30,8 @@ class Assets {
 		fx = dn.heaps.assets.Atlas.load("atlas/fx.atlas");
 		ship = dn.heaps.assets.Atlas.load("atlas/ship.atlas");
 		ui = dn.heaps.assets.Atlas.load("atlas/ui.atlas");
+
+		rocketLaunch = new dn.heaps.Sfx(hxd.Res.sfx.rocket_launch);
+		thruster = new dn.heaps.Sfx(hxd.Res.sfx.thruster);
 	}
 }

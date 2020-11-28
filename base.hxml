@@ -3,5 +3,6 @@
 -lib heaps
 -lib deepnightLibs
 -lib box2d
+-lib led-haxe-api
 -main Boot
 -dce full

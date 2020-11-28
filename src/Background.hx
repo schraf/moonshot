@@ -29,6 +29,7 @@ class Background extends h2d.Layers
 		moon.x = x;
 		moon.y = y;
 		moon.scale(scale);
+		return moon;
 	}
 
 	public function addGround() {

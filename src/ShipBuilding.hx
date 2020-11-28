@@ -1,3 +1,6 @@
+import ui.Button;
+import h2d.Bitmap;
+import format.gif.Data.Block;
 import h3d.Vector;
 import h2d.Text;
 import ui.Modal;
@@ -12,8 +15,16 @@ class ShipBuilding extends Process {
 	public var gameMode: Data.GameMode;
 	public var warningMessage: Text;
 
+	private var launching: Bool = false;
+
+	var moonBackground: Background;
+	var moon: Bitmap;
+	var startingMoonScale: Float = .05;
+	var background: Background;
 	var stats: ShipStats;
 	var storageCount: Int = 0;
+	var shipDefinition: ShipDefinition;
+	var launchButton: Button;
 
 	public function new(gameMode: Data.GameMode) {
 		super(Main.ME);
@@ -29,7 +40,7 @@ class ShipBuilding extends Process {
 		camera.setAnchor(0.5, 0.5);
 		camera.setPosition(center.x, center.y);
 
-		var background = new Background(root);
+		background = new Background(root);
 		background.addStars(bounds);
 		background.addMoon(Const.VIEWPORT_WIDTH * 0.1, Const.VIEWPORT_HEIGHT * 0.1, 0.3);
 		background.addGround();
@@ -38,7 +49,7 @@ class ShipBuilding extends Process {
 		layout.x = 420;
 		layout.y = 75;
 
-		var launchButton = new ui.Button("LAUNCH", 400, 200, root);
+		launchButton = new ui.Button("LAUNCH", 400, 200, root);
 		launchButton.x = 30;
 		launchButton.y = 800;
 
@@ -48,8 +59,8 @@ class ShipBuilding extends Process {
 		warningMessage.color = new Vector(1,0,0);
 
 		launchButton.onPush = function (event: hxd.Event) {
-			var shipDefinition = layout.toShipDefinition();
 			storageCount = 0;
+			shipDefinition = layout.toShipDefinition();
 			for (shipPart in shipDefinition.parts) {
 				if (shipPart.part.id == Data.ShipPartKind.Package) {
 					storageCount++;
@@ -59,11 +70,8 @@ class ShipBuilding extends Process {
 				warningMessage.text = "Need " + (this.gameMode.numHouses - storageCount) + " more storage units";
 				return;
 			}
-
-			destroy();
-			Main.ME.startGame(this.gameMode, shipDefinition);
 		};
-
+		
 		initPanel();
 
 		stats = new ShipStats();
@@ -71,6 +79,13 @@ class ShipBuilding extends Process {
 		Process.resizeAll();
 		layout.addCore();
 		Main.ME.leaderboards.resetScore();
+
+		// Generate moon
+		for (cell in layout.cells) cell.alpha = 0.0;
+		moonBackground = new Background(root);
+		moon = moonBackground.addMoon(Const.VIEWPORT_WIDTH / 2 - (685 * startingMoonScale / 2),Const.VIEWPORT_HEIGHT/ 2 - (664 * .05 / 2),startingMoonScale);
+		Assets.rocketLaunch.play(true);
+		launching = true;
 	}
 
 	private function warn(text: String) {
@@ -141,9 +156,36 @@ class ShipBuilding extends Process {
 		stats.refresh();
 	}
 
+	var alpha = 1.0;
+	var currentScale: Float = .05;
+	var moonScale: Float = 1;
 	override function fixedUpdate() {
 		super.fixedUpdate();
 		layout.update();
+
+
+		if (launching) {
+			alpha -= 1 / Const.SHIPBUILDING_FADEOUT_SECONDS / Const.FPS;
+			moonScale += .015 / Const.SHIPBUILDING_FADEOUT_SECONDS / Const.FPS;
+			currentScale *= moonScale;
+			moon.scale(moonScale);
+			moon.x = Const.VIEWPORT_WIDTH / 2 - (685 * currentScale / 2);
+			moon.y = Const.VIEWPORT_HEIGHT / 2 - (664 * currentScale / 2);
+			// moon.x = Const.VIEWPORT_WIDTH / 2 - (moon.width / 2);
+			// moon.y = Const.VIEWPORT_HEIGHT / 2 - (moon.height / 2);
+			// trace(moon.x);
+
+			// FADE OUT
+			launchButton.alpha = background.alpha = panel.alpha = stats.panel.alpha = alpha;
+			if (alpha <= 0) {
+				finish();
+			}
+		}
+	}
+
+	function finish() {
+		Assets.rocketLaunch.stop();
+		destroy();
+		Main.ME.startGame(this.gameMode, shipDefinition);
 	}
 }
-
