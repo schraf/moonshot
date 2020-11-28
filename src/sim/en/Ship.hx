@@ -1,6 +1,8 @@
 package sim.en;
 
 import sim.components.PowerSupply;
+import sim.components.Laser;
+import Entity.EntityTypeFlags;
 import ShipDefinition.ShipPartDefinition;
 import box2D.dynamics.B2FilterData;
 import hxd.res.Font;
@@ -15,13 +17,13 @@ import box2D.dynamics.B2Fixture;
 import box2D.dynamics.B2FixtureDef;
 import box2D.collision.shapes.B2PolygonShape;
 import box2D.dynamics.joints.B2WeldJointDef;
+import hxd.Res;
 
 class Ship extends Entity {
 	var ca:dn.heaps.Controller.ControllerAccess;
 	var time:Float = 0.;
 
-	var shipPartWidth = 30;
-	var shipPartHeight = 30;
+	var shipPartSize = 30;
 	var shipPartOffsetX = Const.SHIP_WIDTH * 30 * 0.5;
 	var shipPartOffsetY = Const.SHIP_HEIGHT * 30 * 0.5;
 
@@ -44,6 +46,7 @@ class Ship extends Entity {
 	var rearLasers: Array<B2Vec2> = [];
 	var leftLasers: Array<B2Vec2> = [];
 	var rightLasers: Array<B2Vec2> = [];
+	var lasers: Array<Laser>;
 
 	public static var componentShape: B2PolygonShape;
 	public static var filterData: B2FilterData;
@@ -53,16 +56,19 @@ class Ship extends Entity {
 	public function new(shipDefinition: ShipDefinition, b2world, x, y) {
 		super(x, y);
 
-		this.shipDefinition = shipDefinition;
+		this.typeFlags |= EntityTypeFlags.SHIP;
 
-		visuals = ShipVisuals.createFromDefinition(this.shipDefinition, shipPartWidth, shipPartHeight, spr);
+		this.shipDefinition = shipDefinition;
+		this.lasers = new Array<Laser>();
+
+		visuals = ShipVisuals.createFromDefinition(this.shipDefinition, shipPartSize, shipPartSize, spr);
 
 		Ship.b2world = b2world;
 		Ship.filterData = new B2FilterData();
 		Ship.filterData.groupIndex = -1;
 
 		Ship.componentShape = new B2PolygonShape();
-		componentShape.setAsBox(shipPartWidth/200, shipPartHeight/200);
+		componentShape.setAsBox(shipPartSize/200, shipPartSize/200);
 
 		var fixtureDef = new B2FixtureDef();
 		fixtureDef.density = 1;
@@ -85,16 +91,14 @@ class Ship extends Entity {
 			powerCapacity += shipPart.part.power_capacity;
 			powerRechargeRate += shipPart.part.recharge_rate;
 
-			trace(shipPart);
-
 			if (shipPart.part.id != Data.ShipPartKind.Core) {
 				var bodyPosition = this.body.getPosition();
-				var offsetX = shipPart.x * shipPartWidth - shipPartOffsetX + shipPartWidth * 0.5;
-				var offsetY = shipPart.y * shipPartHeight - shipPartOffsetY + shipPartHeight * 0.5;
+				var offsetX = shipPart.x * shipPartSize - shipPartOffsetX + shipPartSize * 0.5;
+				var offsetY = shipPart.y * shipPartSize - shipPartOffsetY + shipPartSize * 0.5;
 				var bodyDef = new B2BodyDef();
 				bodyDef.type = B2BodyType.DYNAMIC_BODY;
 				bodyDef.position.set(bodyPosition.x + offsetX/100, bodyPosition.y + offsetY/100);
-		
+
 				var componentBody = b2world.createBody(bodyDef);
 				componentBody.createFixture(fixtureDef);
 				createJoint(componentBody);
@@ -140,8 +144,9 @@ class Ship extends Entity {
 
 	function addLaser(shipPart: ShipPartDefinition) {
 		var offset = new B2Vec2();
-		offset.x += shipPart.x * shipPartWidth - shipPartOffsetX;
-		offset.y += shipPart.y * shipPartHeight - shipPartOffsetY;
+		offset.x += shipPart.x * shipPartSize - shipPartOffsetX;
+		offset.y += shipPart.y * shipPartSize - shipPartOffsetY;
+		this.lasers.push(new Laser(offset.x, offset.y, spr));
 
 		switch shipPart.rotation {
 			case 0:
@@ -168,7 +173,11 @@ class Ship extends Entity {
 		ca.dispose(); // release on destruction
 	}
 
-	public function onCollision () {
+	override function onCollision (entity: Entity) {
+		if (entity.isA(EntityTypeFlags.PROJECTILE) || entity.isA(EntityTypeFlags.PACKAGE)) {
+			return;
+		}
+
 		if (cd.has('shipCollision')) {
 			return;
 		}
@@ -184,6 +193,8 @@ class Ship extends Entity {
 		}
 
 		if (damage > 0) {
+			Res.audio.hit.play(false, 0.1);
+
 			this.hullStrength = Math.max(0, this.hullStrength - damage);
 			game.hud.hull.setValue(this.hullStrength / Const.SHIP_HULL_STRENGTH);
 			Main.ME.leaderboards.removeFromScore(1);
@@ -196,11 +207,15 @@ class Ship extends Entity {
 	}
 
 	function calculateForce (boosters: Int): Float {
+		if (boosters == 0) {
+			return 0.0;
+		}
+
 		var powerUsage: Float = boosters * Data.shipPart.get(Data.ShipPartKind.Booster).power_usage;
 		var force: Float = 0.0;
 
 		if (this.powerSupply.consumePower(powerUsage)) {
-			force = Math.max(0, boosters - (this.mass / 500.0));
+			force = Math.max(0.5, boosters - (this.mass / 500.0));
 		}
 
 		return force;
@@ -236,7 +251,7 @@ class Ship extends Entity {
 				fireBooster(body, Math.PI * 3 / 2);
 			}
 		}
-		
+
 		if (ca.rightDown() || ca.isKeyboardDown(hxd.Key.RIGHT)) {
 			for (body in rightBoosters) {
 				fireBooster(body, Math.PI / 2);
@@ -252,6 +267,22 @@ class Ship extends Entity {
 				packageLauncherPower = 0;
 			}
 		}
+
+		for (asteroid in Entity.ASTEROIDS) {
+			var asteroidPosition = asteroid.getBodyPosition();
+			for (laser in this.lasers) {
+				if (laser.canFireAt(asteroidPosition)) {
+					var power = Data.shipPart.get(Data.ShipPartKind.Laser).power_usage;
+
+					if (this.powerSupply.consumePower(power)) {
+						laser.resetCooldown();
+						var pos = laser.localToGlobal();
+						var vel = asteroidPosition.sub(pos).normalized().multiply(Const.PROJECTILE_SPEED);
+						new Projectile(pos.x, pos.y, vel.x, vel.y);
+					}
+				}
+			}
+		}
 		game.hud.launcher.setValue(packageLauncherPower / 10);
 	}
 
@@ -260,7 +291,7 @@ class Ship extends Entity {
 		position.multiply(100);
 		var thrustAngle = this.body.getAngle() + Math.PI / 2 + theta;
 		Game.ME.fx.spray(position.x, position.y, thrustAngle);
-		
+
 		var dir = new B2Vec2(Math.cos(thrustAngle), Math.sin(thrustAngle));
 		var forceVec = dir.copy();
 		forceVec.multiply(-1 * Const.THRUST_FORCE);
