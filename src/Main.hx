@@ -10,6 +10,9 @@ class Main extends dn.Process {
 	public var leaderboards: Leaderboards;
 
 	public function new(s:h2d.Scene) {
+		dn.Process.CUSTOM_STAGE_WIDTH  = Const.VIEWPORT_WIDTH;
+		dn.Process.CUSTOM_STAGE_HEIGHT  = Const.VIEWPORT_HEIGHT;
+	
 		super();
 		ME = this;
 		this.scene = s;
