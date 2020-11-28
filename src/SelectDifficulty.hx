@@ -9,11 +9,23 @@ class Difficulty {
     public var gameModeKind: Data.GameModeKind;
     public var color: Int;
     public var id: Int;
+
     public function new(gameModeKind: Data.GameModeKind, id: Int, color: Int, title: String) {
         this.gameModeKind = gameModeKind;
         this.title = title;
         this.color = color;
         this.id = id;
+    }
+
+    public function playSound() {
+        switch (gameModeKind) {
+            case (ClassA):
+                
+            case (ClassB):
+                Res.audio.horse.play(false,.5);
+            case (ClassC):
+                Res.audio.wilhelm.play(false,.5);
+        }
     }
 
     public function description() {
@@ -220,6 +232,7 @@ class SelectDifficulty extends Process {
 
     function buttonPressed() {
         destroy();
+        options[selectedOption].playSound();
         Main.ME.startShipBuilding(options[selectedOption].gameMode());
     }
 }
