@@ -56,7 +56,6 @@ class Asteroid extends Entity {
 	}
 
 	override function onCollision(entity:Entity) {
-		// POLISH: explosion fx
 		if (entity.isA(EntityTypeFlags.PROJECTILE)) {
 			destroy();
 		}

@@ -280,11 +280,10 @@ class Ship extends Entity {
 			for (laser in this.lasers) {
 				if (laser.canFireAt(asteroidPosition)) {
 					var power = Data.shipPart.get(Data.ShipPartKind.Laser).power_usage;
-
 					if (this.powerSupply.consumePower(power)) {
 						laser.resetCooldown();
-						var pos = laser.localToGlobal();
-						var vel = asteroidPosition.sub(pos).normalized().multiply(Const.PROJECTILE_SPEED);
+						var pos = laser.getWorldPosition();
+						var vel = asteroidPosition.sub(new h2d.col.Point(pos.x, pos.y)).normalized().multiply(Const.PROJECTILE_SPEED);
 						new Projectile(pos.x, pos.y, vel.x, vel.y);
 					}
 				}
