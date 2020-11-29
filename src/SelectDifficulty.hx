@@ -33,19 +33,19 @@ class Difficulty {
         switch (gameModeKind) {
             case (ClassA):
                 desc.push("This one is easy. In fact, the customer doesn't");
-                desc.push("remember that they ordered anything. She'll forget");
+                desc.push("remember that they ordered anything. They'll forget");
                 desc.push("after 11 hours and you'll win.");
                 desc.push(" ");
             case (ClassB):
-                desc.push("Cyber Monday has come and gone. Deliver 2");
-                desc.push("twin space zebras, winners of the latest");
+                desc.push("Cyber Monday has come and gone. Deliver 5");
+                desc.push("quintuplet space zebras, winners of the latest");
                 desc.push("Interstellar derbathon. Don't take too long,");
                 desc.push("would you kindly?");
             case (ClassC):
                 desc.push("It is DEFCON 1 and supplies are dwindling.");
-                desc.push("You have 2 minutes in total to fabricate your craft and");
-                desc.push("deliver vital supplies to three forward moon outposts.");
-                desc.push("Hurry.");
+                desc.push("You have basically no budget to fabricate your craft and");
+                desc.push("deliver vital supplies to 10 forward moon outposts.");
+                desc.push(" ");
         }
         return desc;
     }
