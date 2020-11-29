@@ -152,7 +152,7 @@ class Menu extends Process {
 		}
 		else if (options[selectedOption] == LEADERBOARD) {
 			destroy();
-			Main.ME.startLeaderboards(Data.gameMode.get(Data.GameModeKind.ClassA));
+			Main.ME.showSelectDifficulty(true);
 		}
 	}
 }

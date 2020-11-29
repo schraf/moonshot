@@ -77,6 +77,7 @@ class SelectDifficulty extends Process {
 
     var flow: h2d.Flow;
     var ca : dn.heaps.Controller.ControllerAccess;
+    var simple: Bool;
 
     var options: Array<Difficulty>;
 
@@ -84,11 +85,12 @@ class SelectDifficulty extends Process {
     var gameMode: Data.GameMode;
     var descriptionLines: Array<Text> = [];
 
-    public function new() {
+    public function new(simple = false) {
         super(Main.ME);
         createRoot(Main.ME.root);
+        this.simple = simple;
 
-        ca = Main.ME.controller.createAccess("menu");
+        ca = Main.ME.controller.createAccess("select_difficulty");
 
 		var bounds = new h2d.col.Bounds();
 		bounds.set(0.0, 0.0, Const.VIEWPORT_WIDTH, Const.VIEWPORT_HEIGHT);
@@ -120,25 +122,34 @@ class SelectDifficulty extends Process {
 
         options = [Difficulty.EASY, Difficulty.MEDIUM, Difficulty.HARD];
 
-        addText("Difficulty");
         flow.addSpacing(50);
-        addButton(Difficulty.EASY.title, 0);
-        addButton(Difficulty.MEDIUM.title, 1);
-        addButton(Difficulty.HARD.title, 2);
+        if (!simple) {
+            addText("Difficulty");
+            addButton(Difficulty.EASY.title, 0);
+            addButton(Difficulty.MEDIUM.title, 1);
+            addButton(Difficulty.HARD.title, 2);
+        } else {
+            addText("Leaderboards");
+            addButton(Difficulty.EASY.title, 0, Difficulty.EASY.color);
+            addButton(Difficulty.MEDIUM.title, 1, Difficulty.MEDIUM.color);
+            addButton(Difficulty.HARD.title, 2, Difficulty.HARD.color);
+        }
+
         flow.addSpacing(50);
 
         selectedOption = 0;
 
-        for (i in 0...5) {
-            var tf = new h2d.Text(Assets.fontMedium, flow);
-            tf.text = "";
-            tf.textColor = 0xFFFFFF;
-            descriptionLines.push(new h2d.Text(Assets.fontMedium, flow));
+        if (!simple) {
+            for (i in 0...5) {
+                var tf = new h2d.Text(Assets.fontMedium, flow);
+                tf.text = "";
+                tf.textColor = 0xFFFFFF;
+                descriptionLines.push(new h2d.Text(Assets.fontMedium, flow));
+            }
+            setDescription(options[selectedOption]);
         }
 
-        setDescription(options[selectedOption]);
         select(0, false);
-
         Process.resizeAll();
     }
 
@@ -149,8 +160,8 @@ class SelectDifficulty extends Process {
         return tf;
     }
 
-    function addButton(str:String, option: Int) {
-		var tf = addText(str);
+    function addButton(str:String, option: Int, c=0xFFFFFF) {
+		var tf = addText(str, c);
 		var interactive = new Interactive(tf.calcTextWidth(str), tf.textHeight, tf);
 		interactive.enableRightButton = true;
 
@@ -190,8 +201,8 @@ class SelectDifficulty extends Process {
 
         flow.getChildAt(options[selectedOption].id).alpha = 1;
         flow.getChildAt(options[optionToSelect].id).alpha = 0.5;
+        if (!simple)
         setDescription(options[optionToSelect]);
-        // updateHouses(options[selectedOption]);
 
         selectedOption = optionToSelect;
     }
@@ -232,8 +243,12 @@ class SelectDifficulty extends Process {
 
     function buttonPressed() {
         destroy();
-        options[selectedOption].playSound();
-        Main.ME.startShipBuilding(options[selectedOption].gameMode());
+        if (simple)
+            Main.ME.startLeaderboards(options[selectedOption].gameMode());
+        else {
+            options[selectedOption].playSound();
+            Main.ME.startShipBuilding(options[selectedOption].gameMode());
+        }
     }
 }
 
