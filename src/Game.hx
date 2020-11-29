@@ -1,4 +1,5 @@
 
+import hxsl.Ast.Const;
 import PostGame.PostGameMode;
 import hxd.Res;
 import haxe.macro.Type.ClassType;
@@ -62,6 +63,8 @@ class Game extends Process {
 
 	public var ship: Ship;
 	var up:B2Vec2;
+
+	var lastAsteriodSpawn: Float = 0.0;
 
 	public function new(gameMode: Data.GameMode, shipDefinition: ShipDefinition) {
 		super(Main.ME);
@@ -185,7 +188,6 @@ class Game extends Process {
 		// scroller.setScale(Const.SCALE);
 	}
 
-
 	function gc() {
 		if( Entity.GC==null || Entity.GC.length==0 )
 			return;
@@ -237,6 +239,18 @@ class Game extends Process {
 	override function update() {
 		super.update();
 
+		if (Entity.HOUSES.length == 0) {
+			endGame(PostGameMode.WIN);
+		}
+
+		var time = framesToSec(ftime);
+		if (time - lastAsteriodSpawn > 3) {
+			var asteroid = new Asteroid(world, cast (Const.FIELD_WIDTH / 2), Const.FIELD_HEIGHT);
+			asteroid.body.applyImpulse(new B2Vec2(45, 45), asteroid.body.getPosition());
+			lastAsteriodSpawn = time;
+		}
+		
+
 		if (!ui.Console.ME.hasFlag('nogravity')) {
 			for(e in Entity.ALL) if( !e.destroyed ) {
 				e.update();
@@ -244,10 +258,6 @@ class Game extends Process {
 					moon.applyGravity(e.body);
 				}
 			}
-		}
-
-		if (Entity.HOUSES.length == 0) {
-			endGame(PostGameMode.WIN);
 		}
 
 		world.step(1 / 60,  3,  3);
