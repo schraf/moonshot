@@ -49,7 +49,9 @@ class House extends Entity {
 
 	override function onCollision (entity: Entity) {
 		if (entity.isA(EntityTypeFlags.PACKAGE)) {
-			Main.ME.leaderboards.addToScore(500);
+			var velocity = entity.body.m_linearVelocity;
+			var speed = Math.sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
+			Main.ME.leaderboards.addToScore(cast (500 + (speed * -10)));
 			Res.audio.delivered.play(false, 0.1);
 			destroy();
 		}

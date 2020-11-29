@@ -49,9 +49,11 @@ class Tutorial extends Process {
 		addSection("Firing weapons takes energy, use batteries to store as much as you can.", Assets.ship.getTile('battery'), Const.VIEWPORT_WIDTH, 0.35);
 		addSection("Use solar panels to charge up your batteries faster.", Assets.ship.getTile('solar'), Const.VIEWPORT_WIDTH, 0.35);
 		addSection("Shields deplete energy, but protect from collisions.", Assets.ship.getTile('shield'), Const.VIEWPORT_WIDTH, 0.35);
-		addSection("Watch out for asteriods!.", Assets.background.getTile('asteroid_a'), Const.VIEWPORT_WIDTH, 0.35);
 		flow.addSpacing(20);
 		addSection("Once all packages are delivered, your mission is complete! Good luck!", null, Const.VIEWPORT_WIDTH, 1);
+		addSection("Final score is calculated from: leftover budget - packages launched - damage taken + packages delivered", null, Const.VIEWPORT_WIDTH, 1);
+		addSection("The harder the packages hit the house, the lest money we get for them, so try to be gentle", null, Const.VIEWPORT_WIDTH, 1);
+
 
 		Process.resizeAll();
 	}

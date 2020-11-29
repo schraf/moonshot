@@ -215,6 +215,8 @@ class Ship extends Entity {
 			Game.ME.trackingCamera.shakeS(1, 2);
 			Res.audio.hit.play(false, 0.1);
 
+			Main.ME.leaderboards.addToScore(cast (damage * -1));
+
 			this.hullStrength = Math.max(0, this.hullStrength - damage);
 			game.hud.hull.setValue(this.hullStrength / Const.SHIP_HULL_STRENGTH);
 			Main.ME.leaderboards.removeFromScore(1);
@@ -334,6 +336,7 @@ class Ship extends Entity {
 
 	function launchPackage() {
 		// numPackages -= 1;
+		Main.ME.leaderboards.addToScore(-100);
 
 		var packagePosition = body.getPosition();
 		packagePosition.multiply(100);

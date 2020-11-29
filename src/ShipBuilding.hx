@@ -60,6 +60,9 @@ class ShipBuilding extends Process {
 		launchButton.onPush = function (event: hxd.Event) {
 			storageCount = 0;
 			shipDefinition = layout.toShipDefinition();
+			
+			Main.ME.leaderboards.addToScore(this.gameMode.maxCost - stats.cost);
+			
 			for (shipPart in shipDefinition.parts) {
 				if (shipPart.part.id == Data.ShipPartKind.Package) {
 					storageCount++;
