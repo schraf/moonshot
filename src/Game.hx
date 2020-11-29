@@ -140,15 +140,15 @@ class Game extends Process {
 		for (i in 0 ... this.gameMode.numAsteroids) {
 			var point = new h2d.col.Point(1.0, 0.0);
 			var angle = Math.random() * 2.0 * Math.PI;
-			var distance = (Math.random() * bounds.height * 0.75) + sim.en.Moon.Radius;
+			var distance = (Math.random() * starBounds.height * 0.75) + sim.en.Moon.Radius;
 
 			point.rotate(angle);
 			point.scale(distance);
 			point = point.add(moonPosition);
 
-			// clamp to bounds
-			point.x = Math.max(Math.min(point.x, bounds.width), 0.0);
-			point.y = Math.max(Math.min(point.y, bounds.height), 0.0);
+			// clamp to starBounds
+			point.x = Math.max(Math.min(point.x, starBounds.width), 0.0);
+			point.y = Math.max(Math.min(point.y, starBounds.height), 0.0);
 
 			// move towards moon
 			var dir = point.sub(moonPosition);
