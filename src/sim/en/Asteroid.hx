@@ -23,6 +23,7 @@ class Asteroid extends Entity {
 	public function new(b2world, x, y) {
 		super(x, y);
 		this.typeFlags |= EntityTypeFlags.ASTEROID;
+		this.ignoreGravity = true;
 
 		Entity.ASTEROIDS.push(this);
 
@@ -71,7 +72,7 @@ class Asteroid extends Entity {
 		collider.x = pos.x;
 		collider.y = pos.y;
 
-		if (pos.x < 0.0 || pos.x > Const.VIEWPORT_WIDTH || pos.y < 0.0 || pos.y > Const.VIEWPORT_HEIGHT) {
+		if (pos.x < 0.0 || pos.x > Const.FIELD_WIDTH || pos.y < 0.0 || pos.y > Const.FIELD_HEIGHT) {
 			destroy();
 		}
 	}

@@ -49,6 +49,7 @@ class House extends Entity {
 
 	override function onCollision (entity: Entity) {
 		if (entity.isA(EntityTypeFlags.PACKAGE)) {
+			Game.ME.fx.markerText(this.cx, this.cy, "Thanks!", 2);
 			var velocity = entity.body.m_linearVelocity;
 			var speed = Math.sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
 			Main.ME.leaderboards.addToScore(cast (500 + (speed * -10)));

@@ -1,3 +1,5 @@
+import h2d.Text.Align;
+import h3d.Vector;
 import h2d.Sprite;
 import dn.heaps.HParticle;
 import dn.Tweenie;
@@ -131,19 +133,18 @@ class Fx extends dn.Process {
 	}
 
 	public function markerText(cx:Int, cy:Int, txt:String, ?t=1.0) {
-		#if debug
 		var tf = new h2d.Text(Assets.fontTiny, topNormalSb);
 		tf.text = txt;
 
 		var p = allocTopAdd(getTile("fxCircle"), (cx+0.5)*Const.GRID, (cy+0.5)*Const.GRID);
-		p.colorize(0x0080FF);
-		p.alpha = 0.6;
+		p.alpha = 0.0;
 		p.lifeS = 0.3;
 		p.fadeOutSpeed = 0.4;
 		p.onKill = tf.remove;
-
-		tf.setPosition(p.x-tf.textWidth*0.5, p.y-tf.textHeight*0.5);
-		#end
+		tf.color = new Vector(0, 1, 0, 1);
+		tf.setScale(2);
+		tf.textAlign = Align.Center;
+		tf.setPosition(p.x, p.y);
 	}
 
 	public function flashBangS(c:UInt, a:Float, ?t=0.1) {

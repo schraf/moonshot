@@ -1,4 +1,5 @@
 
+import hxsl.Ast.Const;
 import PostGame.PostGameMode;
 import hxd.Res;
 import haxe.macro.Type.ClassType;
@@ -62,6 +63,8 @@ class Game extends Process {
 
 	public var ship: Ship;
 	var up:B2Vec2;
+
+	var lastAsteriodSpawn: Float = 0.0;
 
 	public function new(gameMode: Data.GameMode, shipDefinition: ShipDefinition) {
 		super(Main.ME);
@@ -140,15 +143,15 @@ class Game extends Process {
 		for (i in 0 ... this.gameMode.numAsteroids) {
 			var point = new h2d.col.Point(1.0, 0.0);
 			var angle = Math.random() * 2.0 * Math.PI;
-			var distance = (Math.random() * bounds.height * 0.75) + sim.en.Moon.Radius;
+			var distance = (Math.random() * starBounds.height * 0.75) + sim.en.Moon.Radius;
 
 			point.rotate(angle);
 			point.scale(distance);
 			point = point.add(moonPosition);
 
-			// clamp to bounds
-			point.x = Math.max(Math.min(point.x, bounds.width), 0.0);
-			point.y = Math.max(Math.min(point.y, bounds.height), 0.0);
+			// clamp to starBounds
+			point.x = Math.max(Math.min(point.x, starBounds.width), 0.0);
+			point.y = Math.max(Math.min(point.y, starBounds.height), 0.0);
 
 			// move towards moon
 			var dir = point.sub(moonPosition);
@@ -184,7 +187,6 @@ class Game extends Process {
 		super.onResize();
 		// scroller.setScale(Const.SCALE);
 	}
-
 
 	function gc() {
 		if( Entity.GC==null || Entity.GC.length==0 )
@@ -237,6 +239,18 @@ class Game extends Process {
 	override function update() {
 		super.update();
 
+		if (Entity.HOUSES.length == 0) {
+			endGame(PostGameMode.WIN);
+		}
+
+		var time = framesToSec(ftime);
+		if (time - lastAsteriodSpawn > 3) {
+			var asteroid = new Asteroid(world, cast (Const.FIELD_WIDTH / 2), Const.FIELD_HEIGHT);
+			asteroid.body.applyImpulse(new B2Vec2(45, 45), asteroid.body.getPosition());
+			lastAsteriodSpawn = time;
+		}
+		
+
 		if (!ui.Console.ME.hasFlag('nogravity')) {
 			for(e in Entity.ALL) if( !e.destroyed ) {
 				e.update();
@@ -244,10 +258,6 @@ class Game extends Process {
 					moon.applyGravity(e.body);
 				}
 			}
-		}
-
-		if (Entity.HOUSES.length == 0) {
-			endGame(PostGameMode.WIN);
 		}
 
 		world.step(1 / 60,  3,  3);
