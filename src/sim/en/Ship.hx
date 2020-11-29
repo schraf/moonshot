@@ -55,6 +55,7 @@ class Ship extends Entity {
 	// x and y in sprite coords
 	public function new(shipDefinition: ShipDefinition, b2world, x, y) {
 		super(x, y);
+		setPosPixel(x, y);
 
 		this.typeFlags |= EntityTypeFlags.SHIP;
 
