@@ -5,10 +5,13 @@ import dn.Process;
 class SplashScreens extends Process {
 	var flow: h2d.Flow;
 	var cinematic = new dn.Cinematic(Const.FPS);
+	var ca : dn.heaps.Controller.ControllerAccess;
 
 	public function new() {
 		super(Main.ME);
 		createRoot(Main.ME.root);
+
+		ca = Main.ME.controller.createAccess("splash_screens");
 
 		var bounds = new h2d.col.Bounds();
 		bounds.set(0.0, 0.0, Const.VIEWPORT_WIDTH, Const.VIEWPORT_HEIGHT);
@@ -48,6 +51,13 @@ class SplashScreens extends Process {
 		});
 
 		Process.resizeAll();
+	}
+
+	override function update() {
+		if (ca.xDown()) {
+			destroy();
+			Main.ME.showMenu();
+		}
 	}
 
 	function addLogo() {
