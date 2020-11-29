@@ -23,6 +23,7 @@ class Asteroid extends Entity {
 	public function new(b2world, x, y) {
 		super(x, y);
 		this.typeFlags |= EntityTypeFlags.ASTEROID;
+		this.ignoreGravity = true;
 
 		Entity.ASTEROIDS.push(this);
 
