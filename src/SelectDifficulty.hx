@@ -56,7 +56,7 @@ class Difficulty {
         Data.GameModeKind.ClassA,
         1,
         0x1CE019,
-        "Delapidated Deliverer"
+        "Affluent Airship"
     );
     public static var MEDIUM = new Difficulty(
         Data.GameModeKind.ClassB,
@@ -68,7 +68,7 @@ class Difficulty {
         Data.GameModeKind.ClassC,
         3,
         0xAD0909,
-        "FTL Freighter"
+        "Daring Dodger"
     );
 }
 
