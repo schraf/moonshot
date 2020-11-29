@@ -1,3 +1,4 @@
+import PostGame.PostGameMode;
 import hxd.Res;
 import PostGame.PostGameState;
 import Data;
@@ -108,16 +109,16 @@ class Main extends dn.Process {
 			new ShipBuilding(gameMode);
 	}
 
-	public function startPostGame(gameMode: Data.GameMode) {
+	public function startPostGame(gameMode: Data.GameMode, pastGameMode: PostGameMode) {
 		if(PostGame.ME != null) {
 			PostGame.ME.destroy();
 
 			delayer.addF(function() {
-				new PostGame(gameMode.Id);
+				new PostGame(gameMode.Id, pastGameMode);
 			}, 1);
 		}
 		else {
-			new PostGame(gameMode.Id);
+			new PostGame(gameMode.Id, pastGameMode);
 		}
 	}
 
@@ -126,11 +127,11 @@ class Main extends dn.Process {
 			PostGame.ME.destroy();
 
 			delayer.addF(function() {
-				new PostGame(gameMode.Id, PostGameState.LOAD_LEADERBOARD);
+				new PostGame(gameMode.Id, PostGameMode.LEADERBOARD);
 			}, 1);
 		}
 		else {
-			new PostGame(gameMode.Id, PostGameState.LOAD_LEADERBOARD);
+			new PostGame(gameMode.Id, PostGameMode.LEADERBOARD);
 		}
 	}
 

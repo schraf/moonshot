@@ -1,4 +1,5 @@
 
+import PostGame.PostGameMode;
 import hxd.Res;
 import haxe.macro.Type.ClassType;
 import box2D.collision.B2Manifold;
@@ -225,12 +226,12 @@ class Game extends Process {
 		for(e in Entity.ALL) if( !e.destroyed ) e.fixedUpdate();
 	}
 
-	public function endGame () {
+	public function endGame (postGameMode: PostGameMode) {
 		delayer.addF(function() {
 			destroy();
 		}, 1);
 
-		Main.ME.startPostGame(this.gameMode);
+		Main.ME.startPostGame(this.gameMode, postGameMode);
 	}
 
 	override function update() {
@@ -246,7 +247,7 @@ class Game extends Process {
 		}
 
 		if (Entity.HOUSES.length == 0) {
-			endGame();
+			endGame(PostGameMode.WIN);
 		}
 
 		world.step(1 / 60,  3,  3);

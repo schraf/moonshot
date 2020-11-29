@@ -1,5 +1,6 @@
 package sim.en;
 
+import PostGame.PostGameMode;
 import sim.components.PowerSupply;
 import sim.components.Laser;
 import Entity.EntityTypeFlags;
@@ -220,7 +221,7 @@ class Ship extends Entity {
 
 			if (this.hullStrength <= 0) {
 				// POLISH: explosion
-				Game.ME.endGame();
+				Game.ME.endGame(PostGameMode.DESTROYED);
 			}
 		}
 	}
