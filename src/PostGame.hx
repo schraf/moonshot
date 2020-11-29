@@ -1,3 +1,4 @@
+import h2d.Text;
 import hxd.Event.EventKind;
 import hxd.Key;
 import hxd.Window;
@@ -25,8 +26,9 @@ class PostGame extends Process {
 	var ca : dn.heaps.Controller.ControllerAccess;
 	var state: PostGameState;
 	var gameMode: Data.GameModeKind;
-	var loadingText: h2d.Object;
+	var loadingText: Text;
 	var inputText: h2d.Text;
+	var inputInstructions: h2d.Text;
 
 	public function new(gameMode: Data.GameModeKind, postGameMode: PostGameMode) {
 		super(Main.ME);
@@ -60,7 +62,8 @@ class PostGame extends Process {
 				this.state = ENTER_NAME;
 				addTitle('GAME OVER');
 				addTitle('all packages delivered!', 0x00FF00, true);
-				addTitle('Press enter when complete:');
+				flow.addSpacing(100);
+				inputInstructions = addTitle('Press enter when complete:');
 				inputArray = generateName();
 				inputText = addTitle(inputArray.join(''), 0xD04B38, true);
 			case DESTROYED:
@@ -78,7 +81,7 @@ class PostGame extends Process {
 		background.addMoon(Const.VIEWPORT_WIDTH * 0.8, Const.VIEWPORT_HEIGHT * 0.1, 0.3);
 
 		flow.addSpacing(100);
-		this.loadingText = addText('Loading leaderboards ...');
+		this.loadingText = addText('');
 
 		Process.resizeAll();
 	}
@@ -136,6 +139,9 @@ class PostGame extends Process {
 				delayer.addS(function () {
 					if (ca.bPressed()) {
 						Main.ME.leaderboards.setName(inputArray.join(''));
+						this.loadingText.text = "Loading leaderboards ...";
+						this.inputText.remove();
+						this.inputInstructions.remove();
 						this.state = PostGameState.FINALIZE_SCORE;
 					}
 				}, 1);
