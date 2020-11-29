@@ -8,6 +8,13 @@ enum PostGameState {
 	READY;
 }
 
+enum PostGameMode {
+	WIN;
+	DESTROYED;
+	OUT_OF_TIME;
+	LEADERBOARD;
+}
+
 class PostGame extends Process {
 	public static var ME : PostGame;
 
@@ -17,44 +24,61 @@ class PostGame extends Process {
 	var gameMode: Data.GameModeKind;
 	var loadingText: h2d.Object;
 
-	public function new(gameMode: Data.GameModeKind, postGameState: PostGameState = PostGameState.FINALIZE_SCORE) {
+	public function new(gameMode: Data.GameModeKind, postGameMode: PostGameMode) {
 		super(Main.ME);
 		createRoot(Main.ME.root);
 		ME = this;
 
+		
 		this.gameMode = gameMode;
-		this.state = postGameState;
 		this.ca = Main.ME.controller.createAccess("postgame");
-
+		
 		var bounds = new h2d.col.Bounds();
 		bounds.set(0.0, 0.0, Const.VIEWPORT_WIDTH, Const.VIEWPORT_HEIGHT);
 		var center = bounds.getCenter();
 		var camera = Boot.ME.s2d.camera;
 		camera.setAnchor(0.5, 0.5);
 		camera.setPosition(center.x, center.y);
-
+		
 		flow = new h2d.Flow(root);
 		flow.layout = Vertical;
 		flow.fillWidth = true;
 		flow.fillHeight = true;
 		flow.horizontalAlign = Middle;
 		flow.verticalAlign = Middle;
+		
+		switch postGameMode {
+			case LEADERBOARD:
+				this.state = LOAD_LEADERBOARD;
+				addTitle('LEADERBOARDS');
+			case WIN:
+				this.state = FINALIZE_SCORE;
+				addTitle('GAME OVER');
+				addTitle('all packages delivered!', 0x00FF00, true);
+			case DESTROYED:
+				this.state = LOAD_LEADERBOARD;
+				addTitle('GAME OVER');
+				addTitle('ship destoryed!', 0xFF0000, true);
+			case OUT_OF_TIME:
+				this.state = LOAD_LEADERBOARD;
+				addTitle('GAME OVER');
+				addTitle('out of time!', 0xFF0000, true);
+		}
 
 		var background = new Background(root);
 		background.addStars(bounds);
 		background.addMoon(Const.VIEWPORT_WIDTH * 0.8, Const.VIEWPORT_HEIGHT * 0.1, 0.3);
 
-		this.state == PostGameState.FINALIZE_SCORE ? addTitle('GAME OVER') : addTitle('LEADERBOARDS');
 		flow.addSpacing(100);
 		this.loadingText = addText('Loading leaderboards ...');
 
 		Process.resizeAll();
 	}
 
-	function addTitle(text:String): h2d.Text {
-		var tf = new h2d.Text(Assets.fontLarge, flow);
+	function addTitle(text:String, c: Int = 0xFFFFFF, small: Bool = false): h2d.Text {
+		var tf = new h2d.Text(small ? Assets.fontMedium : Assets.fontLarge, flow);
 		tf.text = text;
-		tf.textColor = 0xFFFFFF;
+		tf.textColor = c;
 		return tf;
 	}
 
