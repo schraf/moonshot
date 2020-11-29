@@ -31,11 +31,11 @@ class Leaderboards {
 	var name: String;
 	var leaderboards: Array<Leaderboard>;
 	var currentScore: Int;
+	var enteringName: Bool;
 
 	public function new () {
 		this.leaderboards = new Array<Leaderboard>();
 		resetScore();
-		generateName();
 	}
 
 	public function getName (): String {
@@ -84,7 +84,7 @@ class Leaderboards {
 		params['action'] = 'set';
 		params['name'] = this.name;
 		params['leaderboard'] = Data.gameMode.get(gameMode).leaderboard;
-		params['score'] = Std.string(this.currentScore);
+		params['score'] = Std.string(Std.int(this.currentScore));
 
 		leaderboard.isLoading = true;
 
@@ -140,15 +140,5 @@ class Leaderboards {
 				trace('failed to load leaderboard ${gameMode} for ${this.name}');
 			}
 		});
-	}
-
-	function generateName () {
-		var name = '';
-
-		while (name.length < 5) {
-			name += String.fromCharCode(Math.floor(Math.random() * 26) + 65);
-		}
-
-		this.name = name;
 	}
 }

@@ -1,7 +1,11 @@
+import h2d.Text;
+import hxd.Event.EventKind;
 import hxd.Key;
+import hxd.Window;
 import dn.Process;
 
 enum PostGameState {
+	ENTER_NAME;
 	FINALIZE_SCORE;
 	LOAD_LEADERBOARD;
 	WAIT;
@@ -22,13 +26,16 @@ class PostGame extends Process {
 	var ca : dn.heaps.Controller.ControllerAccess;
 	var state: PostGameState;
 	var gameMode: Data.GameModeKind;
-	var loadingText: h2d.Object;
+	var loadingText: Text;
+	var inputText: h2d.Text;
+	var inputInstructions: h2d.Text;
 
 	public function new(gameMode: Data.GameModeKind, postGameMode: PostGameMode) {
 		super(Main.ME);
 		createRoot(Main.ME.root);
 		ME = this;
 
+		hxd.Window.getInstance().addEventTarget(textInput);
 		
 		this.gameMode = gameMode;
 		this.ca = Main.ME.controller.createAccess("postgame");
@@ -52,13 +59,17 @@ class PostGame extends Process {
 				this.state = LOAD_LEADERBOARD;
 				addTitle('LEADERBOARDS');
 			case WIN:
-				this.state = FINALIZE_SCORE;
+				this.state = ENTER_NAME;
 				addTitle('GAME OVER');
 				addTitle('all packages delivered!', 0x00FF00, true);
+				flow.addSpacing(100);
+				inputInstructions = addTitle('Press enter when complete:');
+				inputArray = generateName();
+				inputText = addTitle(inputArray.join(''), 0xD04B38, true);
 			case DESTROYED:
 				this.state = LOAD_LEADERBOARD;
 				addTitle('GAME OVER');
-				addTitle('ship destoryed!', 0xFF0000, true);
+				addTitle('ship destroyed!', 0xFF0000, true);
 			case OUT_OF_TIME:
 				this.state = LOAD_LEADERBOARD;
 				addTitle('GAME OVER');
@@ -70,7 +81,7 @@ class PostGame extends Process {
 		background.addMoon(Const.VIEWPORT_WIDTH * 0.8, Const.VIEWPORT_HEIGHT * 0.1, 0.3);
 
 		flow.addSpacing(100);
-		this.loadingText = addText('Loading leaderboards ...');
+		this.loadingText = addText('');
 
 		Process.resizeAll();
 	}
@@ -104,9 +115,37 @@ class PostGame extends Process {
 		root.setScale(Const.SCALE);
 	}
 
-	override function update() {
+	var inputIndex = 0;
+	var inputArray = [];
+	function textInput(event : hxd.Event) {
+		if (this.state == PostGameState.ENTER_NAME && event.kind.equals(EventKind.ETextInput)) {
+			inputArray[inputIndex++] = String.fromCharCode(event.charCode);
+			inputIndex %= inputArray.length;
+			inputText.text = inputArray.join('');
+		}
+	}
 
+	function generateName() {
+		var name = [];
+		while (name.length < 5) {
+			name.push(String.fromCharCode(Math.floor(Math.random() * 26) + 65));
+		}
+		return name;
+	}
+
+	override function update() {
 		switch (this.state) {
+			case PostGameState.ENTER_NAME: {
+				delayer.addS(function () {
+					if (ca.bPressed()) {
+						Main.ME.leaderboards.setName(inputArray.join(''));
+						this.loadingText.text = "Loading leaderboards ...";
+						this.inputText.remove();
+						this.inputInstructions.remove();
+						this.state = PostGameState.FINALIZE_SCORE;
+					}
+				}, 1);
+			}
 			case PostGameState.FINALIZE_SCORE: {
 				this.state = PostGameState.WAIT;
 				delayer.addS(function () {
