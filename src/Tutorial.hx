@@ -45,9 +45,9 @@ class Tutorial extends Process {
 		flow.addSpacing(20);
 		addSection("W A S D to move, if you have the thrusters for it.", Assets.ship.getTile('thruster'), Const.VIEWPORT_WIDTH, 0.35);
 		addSection("Space to charge up the package cannon, space again to shoot at the mouse pointer.", Assets.ship.getTile('storage'), Const.VIEWPORT_WIDTH, 0.35);
-		addSection("E to fire all lasers. This will help you avoid taking damage from asteroids.", Assets.ship.getTile('laser'), Const.VIEWPORT_WIDTH, 0.35);
+		addSection("Lasers will destory asteroids if you have enough power.", Assets.ship.getTile('laser'), Const.VIEWPORT_WIDTH, 0.35);
 		addSection("Firing weapons takes energy, use batteries to store as much as you can.", Assets.ship.getTile('battery'), Const.VIEWPORT_WIDTH, 0.35);
-		addSection("Use solar panels to charge up your batteries.", Assets.ship.getTile('solar'), Const.VIEWPORT_WIDTH, 0.35);
+		addSection("Use solar panels to charge up your batteries faster.", Assets.ship.getTile('solar'), Const.VIEWPORT_WIDTH, 0.35);
 		addSection("Shields deplete energy, but protect from collisions.", Assets.ship.getTile('shield'), Const.VIEWPORT_WIDTH, 0.35);
 		addSection("Watch out for asteriods!.", Assets.background.getTile('asteroid_a'), Const.VIEWPORT_WIDTH, 0.35);
 		flow.addSpacing(20);

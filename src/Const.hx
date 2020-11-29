@@ -41,5 +41,5 @@ class Const {
 	public static var PACKAGE_ROTATION_SPEED = 0.01;
 
 	public static var THRUST_FORCE = .5;
-	public static var SHIPBUILDING_FADEOUT_SECONDS = 10;
+	public static var SHIPBUILDING_FADEOUT_SECONDS = 5;
 }

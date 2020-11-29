@@ -11,14 +11,14 @@ class HouseArrow extends Entity {
   var t = 0.0;
   var house: House;
 
-  var SIZE = 60;
+  var SIZE = 30;
 
   public function new(x, y, house) {
     super(x, y);
     setPosPixel(x, y);
     this.house = house;
 
-    spr.set(Assets.ship, "laser");
+    spr.set(Assets.background, "house");
     this.x = x;
     this.y = y;
     
@@ -33,13 +33,18 @@ class HouseArrow extends Entity {
     t += .1;
     
     if (Game.ME.trackingCamera.nearCenter(house.centerX, house.centerY, .8)) {
-      var offset = new B2Vec2(Math.cos(house.angle), Math.sin(house.angle));
-      offset.multiply(100 + 5*Math.sin(t));
-      this.x = house.centerX + offset.x;
-      this.y = house.centerY + offset.y;
-      setPosPixel(this.x, this.y);
-      spr.rotation = house.angle + Math.PI / 2;
+      entityVisible = false;
       return;
+
+      // Makes the arrow show up above the house. Commenting out since the IS a house right now.
+      // var offset = new B2Vec2(Math.cos(house.angle), Math.sin(house.angle));
+      // offset.multiply(100 + 5*Math.sin(t));
+      // this.x = house.centerX + offset.x;
+      // this.y = house.centerY + offset.y;
+      // setPosPixel(this.x, this.y);
+      // spr.rotation = house.angle + Math.PI / 2;
+    } else {
+      entityVisible = true;
     }
 
     var ship = Game.ME.ship;

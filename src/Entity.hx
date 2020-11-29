@@ -161,7 +161,9 @@ class Entity {
 			debugLabel = null;
 		}
 
-		cd.destroy();
+		if (cd != null) {
+			cd.destroy();
+		}
 		cd = null;
 	}
 
