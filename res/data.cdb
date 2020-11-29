@@ -146,12 +146,12 @@
 				{
 					"id": "cost",
 					"name": "Cost",
-					"maxValue": 1000
+					"maxValue": 9999
 				},
 				{
 					"id": "mass",
 					"name": "Mass",
-					"maxValue": 5000
+					"maxValue": 9999
 				},
 				{
 					"id": "fuel",
@@ -196,27 +196,27 @@
 			],
 			"lines": [
 				{
-					"numAsteroids": 3,
-					"numHouses": 1,
-					"maxCost": 1500,
-					"maxWeight": 1000,
+					"numAsteroids": 10,
+					"numHouses": 3,
+					"maxCost": 10000,
+					"maxWeight": 99999,
 					"Id": "ClassA",
 					"leaderboard": "ClassA"
 				},
 				{
 					"Id": "ClassB",
-					"numAsteroids": 5,
-					"numHouses": 2,
-					"maxCost": 700,
-					"maxWeight": 500,
+					"numAsteroids": 20,
+					"numHouses": 5,
+					"maxCost": 1000,
+					"maxWeight": 99999,
 					"leaderboard": "ClassB"
 				},
 				{
 					"Id": "ClassC",
-					"numAsteroids": 10,
-					"numHouses": 3,
-					"maxCost": 300,
-					"maxWeight": 250,
+					"numAsteroids": 50,
+					"numHouses": 10,
+					"maxCost": 500,
+					"maxWeight": 99999,
 					"leaderboard": "ClassC"
 				}
 			],
