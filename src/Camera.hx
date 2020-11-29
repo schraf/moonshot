@@ -41,6 +41,16 @@ class Camera extends dn.Process {
 		}
 	}
 
+	public function nearCenter(x, y, fraction=.5) {
+		var hw = Const.VIEWPORT_WIDTH/2 * fraction;
+		var hh = Const.VIEWPORT_HEIGHT/2 * fraction;
+		if (x < this.x - hw) return false;
+		if (y < this.y - hh) return false;
+		if (x > this.x + hw) return false;
+		if (y > this.y + hh) return false;
+		return true;
+	}
+
 	public inline function scrollerToGlobalX(v:Float) return v*Const.SCALE + Game.ME.scroller.x;
 	public inline function scrollerToGlobalY(v:Float) return v*Const.SCALE + Game.ME.scroller.y;
 
@@ -92,13 +102,13 @@ class Camera extends dn.Process {
 		if( !ui.Console.ME.hasFlag("scroll") ) {
 			var scroller = Game.ME.scroller;
 
+			// Clamp
+			this.x = M.fclamp(this.x, Const.VIEWPORT_WIDTH/2, Const.FIELD_WIDTH-Const.VIEWPORT_WIDTH/2);
+			this.y = M.fclamp(this.y, Const.VIEWPORT_HEIGHT/2, Const.FIELD_HEIGHT-Const.VIEWPORT_HEIGHT/2);
+
 			scroller.x = -x*zoom + wid*0.5;
 			scroller.y = -y*zoom + hei*0.5;
 
-			// Clamp
-			scroller.x = M.fclamp(scroller.x, -Const.FIELD_WIDTH + Const.VIEWPORT_WIDTH, 0);
-			scroller.y = M.fclamp(scroller.y, -Const.FIELD_HEIGHT + Const.VIEWPORT_HEIGHT, 0);
-			
 
 			// Bumps friction
 			bumpOffX *= Math.pow(0.75, tmod);

@@ -211,6 +211,7 @@ class Ship extends Entity {
 		}
 
 		if (damage > 0) {
+			Game.ME.trackingCamera.shakeS(1, 2);
 			Res.audio.hit.play(false, 0.1);
 
 			this.hullStrength = Math.max(0, this.hullStrength - damage);
@@ -222,21 +223,6 @@ class Ship extends Entity {
 				Game.ME.endGame();
 			}
 		}
-	}
-
-	function calculateForce (boosters: Int): Float {
-		if (boosters == 0) {
-			return 0.0;
-		}
-
-		var powerUsage: Float = boosters * Data.shipPart.get(Data.ShipPartKind.Booster).power_usage;
-		var force: Float = 0.0;
-
-		if (this.powerSupply.consumePower(powerUsage)) {
-			force = Math.max(0.5, boosters - (this.mass / 500.0));
-		}
-
-		return force;
 	}
 
 	override function update() {
@@ -346,13 +332,14 @@ class Ship extends Entity {
 	}
 
 	function launchPackage() {
-		numPackages -= 1;
+		// numPackages -= 1;
 
 		var packagePosition = body.getPosition();
-		var newPackage = new Package(Game.ME.world , cast packagePosition.x * 100, cast packagePosition.y * 100);
+		packagePosition.multiply(100);
+		var newPackage = new Package(Game.ME.world , cast packagePosition.x, cast packagePosition.y);
+		var x = Main.ME.scene.mouseX - Game.ME.scroller.x;
+		var y = Main.ME.scene.mouseY - Game.ME.scroller.y;
 
-		var x = Main.ME.scene.mouseX / 100;
-		var y = Main.ME.scene.mouseY / 100;
 
 		var dx = x - packagePosition.x;
 		var dy = y - packagePosition.y;
@@ -361,6 +348,7 @@ class Ship extends Entity {
 		vec.normalize();
 		vec.multiply(packageLauncherPower);
 
-		newPackage.body.applyForce(vec , packagePosition);
+		packagePosition.multiply(1/100);
+		newPackage.body.applyForce(vec, packagePosition);
 	}
 }

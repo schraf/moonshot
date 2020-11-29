@@ -110,7 +110,7 @@ class Game extends Process {
 		trackingCamera = new Camera();
 		trackingCamera.trackTarget(ship, true);
 
-		var moonPosition = new h2d.col.Point(bounds.width * 0.7, bounds.height * 0.25);
+		var moonPosition = new h2d.col.Point(starBounds.width * 0.7, starBounds.height * 0.25);
 		moon = new Moon(world, Math.floor(moonPosition.x), Math.floor(moonPosition.y));
 
 		// walls

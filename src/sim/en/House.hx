@@ -10,9 +10,14 @@ import hxd.Res;
 class House extends Entity {
 	static var SIZE = 25;
 
+	public var arrow: HouseArrow;
+	public var angle: Float;
+
 	public function new(b2world, x, y, angle) {
-		super(0, 0);
+		super(x, y);
 		this.typeFlags |= EntityTypeFlags.HOUSE;
+
+		this.angle = angle;
 
 		Entity.HOUSES.push(this);
 
@@ -38,6 +43,8 @@ class House extends Entity {
 
 		this.body = b2world.createBody(bodyDef);
 		this.body.createFixture(fixtureDef);
+
+		arrow = new HouseArrow(x, y, this);
 	}
 
 	override function onCollision (entity: Entity) {
@@ -51,8 +58,10 @@ class House extends Entity {
 	override function dispose() {
 		Entity.HOUSES.remove(this);
 		super.dispose();
+		arrow.dispose();
 	}
 
 	override function update() {
+		arrow.update();
 	}
 }
