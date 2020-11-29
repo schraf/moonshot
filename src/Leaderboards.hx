@@ -84,7 +84,7 @@ class Leaderboards {
 		params['action'] = 'set';
 		params['name'] = this.name;
 		params['leaderboard'] = Data.gameMode.get(gameMode).leaderboard;
-		params['score'] = Std.string(this.currentScore);
+		params['score'] = Std.string(Std.int(this.currentScore));
 
 		leaderboard.isLoading = true;
 
