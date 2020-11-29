@@ -24,11 +24,14 @@ class ShipBuilding extends Process {
 	var storageCount: Int = 0;
 	var shipDefinition: ShipDefinition;
 	var launchButton: Button;
+	var ca : dn.heaps.Controller.ControllerAccess;
 
 	public function new(gameMode: Data.GameMode) {
 		super(Main.ME);
 		ME = this;
 		this.gameMode = gameMode;
+
+		ca = Main.ME.controller.createAccess("ship_building");
 
 		createRootInLayers(Main.ME.root, Const.DP_BG);
 
@@ -176,7 +179,7 @@ class ShipBuilding extends Process {
 
 			moon.rotate(.006);
 
-			if (alpha <= -1) {
+			if (ca.xDown() || alpha <= -1) {
 				finish();
 			}
 		}
