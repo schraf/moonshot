@@ -105,7 +105,6 @@ class PostGame extends Process {
 	}
 
 	override function update() {
-
 		switch (this.state) {
 			case PostGameState.FINALIZE_SCORE: {
 				this.state = PostGameState.WAIT;

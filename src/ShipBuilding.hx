@@ -171,13 +171,13 @@ class ShipBuilding extends Process {
 			moonAlpha = Math.min(1,(1 - alpha) * 2);
 			moonBackground.alpha = moonAlpha;
 			
-			moonScale += .04 / Const.SHIPBUILDING_FADEOUT_SECONDS / Const.FPS;
+			moonScale += .08 / Const.SHIPBUILDING_FADEOUT_SECONDS / Const.FPS;
 			currentScale *= moonScale;
 			moon.scale(moonScale);
 			moon.x = Const.VIEWPORT_WIDTH * .95 - (685 * currentScale / 2);
 			moon.y = Const.VIEWPORT_HEIGHT * .5 - (664 * currentScale / 2);
 
-			moon.rotate(.006);
+			moon.rotate(.01);
 
 			if (ca.xDown() || alpha <= -1) {
 				finish();
