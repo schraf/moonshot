@@ -43,6 +43,8 @@ class Package extends Entity {
 		spr.set(Assets.background, "package");
 		spr.setCenterRatio();
 		setScale(40 / spr.tile.width);
+
+		this.body.applyTorque((Math.random() - Math.random()) * Const.PACKAGE_ROTATION_SPEED);
 	}
 
 	override function onCollision (entity: Entity) {
@@ -55,5 +57,5 @@ class Package extends Entity {
 		var p = body.getPosition();
 		setPosPixel(p.x * 100, p.y * 100);
 		spr.rotation = body.getAngle();
-	  }
+	}
 }

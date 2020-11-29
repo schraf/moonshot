@@ -9,6 +9,9 @@ class Const {
 	public static var VIEWPORT_WIDTH = 1920;
 	public static var VIEWPORT_HEIGHT = 1080;
 
+	public static var FIELD_WIDTH = 1920 * 2;
+	public static var FIELD_HEIGHT = 1080 * 3;
+
 	static var _uniq = 0;
 	public static var NEXT_UNIQ(get,never) : Int; static inline function get_NEXT_UNIQ() return _uniq++;
 	public static var INFINITE = 999999;
@@ -35,6 +38,8 @@ class Const {
 	public static var ASTEROID_SPEED = 0.1;
 	public static var ASTEROID_ROTATION_SPEED = 2.0;
 
-	public static var THRUST_FORCE = .1;
-	public static var SHIPBUILDING_FADEOUT_SECONDS = 10;
+	public static var PACKAGE_ROTATION_SPEED = 0.01;
+
+	public static var THRUST_FORCE = .5;
+	public static var SHIPBUILDING_FADEOUT_SECONDS = 5;
 }

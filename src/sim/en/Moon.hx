@@ -20,7 +20,7 @@ class Moon extends Entity {
 
 	public static var Radius = 100;
 
-	static var G = 3;
+	static var G = 1;
 
 	public function new(b2world, x, y) {
 		super(x, y);

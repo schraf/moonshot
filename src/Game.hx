@@ -57,6 +57,7 @@ class Game extends Process {
 	public var gameMode: Data.GameMode;
 	public var world:B2World;
 	public var moon: Moon;
+	public var trackingCamera: Camera;
 
 	public var ship: Ship;
 	var up:B2Vec2;
@@ -81,13 +82,22 @@ class Game extends Process {
 		var bounds = new h2d.col.Bounds();
 		bounds.set(0.0, 0.0, Const.VIEWPORT_WIDTH, Const.VIEWPORT_HEIGHT);
 
+		
 		var center = bounds.getCenter();
 		var camera = Boot.ME.s2d.camera;
 		camera.setAnchor(0.5, 0.5);
 		camera.setPosition(center.x, center.y);
+		
+		var left = 0;
+		var top = 0;
+		var bottom = Const.FIELD_HEIGHT;
+		var right = Const.FIELD_WIDTH;
 
+		var starBounds = new h2d.col.Bounds();
+		starBounds.set(left, top, Const.FIELD_WIDTH, Const.FIELD_HEIGHT);
+		starBounds.scaleCenter(1.1);
 		var background = new Background();
-		background.addStars(bounds);
+		background.addStars(starBounds);
 		scroller.add(background, Const.DP_BG);
 
 		Process.resizeAll();
@@ -95,11 +105,37 @@ class Game extends Process {
 		world = new B2World(new B2Vec2(0, 0), true);
 		up = new B2Vec2(0, -50);
 
-		ship = new Ship(shipDefinition, world, Const.VIEWPORT_HEIGHT - 300, 300);
+		ship = new Ship(shipDefinition, world, 300, Const.FIELD_HEIGHT - 300);
 
-		var moonPosition = new h2d.col.Point(bounds.width * 0.7, bounds.height * 0.25);
+		trackingCamera = new Camera();
+		trackingCamera.trackTarget(ship, true);
+
+		var moonPosition = new h2d.col.Point(starBounds.width * 0.7, starBounds.height * 0.25);
 		moon = new Moon(world, Math.floor(moonPosition.x), Math.floor(moonPosition.y));
 
+		// walls
+		var wallShape = new B2PolygonShape();
+		var wallFixDef = new B2FixtureDef();
+		wallFixDef.shape = wallShape;
+		wallFixDef.density = 1;
+		var wallBodyDef = new B2BodyDef();
+		wallBodyDef.type = B2BodyType.STATIC_BODY;
+		//top
+		wallShape.setAsBox(Const.FIELD_WIDTH/100, 1);
+		wallBodyDef.position.set(left/100, top/100);
+		world.createBody(wallBodyDef).createFixture(wallFixDef);
+		//bottom
+		wallBodyDef.position.set(left/100, bottom/100);
+		world.createBody(wallBodyDef).createFixture(wallFixDef);
+		//left
+		wallShape.setAsBox(1, Const.FIELD_HEIGHT/100);
+		wallBodyDef.position.set(left/100, top/100);
+		world.createBody(wallBodyDef).createFixture(wallFixDef);
+		//right
+		wallBodyDef.position.set(right/100, top/100);
+		world.createBody(wallBodyDef).createFixture(wallFixDef);
+
+		// asteroids
 		for (i in 0 ... this.gameMode.numAsteroids) {
 			var point = new h2d.col.Point(1.0, 0.0);
 			var angle = Math.random() * 2.0 * Math.PI;
@@ -122,8 +158,8 @@ class Game extends Process {
 			asteroid.body.applyImpulse(new B2Vec2(dir.x, dir.y), asteroid.body.getPosition());
 		}
 
+		// houses
 		var separationAngle = (2.0 * Math.PI) / this.gameMode.numHouses;
-
 		for (i in 0 ... this.gameMode.numHouses) {
 			var point = new h2d.col.Point(1.0, 0.0);
 			var angle = (i * separationAngle) + ((2.0 * Math.random() - 1.0) * separationAngle * 0.5);
