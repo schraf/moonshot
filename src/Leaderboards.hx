@@ -31,6 +31,7 @@ class Leaderboards {
 	var name: String;
 	var leaderboards: Array<Leaderboard>;
 	var currentScore: Int;
+	var enteringName: Bool;
 
 	public function new () {
 		this.leaderboards = new Array<Leaderboard>();

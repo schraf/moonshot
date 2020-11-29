@@ -1,7 +1,10 @@
+import hxd.Event.EventKind;
 import hxd.Key;
+import hxd.Window;
 import dn.Process;
 
 enum PostGameState {
+	ENTER_NAME;
 	FINALIZE_SCORE;
 	LOAD_LEADERBOARD;
 	WAIT;
@@ -29,6 +32,7 @@ class PostGame extends Process {
 		createRoot(Main.ME.root);
 		ME = this;
 
+		hxd.Window.getInstance().addEventTarget(textInput);
 		
 		this.gameMode = gameMode;
 		this.ca = Main.ME.controller.createAccess("postgame");
@@ -52,7 +56,7 @@ class PostGame extends Process {
 				this.state = LOAD_LEADERBOARD;
 				addTitle('LEADERBOARDS');
 			case WIN:
-				this.state = FINALIZE_SCORE;
+				this.state = ENTER_NAME;
 				addTitle('GAME OVER');
 				addTitle('all packages delivered!', 0x00FF00, true);
 			case DESTROYED:
@@ -104,9 +108,20 @@ class PostGame extends Process {
 		root.setScale(Const.SCALE);
 	}
 
-	override function update() {
+	function textInput(event : hxd.Event) {
+		if (event.kind.equals(EventKind.ETextInput)) {
+			trace(event.toString());
+		}
+	}
 
+	override function update() {
 		switch (this.state) {
+			case PostGameState.ENTER_NAME: {
+				delayer.addS(function () {
+					
+					this.state = PostGameState.FINALIZE_SCORE;
+				}, 1);
+			}
 			case PostGameState.FINALIZE_SCORE: {
 				this.state = PostGameState.WAIT;
 				delayer.addS(function () {

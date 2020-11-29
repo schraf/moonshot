@@ -20,7 +20,7 @@ class Difficulty {
     public function playSound() {
         switch (gameModeKind) {
             case (ClassA):
-                // Res.audio.duct_tape.play(false,.5);
+                Res.audio.duct_tape.play(false,.5);
             case (ClassB):
                 Res.audio.horse.play(false,.5);
             case (ClassC):
