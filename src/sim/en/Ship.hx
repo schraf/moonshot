@@ -24,7 +24,7 @@ class Ship extends Entity {
 	var ca:dn.heaps.Controller.ControllerAccess;
 	var time:Float = 0.;
 
-	var shipPartSize = 30;
+	public var shipPartSize = 30;
 	var shipPartOffsetX = Const.SHIP_WIDTH * 30 * 0.5;
 	var shipPartOffsetY = Const.SHIP_HEIGHT * 30 * 0.5;
 

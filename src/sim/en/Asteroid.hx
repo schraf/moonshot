@@ -1,5 +1,6 @@
 package sim.en;
 
+import box2D.dynamics.B2FilterData;
 import Entity.EntityTypeFlags;
 import box2D.collision.shapes.B2CircleShape;
 import h2d.Bitmap;
@@ -29,11 +30,15 @@ class Asteroid extends Entity {
 
 		var shape = new B2CircleShape(r/100);
 
+		var wallFilterData = new B2FilterData();
+		wallFilterData.groupIndex = -2;
+
 		var fixtureDef = new B2FixtureDef();
 		fixtureDef.density = 10;
 		fixtureDef.shape = shape;
 		fixtureDef.friction = 0;
 		fixtureDef.userData = this;
+		fixtureDef.filter = wallFilterData;
 
 		var bodyDef = new B2BodyDef();
 		bodyDef.type = B2BodyType.DYNAMIC_BODY;

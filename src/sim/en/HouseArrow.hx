@@ -31,6 +31,7 @@ class HouseArrow extends Entity {
 
   override public function update() {
     t += .1;
+    if (t > 6283185) t -= 6283185;
     
     if (Game.ME.trackingCamera.nearCenter(house.centerX, house.centerY, .8)) {
       entityVisible = false;

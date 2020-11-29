@@ -1,4 +1,5 @@
 
+import box2D.dynamics.B2FilterData;
 import hxsl.Ast.Const;
 import PostGame.PostGameMode;
 import hxd.Res;
@@ -119,9 +120,12 @@ class Game extends Process {
 
 		// walls
 		var wallShape = new B2PolygonShape();
+		var wallFilterData = new B2FilterData();
+		wallFilterData.groupIndex = -2;
 		var wallFixDef = new B2FixtureDef();
 		wallFixDef.shape = wallShape;
 		wallFixDef.density = 1;
+		wallFixDef.filter = wallFilterData;
 		var wallBodyDef = new B2BodyDef();
 		wallBodyDef.type = B2BodyType.STATIC_BODY;
 		//top
@@ -243,11 +247,14 @@ class Game extends Process {
 			endGame(PostGameMode.WIN);
 		}
 
+		//asteroid belt
 		var time = framesToSec(ftime);
-		if (time - lastAsteriodSpawn > 3) {
-			var asteroid = new Asteroid(world, cast (Const.FIELD_WIDTH / 2), Const.FIELD_HEIGHT);
-			asteroid.body.applyImpulse(new B2Vec2(45, 45), asteroid.body.getPosition());
-			lastAsteriodSpawn = time;
+		if (time - lastAsteriodSpawn > 2) {
+			var asteroid = new Asteroid(world, Math.floor(Const.FIELD_WIDTH), Const.ASTEROID_BELT_Y);
+			var vx = -Const.ASTEROID_BELT_SPEED - Math.random();
+			var vy = (Math.random() - Math.random()) * 0.5;
+			asteroid.body.applyImpulse(new B2Vec2(vx, vy), asteroid.body.getPosition());
+			lastAsteriodSpawn = time - Math.random() * 0.25;
 		}
 		
 
