@@ -70,7 +70,7 @@
 				},
 				{
 					"cost": 75,
-					"mass": 50,
+					"mass": 100,
 					"tile_name": "battery",
 					"power_usage": 0,
 					"id": "Battery",

@@ -76,6 +76,7 @@ class ShipBuilding extends Process {
 				return;
 			}
 
+			Main.ME.stopMusic();
 			#if debug
 				finish();
 			#else
@@ -84,7 +85,6 @@ class ShipBuilding extends Process {
 				moonBackground.addStars(bounds);
 				moon = moonBackground.addMoon(0,0,startingMoonScale);
 				Res.audio.rocketLaunch.play(true);
-				Main.ME.stopMusic();
 				launching = true;
 			#end
 		};
@@ -172,7 +172,7 @@ class ShipBuilding extends Process {
 			moonAlpha = Math.min(1,(1 - alpha) * 2);
 			moonBackground.alpha = moonAlpha;
 			
-			moonScale += .08 / Const.SHIPBUILDING_FADEOUT_SECONDS / Const.FPS;
+			moonScale += .09 / Const.SHIPBUILDING_FADEOUT_SECONDS / Const.FPS;
 			currentScale *= moonScale;
 			moon.scale(moonScale);
 			moon.x = Const.VIEWPORT_WIDTH * .95 - (685 * currentScale / 2);
@@ -182,15 +182,16 @@ class ShipBuilding extends Process {
 
 			if (ca.xDown() || alpha <= -1) {
 				finish();
+				Res.audio.rocketLaunch.stop();
 			}
 		}
 	}
 
 	function finish() {
-		Res.audio.rocketLaunch.stop();
-		destroy();
-		Main.ME.stopMusic();
-		Main.ME.playMusic();
+		delayer.addF(function() {
+			destroy();
+			Res.audio.space_music.play(true, .6);
+		}, 1);
 		Main.ME.startGame(this.gameMode, shipDefinition);
 	}
 }
