@@ -79,11 +79,11 @@ class Main extends dn.Process {
 	}
 
 	public function playMusic() {
-		Res.audio.DigitalNative.play(true, 0.09);
+		Res.audio.main_music.play(true, 0.4);
 	}
 
 	public function stopMusic() {
-		Res.audio.DigitalNative.stop();
+		Res.audio.main_music.stop();
 	}
 
 	public function startGame(gameMode: Data.GameMode, shipDefinition: ShipDefinition) {

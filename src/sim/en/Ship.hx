@@ -215,11 +215,10 @@ class Ship extends Entity {
 			Game.ME.trackingCamera.shakeS(1, 2);
 			Res.audio.hit.play(false, 0.1);
 
-			Main.ME.leaderboards.addToScore(cast (damage * -1));
+			Main.ME.leaderboards.removeFromScore(cast (damage * 10));
 
 			this.hullStrength = Math.max(0, this.hullStrength - damage);
 			game.hud.hull.setValue(this.hullStrength / Const.SHIP_HULL_STRENGTH);
-			Main.ME.leaderboards.removeFromScore(1);
 
 			if (this.hullStrength <= 0) {
 				// POLISH: explosion
@@ -279,7 +278,7 @@ class Ship extends Entity {
 
 		boosterBody.applyForce(forceVec, boosterBody.getPosition());
 		if (!launchPlaying) {
-			Res.audio.rocketLaunch.play(true, .7);
+			Res.audio.rocketLaunchShort.play(true, .5);
 			launchPlaying = true;
 		}
 		boosterFired = true;
@@ -318,7 +317,7 @@ class Ship extends Entity {
 		}
 
 		if (!boosterFired && launchPlaying) {
-			Res.audio.rocketLaunch.stop();
+			Res.audio.rocketLaunchShort.stop();
 			launchPlaying = false;
 		}
 
@@ -347,14 +346,13 @@ class Ship extends Entity {
 
 	function launchPackage() {
 		// numPackages -= 1;
-		Main.ME.leaderboards.addToScore(-100);
+		Main.ME.leaderboards.removeFromScore(500);
 
 		var packagePosition = body.getPosition();
 		packagePosition.multiply(100);
 		var newPackage = new Package(Game.ME.world , cast packagePosition.x, cast packagePosition.y);
 		var x = Main.ME.scene.mouseX - Game.ME.scroller.x;
 		var y = Main.ME.scene.mouseY - Game.ME.scroller.y;
-
 
 		var dx = x - packagePosition.x;
 		var dy = y - packagePosition.y;

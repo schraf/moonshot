@@ -64,7 +64,9 @@ class ShipBuilding extends Process {
 			storageCount = 0;
 			shipDefinition = layout.toShipDefinition();
 			
-			Main.ME.leaderboards.addToScore(this.gameMode.maxCost - stats.cost);
+			Main.ME.leaderboards.addToScore(
+				Math.floor(((this.gameMode.maxCost - stats.cost) / this.gameMode.maxCost) * 10000)
+			);
 			
 			for (shipPart in shipDefinition.parts) {
 				if (shipPart.part.id == Data.ShipPartKind.Package) {
@@ -84,7 +86,7 @@ class ShipBuilding extends Process {
 				moonBackground = new Background(root);
 				moonBackground.addStars(bounds);
 				moon = moonBackground.addMoon(0,0,startingMoonScale);
-				Res.audio.rocketLaunch.play(true);
+				Res.audio.rocketLaunch.play(true, .7);
 				launching = true;
 			#end
 		};
@@ -172,7 +174,7 @@ class ShipBuilding extends Process {
 			moonAlpha = Math.min(1,(1 - alpha) * 2);
 			moonBackground.alpha = moonAlpha;
 			
-			moonScale += .09 / Const.SHIPBUILDING_FADEOUT_SECONDS / Const.FPS;
+			moonScale += .085 / Const.SHIPBUILDING_FADEOUT_SECONDS / Const.FPS;
 			currentScale *= moonScale;
 			moon.scale(moonScale);
 			moon.x = Const.VIEWPORT_WIDTH * .95 - (685 * currentScale / 2);
@@ -190,6 +192,6 @@ class ShipBuilding extends Process {
 	function finish() {
 		destroy();
 		Main.ME.startGame(this.gameMode, shipDefinition);
-		Res.audio.space_music.play(true, .6);
+		Res.audio.space_music.play(true, .3);
 	}
 }

@@ -119,9 +119,12 @@ class PostGame extends Process {
 	var inputArray = [];
 	function textInput(event : hxd.Event) {
 		if (this.state == PostGameState.ENTER_NAME && event.kind.equals(EventKind.ETextInput)) {
-			inputArray[inputIndex++] = String.fromCharCode(event.charCode);
-			inputIndex %= inputArray.length;
-			inputText.text = inputArray.join('');
+			if (event.charCode >= 65 && event.charCode < 91 ||
+				event.charCode >= 97 && event.charCode < 123) {
+				inputArray[inputIndex++] = String.fromCharCode(event.charCode);
+				inputIndex %= inputArray.length;
+				inputText.text = inputArray.join('');
+			}
 		}
 	}
 
