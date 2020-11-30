@@ -139,11 +139,11 @@ class ShipPartPanel extends h2d.Flow {
 			case (Data.ShipPartKind.Battery):
 				return "Increases energy storage by 100.";
 			case (Data.ShipPartKind.Booster):
-				return "Consumes 60 power / second to generate directional thrust. 'R' or mouse wheel to rotate.";
+				return "Consumes 60 power / second to generate directional thrust. Mouse wheel to rotate.";
 			case (Data.ShipPartKind.Laser):
 				return "Consumes 20 energy to destroy a nearby asteroid. More lasers increases fire rate.";
 			case (Data.ShipPartKind.Package):
-				return "Needed for storing packages. Hit 'Space' twice to fire in the direction of the mouse.";
+				return "Needed for storing packages. Hit 'Space' once to charge the package cannon, then again to fire in the direction of the mouse.";
 			case (Data.ShipPartKind.Shield):
 				return "Consumes 15 energy to prevent 10 damage per collision.";
 			case (Data.ShipPartKind.SolarPanel):
