@@ -188,10 +188,8 @@ class ShipBuilding extends Process {
 	}
 
 	function finish() {
-		delayer.addF(function() {
-			destroy();
-			Res.audio.space_music.play(true, .6);
-		}, 1);
+		destroy();
 		Main.ME.startGame(this.gameMode, shipDefinition);
+		Res.audio.space_music.play(true, .6);
 	}
 }
