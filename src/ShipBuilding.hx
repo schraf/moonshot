@@ -65,7 +65,12 @@ class ShipBuilding extends Process {
 			shipDefinition = layout.toShipDefinition();
 			
 			// Half of the total score is a percentage of your cost used.
-			Main.ME.leaderboards.addToScore(Math.floor(((this.gameMode.maxCost - stats.cost) / this.gameMode.maxCost) * 50000));
+			Main.ME.leaderboards.addToScore(
+				Math.floor(
+					((this.gameMode.maxCost - stats.cost) / this.gameMode.maxCost) * 
+					25000
+				)
+			);
 			for (shipPart in shipDefinition.parts) {
 				if (shipPart.part.id == Data.ShipPartKind.Package) {
 					storageCount++;
