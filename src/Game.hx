@@ -72,6 +72,8 @@ class Game extends Process {
 		ME = this;
 		this.gameMode = gameMode;
 
+		totalPackageSpeed = collisionCount = packagesLaunched = 0.0;
+
 		ca = Main.ME.controller.createAccess("game");
 		ca.setLeftDeadZone(0.2);
 		ca.setRightDeadZone(0.2);
@@ -86,8 +88,6 @@ class Game extends Process {
 
 		var bounds = new h2d.col.Bounds();
 		bounds.set(0.0, 0.0, Const.VIEWPORT_WIDTH, Const.VIEWPORT_HEIGHT);
-
-		Main.ME.leaderboards.addToScore(gameMode.numHouses * 500); // compensates for package lowering
 
 		var center = bounds.getCenter();
 		var camera = Boot.ME.s2d.camera;
@@ -233,8 +233,22 @@ class Game extends Process {
 		for(e in Entity.ALL) if( !e.destroyed ) e.fixedUpdate();
 	}
 
+	public static var totalPackageSpeed = 0.0;
+	public static var collisionCount = 0.0;
+	public static var packagesLaunched = 0.0;
+	function calculateScore() {
+		// Half this portion for each extra package and each collision.
+		var toDock = 20000 - (20000 / (collisionCount + 1));
+		toDock += 20000 - (20000 / (packagesLaunched - Game.ME.gameMode.numHouses + 1));
+		trace(toDock);
+		toDock += 10000 - (10000 / Math.max(1, totalPackageSpeed - 10));
+		trace(toDock);
+		Main.ME.leaderboards.removeFromScore(5000 - Math.floor(toDock));
+	}
+
 	public function endGame (postGameMode: PostGameMode) {
 		delayer.addF(function() {
+			calculateScore();
 			destroy();
 			Res.audio.space_music.stop();
 			Main.ME.playMusic();
