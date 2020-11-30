@@ -52,7 +52,6 @@ class Tutorial extends Process {
 		flow.addSpacing(20);
 		addSection("Once all packages are delivered, your mission is complete! Good luck!", null, Const.VIEWPORT_WIDTH, 1);
 		addSection("Final score is calculated from: speed, leftover budget, extra packages launched, damage taken, and gently delivering packages.", null, Const.VIEWPORT_WIDTH, 1);
-		addSection("The harder the packages hit the house, the lest money we get for them, so try to be gentle.", null, Const.VIEWPORT_WIDTH, 1);
 
 		Process.resizeAll();
 	}
