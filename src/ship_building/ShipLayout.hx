@@ -54,7 +54,6 @@ class ShipLayoutCell extends h2d.Object {
 				} else if (event.wheelDelta < 0) {
 					this.partRotation = (this.partRotation + 360 - 90) % 360;
 				}
-
 				setVisuals(part);
 				ShipLayout.Instance.onCellModified(this.cellX, this.cellY);
 			}

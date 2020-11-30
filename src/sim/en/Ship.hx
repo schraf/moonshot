@@ -231,40 +231,12 @@ class Ship extends Entity {
 	override function update() {
 		super.update();
 
-		this.powerSupply.update();
-		game.hud.powerSupply.setValue(this.powerSupply.getCurrentPowerPercentage());
-
 		var theta = body.getAngle();
 		var p = body.getPosition();
 		setPosPixel(p.x * 100, p.y * 100);
 		spr.rotation = theta;
 
 		var center = this.body.getPosition();
-
-		if (ca.upDown() || ca.isKeyboardDown(hxd.Key.UP)) {
-			for (body in forwardBoosters) {
-				fireBooster(body, 0);
-			}
-		}
-
-		if (ca.downDown() || ca.isKeyboardDown(hxd.Key.DOWN)) {
-			for (body in backwardsBoosters) {
-				fireBooster(body, Math.PI);
-			}
-		}
-
-		if (ca.leftDown() || ca.isKeyboardDown(hxd.Key.LEFT)) {
-			for (body in leftBoosters) {
-				fireBooster(body, Math.PI * 3 / 2);
-			}
-		}
-
-		if (ca.rightDown() || ca.isKeyboardDown(hxd.Key.RIGHT)) {
-			for (body in rightBoosters) {
-				fireBooster(body, Math.PI / 2);
-			}
-		}
-
 
 		if (ca.xPressed() && numPackages > 0) {
 			if (packageLauncherPower == 0) {
@@ -310,6 +282,33 @@ class Ship extends Entity {
 
 	override function fixedUpdate() {
 		super.fixedUpdate();
+		this.powerSupply.fixedUpdate();
+		game.hud.powerSupply.setValue(this.powerSupply.getCurrentPowerPercentage());
+
+		if (ca.upDown() || ca.isKeyboardDown(hxd.Key.UP)) {
+			for (body in forwardBoosters) {
+				fireBooster(body, 0);
+			}
+		}
+
+		if (ca.downDown() || ca.isKeyboardDown(hxd.Key.DOWN)) {
+			for (body in backwardsBoosters) {
+				fireBooster(body, Math.PI);
+			}
+		}
+
+		if (ca.leftDown() || ca.isKeyboardDown(hxd.Key.LEFT)) {
+			for (body in leftBoosters) {
+				fireBooster(body, Math.PI * 3 / 2);
+			}
+		}
+
+		if (ca.rightDown() || ca.isKeyboardDown(hxd.Key.RIGHT)) {
+			for (body in rightBoosters) {
+				fireBooster(body, Math.PI / 2);
+			}
+		}
+
 		if (packageLauncherPower != 0) {
 			packageLauncherPower += packageLauncherPowerModifier;
 			if (packageLauncherPower >= 10) {

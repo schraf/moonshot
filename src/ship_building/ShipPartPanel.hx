@@ -62,6 +62,7 @@ class ShipPartButton extends h2d.Object {
 				this.visuals.filter = this.outline;
 				this.selected = true;
 				this.panel.onSelected(this);
+				panel.tooltip.text = ShipPartPanel.getTooltip(part.id);
 			}
 		}
 	}
@@ -86,6 +87,7 @@ class ShipPartButton extends h2d.Object {
 
 class ShipPartPanel extends h2d.Flow {
 	public static var Instance: ShipPartPanel;
+	public var tooltip: Text;
 
 	var selectedPart: ShipPartButton;
 
@@ -119,4 +121,39 @@ class ShipPartPanel extends h2d.Flow {
 
 		this.selectedPart = part;
 	}
+	public function addTooltipBox() {
+		var flow = new h2d.Flow(Instance);
+		flow.paddingTop = 200;
+		flow.multiline = true;
+		flow.fillWidth = true;
+		flow.fillHeight = true;
+		flow.horizontalAlign = Middle;
+		flow.verticalAlign = Bottom;
+		tooltip = new h2d.Text(Assets.fontSmall, flow);
+		tooltip.textColor = 0xFFFFFF;
+	}
+
+	public static function getTooltip(type: Data.ShipPartKind) {
+		switch (type) {
+			case (Data.ShipPartKind.Battery):
+				return "Increases energy storage by 100.";
+			case (Data.ShipPartKind.Booster):
+				return "Consumes 60 power / second to generate directional thrust. 'R' or mouse wheel to rotate.";
+			case (Data.ShipPartKind.Laser):
+				return "Consumes 20 energy to destroy a nearby asteroid. More lasers increases fire rate.";
+			case (Data.ShipPartKind.Package):
+				return "Needed for storing packages. Hit 'Space' twice to fire in the direction of the mouse.";
+			case (Data.ShipPartKind.Shield):
+				return "Consumes 15 energy to prevent 10 damage per collision.";
+			case (Data.ShipPartKind.SolarPanel):
+				return "Increases energy regeneration rate by 30 / second.";
+			default:
+		}
+		return "";
+	}
 }
+
+
+
+
+

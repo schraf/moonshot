@@ -24,7 +24,7 @@ class PowerSupply {
 		return false;
 	}
 
-	public function update () {
+	public function fixedUpdate () {
 		this.currentPower = Math.min(this.currentPower + this.rechargeRate, this.maxPower);
 	}
 }
