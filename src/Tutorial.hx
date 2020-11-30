@@ -50,16 +50,18 @@ class Tutorial extends Process {
 		addSection("Use solar panels to charge up your batteries faster.", Assets.ship.getTile('solar'), Const.VIEWPORT_WIDTH, 0.35);
 		addSection("Shields deplete energy, but protect from collisions.", Assets.ship.getTile('shield'), Const.VIEWPORT_WIDTH, 0.35);
 		flow.addSpacing(20);
-		addSection("Once all packages are delivered, your mission is complete! Good luck!", null, Const.VIEWPORT_WIDTH, 1);
-		addSection("Final score is calculated from: speed, leftover budget, extra packages launched, damage taken, and gently delivering packages.", null, Const.VIEWPORT_WIDTH, 1);
+		addSection("Once all packages are delivered, your mission is complete! Good luck!", null, Const.VIEWPORT_WIDTH, 1, h2d.Flow.FlowAlign.Middle);
+		addSection("Final score is calculated from the following:", null, Const.VIEWPORT_WIDTH, 1, 0x1CE019, h2d.Flow.FlowAlign.Middle);
+		addSection("Leftover budget [25%], Speed [25%], Extra packages launched [20%], Damage taken [20%], Gently delivering packages [10%].", null, Const.VIEWPORT_WIDTH, 1, 0x1CE019, h2d.Flow.FlowAlign.Middle);
 
 		Process.resizeAll();
 	}
 
-	function addSection(text:String, img: Tile, width: Float, imgScale: Float) {
+	function addSection(text:String, img: Tile, width: Float, imgScale: Float, color = 0xFFFFFF, align = h2d.Flow.FlowAlign.Left) {
 		var localFlow = new h2d.Flow(flow);
 		localFlow.layout = Horizontal;
 		localFlow.verticalAlign = Middle;
+		localFlow.horizontalAlign = align;
 		localFlow.maxWidth = cast width;
 		localFlow.fillWidth = true;
 		localFlow.paddingHorizontal = 20;
@@ -68,13 +70,13 @@ class Tutorial extends Process {
 			addImage(img, localFlow, imgScale);
 			localFlow.addSpacing(10);
 		}
-		addText(text, localFlow);
+		addText(text, localFlow, color);
 	}
 
-	function addText(str:String, parent: Object) {
+	function addText(str:String, parent: Object, color: Int) {
 		var tf = new h2d.Text(Assets.fontSmall, parent);
 		tf.text = str;
-		tf.textColor = 0xFFFFFF;
+		tf.textColor = color;
 	}
 
 	function addImage(tile: Tile, parent: Object, imgScale: Float) {
