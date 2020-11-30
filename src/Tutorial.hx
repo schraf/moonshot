@@ -51,8 +51,8 @@ class Tutorial extends Process {
 		addSection("Shields deplete energy, but protect from collisions.", Assets.ship.getTile('shield'), Const.VIEWPORT_WIDTH, 0.35);
 		flow.addSpacing(20);
 		addSection("Once all packages are delivered, your mission is complete! Good luck!", null, Const.VIEWPORT_WIDTH, 1);
-		addSection("Final score is calculated from: leftover budget, packages launched, damage taken and packages delivered", null, Const.VIEWPORT_WIDTH, 1);
-		addSection("The harder the packages hit the house, the lest money we get for them, so try to be gentle", null, Const.VIEWPORT_WIDTH, 1);
+		addSection("Final score is calculated from: speed, leftover budget, extra packages launched, damage taken, and gently delivering packages.", null, Const.VIEWPORT_WIDTH, 1);
+		addSection("The harder the packages hit the house, the lest money we get for them, so try to be gentle.", null, Const.VIEWPORT_WIDTH, 1);
 
 		Process.resizeAll();
 	}
