@@ -123,14 +123,15 @@ class ShipPartPanel extends h2d.Flow {
 	}
 	public function addTooltipBox() {
 		var flow = new h2d.Flow(Instance);
-		flow.paddingTop = 200;
+		flow.paddingTop = 100;
 		flow.multiline = true;
 		flow.fillWidth = true;
 		flow.fillHeight = true;
 		flow.horizontalAlign = Middle;
-		flow.verticalAlign = Bottom;
+		flow.verticalAlign = Top;
 		tooltip = new h2d.Text(Assets.fontSmall, flow);
-		tooltip.textColor = 0xFFFFFF;
+		tooltip.textAlign = Align.Center;
+		tooltip.textColor = 0xBBBBBB;
 	}
 
 	public static function getTooltip(type: Data.ShipPartKind) {

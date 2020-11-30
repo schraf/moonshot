@@ -41,7 +41,7 @@ class ShipStats {
 
 	public function refresh() {
 		fuelText.text = "Power: " + fuel;
-		costText.text = "Cost: " + cost;
-		massText.text = "Mass: " + mass;
+		costText.text = "Cost: $" + cost;
+		massText.text = "Mass: " + mass + " kg";
 	}
 }
