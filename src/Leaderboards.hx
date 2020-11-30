@@ -68,7 +68,6 @@ class Leaderboards {
 				return leaderboard;
 			}
 		}
-
 		return null;
 	}
 

@@ -282,10 +282,6 @@ class Ship extends Entity {
 			Res.audio.rocketLaunch.play(true, .7);
 			launchPlaying = true;
 		}
-		if (!launchPlaying) {
-			Res.audio.rocketLaunch.play(true, .7);
-			launchPlaying = true;
-		}
 		boosterFired = true;
 	}
 
