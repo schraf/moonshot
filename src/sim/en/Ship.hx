@@ -279,7 +279,7 @@ class Ship extends Entity {
 
 		boosterBody.applyForce(forceVec, boosterBody.getPosition());
 		if (!launchPlaying) {
-			Res.audio.rocketLaunch.play(true, .7);
+			Res.audio.rocketLaunchShort.play(true, .5);
 			launchPlaying = true;
 		}
 		boosterFired = true;
@@ -318,7 +318,7 @@ class Ship extends Entity {
 		}
 
 		if (!boosterFired && launchPlaying) {
-			Res.audio.rocketLaunch.stop();
+			Res.audio.rocketLaunchShort.stop();
 			launchPlaying = false;
 		}
 

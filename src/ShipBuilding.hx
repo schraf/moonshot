@@ -172,7 +172,7 @@ class ShipBuilding extends Process {
 			moonAlpha = Math.min(1,(1 - alpha) * 2);
 			moonBackground.alpha = moonAlpha;
 			
-			moonScale += .09 / Const.SHIPBUILDING_FADEOUT_SECONDS / Const.FPS;
+			moonScale += .085 / Const.SHIPBUILDING_FADEOUT_SECONDS / Const.FPS;
 			currentScale *= moonScale;
 			moon.scale(moonScale);
 			moon.x = Const.VIEWPORT_WIDTH * .95 - (685 * currentScale / 2);
@@ -190,6 +190,6 @@ class ShipBuilding extends Process {
 	function finish() {
 		destroy();
 		Main.ME.startGame(this.gameMode, shipDefinition);
-		Res.audio.space_music.play(true, .6);
+		Res.audio.space_music.play(true, .4);
 	}
 }
