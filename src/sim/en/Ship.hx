@@ -192,7 +192,7 @@ class Ship extends Entity {
 		ca.dispose(); // release on destruction
 	}
 
-	public static var totalPackageSpeed = 0.0;
+	public var totalPackageSpeed = 0.0;
 	var collisionCount = 0;
 	override function onCollision (entity: Entity) {
 		if (entity.isA(EntityTypeFlags.PROJECTILE) || entity.isA(EntityTypeFlags.PACKAGE)) {
@@ -214,7 +214,7 @@ class Ship extends Entity {
 		}
 
 		if (damage > 0) {
-			Game.collisionCount += 1;
+			Game.ME.collisionCount += 1;
 			Game.ME.trackingCamera.shakeS(1, 2);
 			Res.audio.hit.play(false, 0.1);
 
@@ -228,6 +228,11 @@ class Ship extends Entity {
 		}
 	}
 
+	var upDown: Bool = false;
+	var downDown: Bool = false;
+	var leftDown: Bool = false;
+	var rightDown: Bool = false;
+
 	override function update() {
 		super.update();
 
@@ -237,6 +242,11 @@ class Ship extends Entity {
 		spr.rotation = theta;
 
 		var center = this.body.getPosition();
+
+		upDown = ca.upDown() || ca.isKeyboardDown(hxd.Key.UP);
+		downDown = ca.downDown() || ca.isKeyboardDown(hxd.Key.DOWN);
+		leftDown = ca.leftDown() || ca.isKeyboardDown(hxd.Key.LEFT);
+		rightDown = ca.rightDown() || ca.isKeyboardDown(hxd.Key.RIGHT);
 
 		if (ca.xPressed() && numPackages > 0) {
 			if (packageLauncherPower == 0) {
@@ -256,6 +266,7 @@ class Ship extends Entity {
 						laser.resetCooldown();
 						var pos = laser.getWorldPosition();
 						var vel = asteroidPosition.sub(new h2d.col.Point(pos.x, pos.y)).normalized().multiply(Const.PROJECTILE_SPEED);
+						Res.audio.laser.play(false, 0.1);
 						new Projectile(pos.x, pos.y, vel.x, vel.y);
 					}
 				}
@@ -293,25 +304,25 @@ class Ship extends Entity {
 		game.hud.powerSupply.setValue(this.powerSupply.getCurrentPowerPercentage());
 
 		boosterFired = false;
-		if (ca.upDown() || ca.isKeyboardDown(hxd.Key.UP)) {
+		if (upDown) {
 			for (body in forwardBoosters) {
 				fireBooster(body, 0);
 			}
 		}
 
-		if (ca.downDown() || ca.isKeyboardDown(hxd.Key.DOWN)) {
+		if (downDown) {
 			for (body in backwardsBoosters) {
 				fireBooster(body, Math.PI);
 			}
 		}
 
-		if (ca.leftDown() || ca.isKeyboardDown(hxd.Key.LEFT)) {
+		if (leftDown) {
 			for (body in leftBoosters) {
 				fireBooster(body, Math.PI * 3 / 2);
 			}
 		}
 
-		if (ca.rightDown() || ca.isKeyboardDown(hxd.Key.RIGHT)) {
+		if (rightDown) {
 			for (body in rightBoosters) {
 				fireBooster(body, Math.PI / 2);
 			}
@@ -347,7 +358,8 @@ class Ship extends Entity {
 
 	function launchPackage() {
 		// numPackages -= 1;
-		Game.packagesLaunched += 1;
+		Game.ME.packagesLaunched += 1;
+		Res.audio.packageShoot.play(false, 0.1);
 
 		var packagePosition = body.getPosition();
 		packagePosition.multiply(100);

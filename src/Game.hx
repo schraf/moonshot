@@ -72,7 +72,9 @@ class Game extends Process {
 		ME = this;
 		this.gameMode = gameMode;
 
-		totalPackageSpeed = collisionCount = packagesLaunched = 0.0;
+		totalPackageSpeed = 0;
+		collisionCount = 0;
+		packagesLaunched = 0.0;
 
 		ca = Main.ME.controller.createAccess("game");
 		ca.setLeftDeadZone(0.2);
@@ -233,9 +235,9 @@ class Game extends Process {
 		for(e in Entity.ALL) if( !e.destroyed ) e.fixedUpdate();
 	}
 
-	public static var totalPackageSpeed = 0.0;
-	public static var collisionCount = 0.0;
-	public static var packagesLaunched = 0.0;
+	public var totalPackageSpeed = 0.0;
+	public var collisionCount = 0.0;
+	public var packagesLaunched = 0.0;
 	function calculateScore() {
 		// Half this portion for each extra package and each collision.
 		var toDock = 20000 - (20000 / (collisionCount + 1));
