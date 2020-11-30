@@ -74,7 +74,6 @@ class Main extends dn.Process {
 		this.leaderboards = new Leaderboards();
 
 		// Start
-		new dn.heaps.GameFocusHelper(Boot.ME.s2d, Assets.fontMedium);
 		delayer.addF( showSplashScreens, 1 );
 		delayer.addF( playMusic, 1 );
 	}

@@ -278,13 +278,25 @@ class Ship extends Entity {
 		forceVec.multiply(-1 * Const.THRUST_FORCE);
 
 		boosterBody.applyForce(forceVec, boosterBody.getPosition());
+		if (!launchPlaying) {
+			Res.audio.rocketLaunch.play(true, .7);
+			launchPlaying = true;
+		}
+		if (!launchPlaying) {
+			Res.audio.rocketLaunch.play(true, .7);
+			launchPlaying = true;
+		}
+		boosterFired = true;
 	}
 
+	var boosterFired = false;
+	var launchPlaying = false;
 	override function fixedUpdate() {
 		super.fixedUpdate();
 		this.powerSupply.fixedUpdate();
 		game.hud.powerSupply.setValue(this.powerSupply.getCurrentPowerPercentage());
 
+		boosterFired = false;
 		if (ca.upDown() || ca.isKeyboardDown(hxd.Key.UP)) {
 			for (body in forwardBoosters) {
 				fireBooster(body, 0);
@@ -307,6 +319,11 @@ class Ship extends Entity {
 			for (body in rightBoosters) {
 				fireBooster(body, Math.PI / 2);
 			}
+		}
+
+		if (!boosterFired && launchPlaying) {
+			Res.audio.rocketLaunch.stop();
+			launchPlaying = false;
 		}
 
 		if (packageLauncherPower != 0) {
