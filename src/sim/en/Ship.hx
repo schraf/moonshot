@@ -256,6 +256,7 @@ class Ship extends Entity {
 						laser.resetCooldown();
 						var pos = laser.getWorldPosition();
 						var vel = asteroidPosition.sub(new h2d.col.Point(pos.x, pos.y)).normalized().multiply(Const.PROJECTILE_SPEED);
+						Res.audio.laser.play(false, 0.1);
 						new Projectile(pos.x, pos.y, vel.x, vel.y);
 					}
 				}
@@ -348,6 +349,7 @@ class Ship extends Entity {
 	function launchPackage() {
 		// numPackages -= 1;
 		Game.ME.packagesLaunched += 1;
+		Res.audio.packageShoot.play(false, 0.1);
 
 		var packagePosition = body.getPosition();
 		packagePosition.multiply(100);
