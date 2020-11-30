@@ -235,6 +235,8 @@ class Game extends Process {
 	public function endGame (postGameMode: PostGameMode) {
 		delayer.addF(function() {
 			destroy();
+			Res.audio.space_music.stop();
+			Main.ME.playMusic();
 		}, 1);
 
 		Main.ME.startPostGame(this.gameMode, postGameMode);

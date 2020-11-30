@@ -42,9 +42,11 @@ class Credits extends Process {
         addText("Marc Scraffenberger", Assets.fontMedium);
         addText("Luke Brom", Assets.fontMedium);
         flow.addSpacing(25);
-        addText("Music", Assets.fontLarge);
-        addText("Eric Skiff - Digital Native - Resistor Anthems", Assets.fontMedium);
-        addText("Available at http://EricSkiff.com/music", Assets.fontMedium);
+        addText("Music", Assets.fontMedium);
+        addText("Eric Skiff - Digital Native - Resistor Anthems", Assets.fontSmall);
+        addText("Available at http://EricSkiff.com/music", Assets.fontSmall);
+        addText("Benjamin Tisso - New Dawn", Assets.fontSmall);
+        addText("Available at https://www.bensound.com/royalty-free-music/track/new-dawn", Assets.fontSmall);
         flow.addSpacing(50);
         addText("Press Any Key", Assets.fontSmall);
 
