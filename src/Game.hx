@@ -240,9 +240,7 @@ class Game extends Process {
 		// Half this portion for each extra package and each collision.
 		var toDock = 20000 - (20000 / (collisionCount + 1));
 		toDock += 20000 - (20000 / (packagesLaunched - Game.ME.gameMode.numHouses + 1));
-		trace(toDock);
 		toDock += 10000 - (10000 / Math.max(1, totalPackageSpeed - 10));
-		trace(toDock);
 		Main.ME.leaderboards.removeFromScore(5000 - Math.floor(toDock));
 	}
 
