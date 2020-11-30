@@ -228,6 +228,11 @@ class Ship extends Entity {
 		}
 	}
 
+	var upDown: Bool = false;
+	var downDown: Bool = false;
+	var leftDown: Bool = false;
+	var rightDown: Bool = false;
+
 	override function update() {
 		super.update();
 
@@ -237,6 +242,11 @@ class Ship extends Entity {
 		spr.rotation = theta;
 
 		var center = this.body.getPosition();
+
+		upDown = ca.upDown() || ca.isKeyboardDown(hxd.Key.UP);
+		downDown = ca.downDown() || ca.isKeyboardDown(hxd.Key.DOWN);
+		leftDown = ca.leftDown() || ca.isKeyboardDown(hxd.Key.LEFT);
+		rightDown = ca.rightDown() || ca.isKeyboardDown(hxd.Key.RIGHT);
 
 		if (ca.xPressed() && numPackages > 0) {
 			if (packageLauncherPower == 0) {
@@ -294,25 +304,25 @@ class Ship extends Entity {
 		game.hud.powerSupply.setValue(this.powerSupply.getCurrentPowerPercentage());
 
 		boosterFired = false;
-		if (ca.upDown() || ca.isKeyboardDown(hxd.Key.UP)) {
+		if (upDown) {
 			for (body in forwardBoosters) {
 				fireBooster(body, 0);
 			}
 		}
 
-		if (ca.downDown() || ca.isKeyboardDown(hxd.Key.DOWN)) {
+		if (downDown) {
 			for (body in backwardsBoosters) {
 				fireBooster(body, Math.PI);
 			}
 		}
 
-		if (ca.leftDown() || ca.isKeyboardDown(hxd.Key.LEFT)) {
+		if (leftDown) {
 			for (body in leftBoosters) {
 				fireBooster(body, Math.PI * 3 / 2);
 			}
 		}
 
-		if (ca.rightDown() || ca.isKeyboardDown(hxd.Key.RIGHT)) {
+		if (rightDown) {
 			for (body in rightBoosters) {
 				fireBooster(body, Math.PI / 2);
 			}
