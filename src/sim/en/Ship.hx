@@ -192,6 +192,8 @@ class Ship extends Entity {
 		ca.dispose(); // release on destruction
 	}
 
+	public static var totalPackageSpeed = 0.0;
+	var collisionCount = 0;
 	override function onCollision (entity: Entity) {
 		if (entity.isA(EntityTypeFlags.PROJECTILE) || entity.isA(EntityTypeFlags.PACKAGE)) {
 			return;
@@ -212,10 +214,9 @@ class Ship extends Entity {
 		}
 
 		if (damage > 0) {
+			Game.collisionCount += 1;
 			Game.ME.trackingCamera.shakeS(1, 2);
 			Res.audio.hit.play(false, 0.1);
-
-			Main.ME.leaderboards.removeFromScore(cast (damage * 10));
 
 			this.hullStrength = Math.max(0, this.hullStrength - damage);
 			game.hud.hull.setValue(this.hullStrength / Const.SHIP_HULL_STRENGTH);
@@ -346,7 +347,7 @@ class Ship extends Entity {
 
 	function launchPackage() {
 		// numPackages -= 1;
-		Main.ME.leaderboards.removeFromScore(500);
+		Game.packagesLaunched += 1;
 
 		var packagePosition = body.getPosition();
 		packagePosition.multiply(100);
