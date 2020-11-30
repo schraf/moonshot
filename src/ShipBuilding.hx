@@ -77,16 +77,13 @@ class ShipBuilding extends Process {
 			}
 
 			Main.ME.stopMusic();
-			#if debug
-				finish();
-			#else
-				for (cell in layout.cells) cell.alpha = 0.0;
-				moonBackground = new Background(root);
-				moonBackground.addStars(bounds);
-				moon = moonBackground.addMoon(0,0,startingMoonScale);
-				Res.audio.rocketLaunch.play(true, .7);
-				launching = true;
-			#end
+
+			for (cell in layout.cells) cell.alpha = 0.0;
+			moonBackground = new Background(root);
+			moonBackground.addStars(bounds);
+			moon = moonBackground.addMoon(0,0,startingMoonScale);
+			Res.audio.rocketLaunch.play(true, .7);
+			launching = true;
 		};
 		
 		initPanel();
@@ -181,8 +178,8 @@ class ShipBuilding extends Process {
 			moon.rotate(.01);
 
 			if (ca.xDown() || alpha <= -1) {
-				finish();
 				Res.audio.rocketLaunch.stop();
+				finish();
 			}
 		}
 	}

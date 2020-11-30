@@ -11,8 +11,8 @@ class Credits extends Process {
 
 	public function new() {
         super(Main.ME);
-        createRoot(Main.ME.root);
         ME = this;
+        createRoot(Main.ME.root);
 
         ca = Main.ME.controller.createAccess("credits");
 
