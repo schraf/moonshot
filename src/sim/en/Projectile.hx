@@ -37,6 +37,7 @@ class Projectile extends Entity {
 			if (entity.collider != null) {
 				if (entity.collider.contains(this.pos)) {
 					entity.onCollision(this);
+					Game.ME.fx.explode(this.pos.x, this.pos.y);
 					destroy();
 				}
 			}

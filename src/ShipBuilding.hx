@@ -121,6 +121,7 @@ class ShipBuilding extends Process {
 				panel.addPart(part, partSize, partSize);
 			}
 		}
+		panel.addTooltipBox();
 	}
 
 	public function checkBuildPart(part: Data.ShipPart) {

@@ -69,6 +69,26 @@ class Fx extends dn.Process {
 		return pool.alloc(bgNormalSb, t,x,y);
 	}
 
+	public function explode(x:Float, y:Float) {
+		var n = 20;
+		for(i in 0...n) {
+			var p = allocTopNormal(getTile("fxCircle"), x + rnd(-1, 1), y + rnd(-1, 1));
+			var colorChoice = rnd(0, 3);
+			var color = colorChoice < 1 ? 0xffffff : colorChoice < 2 ? 0x000000 : 0x777777;
+			p.colorize(color);
+			p.setScale(.4);
+			// p.moveAwayFrom(x, y, 2);
+			var theta = rnd(0, Math.PI*2);
+			p.moveAng(theta, 5 + rnd(0, 5));
+			// p.frict = 0.99;
+			p.lifeS = rnd(0.05,0.1);
+
+			//spread out origin points
+			p.x += p.dx * 3;
+			p.y += p.dy * 3;
+		}
+	}
+
 	public function spray(x:Float, y:Float, angle:Float, spread:Float = .5) {
 		var n = 8;
 		for(i in 0...n) {

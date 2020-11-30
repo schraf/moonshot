@@ -74,7 +74,6 @@ class Main extends dn.Process {
 		this.leaderboards = new Leaderboards();
 
 		// Start
-		new dn.heaps.GameFocusHelper(Boot.ME.s2d, Assets.fontMedium);
 		delayer.addF( showSplashScreens, 1 );
 		delayer.addF( playMusic, 1 );
 	}
@@ -157,15 +156,15 @@ class Main extends dn.Process {
 			new Credits();
 	}
 
-	public function showSelectDifficulty() {
+	public function showSelectDifficulty(simple = false) {
 		if( SelectDifficulty.ME!=null ) {
 			SelectDifficulty.ME.destroy();
 			delayer.addF(function() {
-				new SelectDifficulty();
+				new SelectDifficulty(simple);
 			}, 1);
 		}
 		else
-			new SelectDifficulty();
+			new SelectDifficulty(simple);
 	}
 	
 	public function showTutorial() {

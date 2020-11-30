@@ -33,13 +33,17 @@ class Const {
 
 	public static var SHIP_PANEL_WIDTH = 400;
 
-	public static var PROJECTILE_SPEED = 10;
+	public static var PROJECTILE_SPEED = 20;
 
 	public static var ASTEROID_SPEED = 0.1;
 	public static var ASTEROID_ROTATION_SPEED = 2.0;
 
 	public static var PACKAGE_ROTATION_SPEED = 0.01;
 
-	public static var THRUST_FORCE = .5;
+	public static var THRUST_FORCE = .7;
 	public static var SHIPBUILDING_FADEOUT_SECONDS = 5;
+
+	public static var ASTEROID_BELT_SPEED = 1;
+	public static var ASTEROID_BELT_Y = 1400;
+
 }

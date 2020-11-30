@@ -24,7 +24,7 @@ class Ship extends Entity {
 	var ca:dn.heaps.Controller.ControllerAccess;
 	var time:Float = 0.;
 
-	var shipPartSize = 30;
+	public var shipPartSize = 30;
 	var shipPartOffsetX = Const.SHIP_WIDTH * 30 * 0.5;
 	var shipPartOffsetY = Const.SHIP_HEIGHT * 30 * 0.5;
 
@@ -231,9 +231,6 @@ class Ship extends Entity {
 	override function update() {
 		super.update();
 
-		this.powerSupply.update();
-		game.hud.powerSupply.setValue(this.powerSupply.getCurrentPowerPercentage());
-
 		var theta = body.getAngle();
 		var p = body.getPosition();
 		setPosPixel(p.x * 100, p.y * 100);
@@ -241,6 +238,65 @@ class Ship extends Entity {
 
 		var center = this.body.getPosition();
 
+		if (ca.xPressed() && numPackages > 0) {
+			if (packageLauncherPower == 0) {
+				packageLauncherPower = 1;
+			} else {
+				launchPackage();
+				packageLauncherPower = 0;
+			}
+		}
+
+		for (asteroid in Entity.ASTEROIDS) {
+			var asteroidPosition = asteroid.getBodyPosition();
+			for (laser in this.lasers) {
+				if (laser.canFireAt(asteroidPosition)) {
+					var power = Data.shipPart.get(Data.ShipPartKind.Laser).power_usage;
+					if (this.powerSupply.consumePower(power)) {
+						laser.resetCooldown();
+						var pos = laser.getWorldPosition();
+						var vel = asteroidPosition.sub(new h2d.col.Point(pos.x, pos.y)).normalized().multiply(Const.PROJECTILE_SPEED);
+						new Projectile(pos.x, pos.y, vel.x, vel.y);
+					}
+				}
+			}
+		}
+		game.hud.launcher.setValue(packageLauncherPower / 10);
+	}
+
+	function fireBooster(boosterBody: B2Body, theta) {
+		if (!this.powerSupply.consumePower(Data.shipPart.get(Data.ShipPartKind.Booster).power_usage)) {
+			return;
+		}
+		var position = boosterBody.getPosition().copy();
+		position.multiply(100);
+		var thrustAngle = this.body.getAngle() + Math.PI / 2 + theta;
+		Game.ME.fx.spray(position.x, position.y, thrustAngle);
+
+		var dir = new B2Vec2(Math.cos(thrustAngle), Math.sin(thrustAngle));
+		var forceVec = dir.copy();
+		forceVec.multiply(-1 * Const.THRUST_FORCE);
+
+		boosterBody.applyForce(forceVec, boosterBody.getPosition());
+		if (!launchPlaying) {
+			Res.audio.rocketLaunch.play(true, .7);
+			launchPlaying = true;
+		}
+		if (!launchPlaying) {
+			Res.audio.rocketLaunch.play(true, .7);
+			launchPlaying = true;
+		}
+		boosterFired = true;
+	}
+
+	var boosterFired = false;
+	var launchPlaying = false;
+	override function fixedUpdate() {
+		super.fixedUpdate();
+		this.powerSupply.fixedUpdate();
+		game.hud.powerSupply.setValue(this.powerSupply.getCurrentPowerPercentage());
+
+		boosterFired = false;
 		if (ca.upDown() || ca.isKeyboardDown(hxd.Key.UP)) {
 			for (body in forwardBoosters) {
 				fireBooster(body, 0);
@@ -265,52 +321,11 @@ class Ship extends Entity {
 			}
 		}
 
-
-		if (ca.xPressed() && numPackages > 0) {
-			if (packageLauncherPower == 0) {
-				packageLauncherPower = 1;
-			} else {
-				launchPackage();
-				packageLauncherPower = 0;
-			}
+		if (!boosterFired && launchPlaying) {
+			Res.audio.rocketLaunch.stop();
+			launchPlaying = false;
 		}
 
-		for (asteroid in Entity.ASTEROIDS) {
-			var asteroidPosition = asteroid.getBodyPosition();
-			for (laser in this.lasers) {
-				if (laser.canFireAt(asteroidPosition)) {
-					var power = Data.shipPart.get(Data.ShipPartKind.Laser).power_usage;
-
-					if (this.powerSupply.consumePower(power)) {
-						laser.resetCooldown();
-						var pos = laser.localToGlobal();
-						var vel = asteroidPosition.sub(pos).normalized().multiply(Const.PROJECTILE_SPEED);
-						new Projectile(pos.x, pos.y, vel.x, vel.y);
-					}
-				}
-			}
-		}
-		game.hud.launcher.setValue(packageLauncherPower / 10);
-	}
-
-	function fireBooster(boosterBody: B2Body, theta) {
-		if (!this.powerSupply.consumePower(Data.shipPart.get(Data.ShipPartKind.Booster).power_usage)) {
-			return;
-		}
-		var position = boosterBody.getPosition().copy();
-		position.multiply(100);
-		var thrustAngle = this.body.getAngle() + Math.PI / 2 + theta;
-		Game.ME.fx.spray(position.x, position.y, thrustAngle);
-
-		var dir = new B2Vec2(Math.cos(thrustAngle), Math.sin(thrustAngle));
-		var forceVec = dir.copy();
-		forceVec.multiply(-1 * Const.THRUST_FORCE);
-
-		boosterBody.applyForce(forceVec, boosterBody.getPosition());
-	}
-
-	override function fixedUpdate() {
-		super.fixedUpdate();
 		if (packageLauncherPower != 0) {
 			packageLauncherPower += packageLauncherPowerModifier;
 			if (packageLauncherPower >= 10) {

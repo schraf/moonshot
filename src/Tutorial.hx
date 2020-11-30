@@ -39,9 +39,9 @@ class Tutorial extends Process {
 		background.addMoon(Const.VIEWPORT_WIDTH * 0.8, Const.VIEWPORT_HEIGHT * 0.1, 0.3);
 
 		addSection("Welcome to the Lunar Postal Service!", Assets.background.getTile('package'), Const.VIEWPORT_WIDTH, 0.75);
-		addSection("Your mission is to delevier packages to houses on the moon for as cheap as possible.", Assets.background.getTile('house'), Const.VIEWPORT_WIDTH, 0.75);
+		addSection("Your mission is to deliver packages to houses on the moon for as cheap as possible.", Assets.background.getTile('house'), Const.VIEWPORT_WIDTH, 0.75);
 		flow.addSpacing(20);
-		addSection("First you must build a ship, click to place peices, mouse wheel or R to rotate. Don't forget to add enough storage space for your deliveries!", null, Const.VIEWPORT_WIDTH, 0.5);
+		addSection("First you must build a ship, click to place pieces, mouse wheel or R to rotate.", null, Const.VIEWPORT_WIDTH, 0.5);
 		flow.addSpacing(20);
 		addSection("W A S D to move, if you have the thrusters for it.", Assets.ship.getTile('thruster'), Const.VIEWPORT_WIDTH, 0.35);
 		addSection("Space to charge up the package cannon, space again to shoot at the mouse pointer.", Assets.ship.getTile('storage'), Const.VIEWPORT_WIDTH, 0.35);
@@ -53,7 +53,6 @@ class Tutorial extends Process {
 		addSection("Once all packages are delivered, your mission is complete! Good luck!", null, Const.VIEWPORT_WIDTH, 1);
 		addSection("Final score is calculated from: leftover budget - packages launched - damage taken + packages delivered", null, Const.VIEWPORT_WIDTH, 1);
 		addSection("The harder the packages hit the house, the lest money we get for them, so try to be gentle", null, Const.VIEWPORT_WIDTH, 1);
-
 
 		Process.resizeAll();
 	}
