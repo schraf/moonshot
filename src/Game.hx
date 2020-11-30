@@ -240,10 +240,10 @@ class Game extends Process {
 	public var packagesLaunched = 0.0;
 	function calculateScore() {
 		// Half this portion for each extra package and each collision.
-		var toDock = 20000 - (20000 / (collisionCount + 1));
-		toDock += 20000 - (20000 / (packagesLaunched - Game.ME.gameMode.numHouses + 1));
-		toDock += 10000 - (10000 / Math.max(1, totalPackageSpeed - 10));
-		Main.ME.leaderboards.addToScore(50000 - Math.floor(toDock));
+		var simScore = 20000 / (collisionCount + 1);
+		simScore += 20000 / (packagesLaunched - Game.ME.gameMode.numHouses + 1));
+		simScore += 10000 / Math.max(1, totalPackageSpeed - 10);
+		Main.ME.leaderboards.addToScore(Math.floor(score);
 	}
 
 	public function endGame (postGameMode: PostGameMode) {
