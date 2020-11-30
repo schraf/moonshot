@@ -52,7 +52,7 @@ class House extends Entity {
 			Game.ME.fx.markerText(this.cx, this.cy, "Thanks!", 2);
 			var velocity = entity.body.m_linearVelocity;
 			var speed = Math.sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
-			Main.ME.leaderboards.addToScore(cast (500 + (speed * -10)));
+			Main.ME.leaderboards.removeFromScore(cast (speed * 100));
 			Res.audio.delivered.play(false, 0.1);
 			destroy();
 		}
