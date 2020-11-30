@@ -346,14 +346,13 @@ class Ship extends Entity {
 
 	function launchPackage() {
 		// numPackages -= 1;
-		Main.ME.leaderboards.removeFromScore(1000);
+		Main.ME.leaderboards.removeFromScore(500);
 
 		var packagePosition = body.getPosition();
 		packagePosition.multiply(100);
 		var newPackage = new Package(Game.ME.world , cast packagePosition.x, cast packagePosition.y);
 		var x = Main.ME.scene.mouseX - Game.ME.scroller.x;
 		var y = Main.ME.scene.mouseY - Game.ME.scroller.y;
-
 
 		var dx = x - packagePosition.x;
 		var dy = y - packagePosition.y;

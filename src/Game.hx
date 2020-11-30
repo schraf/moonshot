@@ -87,7 +87,7 @@ class Game extends Process {
 		var bounds = new h2d.col.Bounds();
 		bounds.set(0.0, 0.0, Const.VIEWPORT_WIDTH, Const.VIEWPORT_HEIGHT);
 
-		Main.ME.leaderboards.addToScore(gameMode.numHouses * 1000); // compensates for package lowering
+		Main.ME.leaderboards.addToScore(gameMode.numHouses * 500); // compensates for package lowering
 
 		var center = bounds.getCenter();
 		var camera = Boot.ME.s2d.camera;
