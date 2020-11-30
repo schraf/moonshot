@@ -20,6 +20,8 @@ class Menu extends Process {
 	var selectedOption: Int;
 
 	public function new() {
+		ME = this;
+
 		#if skip_menu
 		destroy();
 		// Main.ME.startShipBuilding(Data.gameMode.get(Data.GameModeKind.ClassA));
@@ -28,7 +30,6 @@ class Menu extends Process {
 		#end
 
 		super(Main.ME);
-		ME = this;
 		createRoot(Main.ME.root);
 
 		ca = Main.ME.controller.createAccess("menu");
