@@ -96,7 +96,7 @@
 					"id": "SolarPanel",
 					"power_capacity": 0,
 					"flags": 2,
-					"recharge_rate": 0.1
+					"recharge_rate": 0.5
 				},
 				{
 					"id": "Shield",
@@ -117,7 +117,7 @@
 					"power_capacity": 25,
 					"flags": 12,
 					"scale": 0.7,
-					"recharge_rate": 0.1
+					"recharge_rate": 0.5
 				}
 			],
 			"separators": [],
