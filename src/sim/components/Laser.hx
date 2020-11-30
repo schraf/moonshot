@@ -16,10 +16,11 @@ class Laser extends h2d.Object {
 	}
 
 	public function getWorldPosition() {
-		var laserPos = Game.ME.ship.body.getPosition().copy();
+		var ship = Game.ME.ship;
+		var b2x = (this.x + ship.shipPartSize/2)/100;
+		var b2y = (this.y + ship.shipPartSize/2)/100;
+		var laserPos = ship.body.getWorldPoint(new B2Vec2(b2x, b2y));
 		laserPos.multiply(100);
-		var offset = Game.ME.ship.body.getLocalPoint(new B2Vec2(this.x, this.y));
-		laserPos.add(offset);
 		return laserPos;
 	}
 
@@ -37,6 +38,8 @@ class Laser extends h2d.Object {
 		if (dx*dx + dy*dy > RANGE*RANGE) {
 			return false;
 		}
+
+		// POLISH: check if facing towards pos
 
 		return true;
 	}
