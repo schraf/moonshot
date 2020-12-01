@@ -73,7 +73,6 @@ class Game extends Process {
 		this.gameMode = gameMode;
 
 		totalPackageSpeed = 0;
-		collisionCount = 0;
 		packagesLaunched = 0.0;
 		totalFrames = 0;
 
@@ -239,16 +238,15 @@ class Game extends Process {
 
 	public var totalFrames = 0;
 	public var totalPackageSpeed = 0.0;
-	public var collisionCount = 0.0;
 	public var packagesLaunched = 0.0;
 	function calculateScore() {
 		// Time component. Divides down score from time per 5 seconds past 15.
 		var timeScore = (totalFrames / Const.FPS) / 5;
 		var simScore = 25000 / Math.max(1, timeScore - 2);
-		simScore += 20000 / (collisionCount + 1);
-		simScore += 20000 / (packagesLaunched - Game.ME.gameMode.numHouses + 1);
-		simScore += 10000 / Math.max(1, totalPackageSpeed - 10);
-		Main.ME.leaderboards.addToScore(Math.floor(simScore));
+		simScore += 25000 * (ship.hullStrength / Const.SHIP_HULL_STRENGTH);
+		simScore += 25000 / Math.max(1, totalPackageSpeed - 10);
+		Main.ME.leaderboards.addToScore(Math.floor(Math.max(0,simScore)));
+		Main.ME.leaderboards.removeFromScore(Math.floor(packagesLaunched - Game.ME.gameMode.numHouses) * 2000);
 	}
 
 	public function endGame (postGameMode: PostGameMode) {
@@ -258,7 +256,6 @@ class Game extends Process {
 			Res.audio.space_music.stop();
 			Main.ME.playMusic();
 		}, 1);
-
 		Main.ME.startPostGame(this.gameMode, postGameMode);
 	}
 

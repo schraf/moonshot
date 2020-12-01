@@ -25,7 +25,7 @@ class ShipBuilding extends Process {
 	var shipDefinition: ShipDefinition;
 	var launchButton: Button;
 	var ca : dn.heaps.Controller.ControllerAccess;
-
+	var scoreAdded = false;
 	public function new(gameMode: Data.GameMode) {
 		super(Main.ME);
 		ME = this;
@@ -64,13 +64,6 @@ class ShipBuilding extends Process {
 			storageCount = 0;
 			shipDefinition = layout.toShipDefinition();
 			
-			// Half of the total score is a percentage of your cost used.
-			Main.ME.leaderboards.addToScore(
-				Math.floor(
-					((this.gameMode.maxCost - stats.cost) / this.gameMode.maxCost) * 
-					25000
-				)
-			);
 			for (shipPart in shipDefinition.parts) {
 				if (shipPart.part.id == Data.ShipPartKind.Package) {
 					storageCount++;
@@ -82,6 +75,16 @@ class ShipBuilding extends Process {
 			}
 
 			Main.ME.stopMusic();
+			// Half of the total score is a percentage of your cost used.
+			if (!scoreAdded) {
+				Main.ME.leaderboards.addToScore(
+					Math.floor(
+						((this.gameMode.maxCost - stats.cost) / this.gameMode.maxCost) * 
+						25000
+					)
+				);
+				scoreAdded = true;
+			}
 
 			for (cell in layout.cells) cell.alpha = 0.0;
 			moonBackground = new Background(root);
