@@ -37,7 +37,7 @@ class Ship extends Entity {
 
 	var numPackages = 0;
 	var numShields = 0;
-	var hullStrength: Float = Const.SHIP_HULL_STRENGTH;
+	public var hullStrength: Float = Const.SHIP_HULL_STRENGTH;
 	var mass: Int;
 	var forwardBoosters: Array<B2Body> = [];
 	var backwardsBoosters: Array<B2Body> = [];
@@ -193,7 +193,6 @@ class Ship extends Entity {
 	}
 
 	public var totalPackageSpeed = 0.0;
-	var collisionCount = 0;
 	override function onCollision (entity: Entity) {
 		if (entity.isA(EntityTypeFlags.PROJECTILE) || entity.isA(EntityTypeFlags.PACKAGE)) {
 			return;
@@ -214,7 +213,6 @@ class Ship extends Entity {
 		}
 
 		if (damage > 0) {
-			Game.ME.collisionCount += 1;
 			Game.ME.trackingCamera.shakeS(1, 2);
 			Res.audio.hit.play(false, 0.1);
 
