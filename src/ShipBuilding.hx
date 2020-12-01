@@ -65,7 +65,12 @@ class ShipBuilding extends Process {
 			shipDefinition = layout.toShipDefinition();
 			
 			// Half of the total score is a percentage of your cost used.
-			Main.ME.leaderboards.addToScore(Math.floor(((this.gameMode.maxCost - stats.cost) / this.gameMode.maxCost) * 50000));
+			Main.ME.leaderboards.addToScore(
+				Math.floor(
+					((this.gameMode.maxCost - stats.cost) / this.gameMode.maxCost) * 
+					25000
+				)
+			);
 			for (shipPart in shipDefinition.parts) {
 				if (shipPart.part.id == Data.ShipPartKind.Package) {
 					storageCount++;
@@ -77,16 +82,13 @@ class ShipBuilding extends Process {
 			}
 
 			Main.ME.stopMusic();
-			#if debug
-				finish();
-			#else
-				for (cell in layout.cells) cell.alpha = 0.0;
-				moonBackground = new Background(root);
-				moonBackground.addStars(bounds);
-				moon = moonBackground.addMoon(0,0,startingMoonScale);
-				Res.audio.rocketLaunch.play(true, .7);
-				launching = true;
-			#end
+
+			for (cell in layout.cells) cell.alpha = 0.0;
+			moonBackground = new Background(root);
+			moonBackground.addStars(bounds);
+			moon = moonBackground.addMoon(0,0,startingMoonScale);
+			Res.audio.rocketLaunch.play(true, .7);
+			launching = true;
 		};
 		
 		initPanel();
@@ -181,8 +183,8 @@ class ShipBuilding extends Process {
 			moon.rotate(.01);
 
 			if (ca.xDown() || alpha <= -1) {
-				finish();
 				Res.audio.rocketLaunch.stop();
+				finish();
 			}
 		}
 	}

@@ -87,6 +87,7 @@ class SelectDifficulty extends Process {
 
     public function new(simple = false) {
         super(Main.ME);
+        ME = this;
         createRoot(Main.ME.root);
         this.simple = simple;
 
@@ -202,7 +203,7 @@ class SelectDifficulty extends Process {
         flow.getChildAt(options[selectedOption].id).alpha = 1;
         flow.getChildAt(options[optionToSelect].id).alpha = 0.5;
         if (!simple)
-        setDescription(options[optionToSelect]);
+            setDescription(options[optionToSelect]);
 
         selectedOption = optionToSelect;
     }
@@ -228,7 +229,6 @@ class SelectDifficulty extends Process {
     }
 
     override function update() {
-
         if (ca.upPressed()) {
             var x = Main.ME.scene.mouseX;
             var y = Main.ME.scene.mouseY;
@@ -243,14 +243,11 @@ class SelectDifficulty extends Process {
 
     function buttonPressed() {
         destroy();
+        options[selectedOption].playSound();
         if (simple)
             Main.ME.startLeaderboards(options[selectedOption].gameMode());
         else {
-            options[selectedOption].playSound();
             Main.ME.startShipBuilding(options[selectedOption].gameMode());
         }
     }
 }
-
-
-

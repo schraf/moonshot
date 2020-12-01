@@ -75,6 +75,7 @@ class Game extends Process {
 		totalPackageSpeed = 0;
 		collisionCount = 0;
 		packagesLaunched = 0.0;
+		totalFrames = 0;
 
 		ca = Main.ME.controller.createAccess("game");
 		ca.setLeftDeadZone(0.2);
@@ -232,18 +233,22 @@ class Game extends Process {
 	override function fixedUpdate() {
 		super.fixedUpdate();
 
+		totalFrames += 1;
 		for(e in Entity.ALL) if( !e.destroyed ) e.fixedUpdate();
 	}
 
+	public var totalFrames = 0;
 	public var totalPackageSpeed = 0.0;
 	public var collisionCount = 0.0;
 	public var packagesLaunched = 0.0;
 	function calculateScore() {
-		// Half this portion for each extra package and each collision.
-		var toDock = 20000 - (20000 / (collisionCount + 1));
-		toDock += 20000 - (20000 / (packagesLaunched - Game.ME.gameMode.numHouses + 1));
-		toDock += 10000 - (10000 / Math.max(1, totalPackageSpeed - 10));
-		Main.ME.leaderboards.removeFromScore(50000 - Math.floor(toDock));
+		// Time component. Divides down score from time per 5 seconds past 15.
+		var timeScore = (totalFrames / Const.FPS) / 5;
+		var simScore = 25000 / Math.max(1, timeScore - 2);
+		simScore += 20000 / (collisionCount + 1);
+		simScore += 20000 / (packagesLaunched - Game.ME.gameMode.numHouses + 1);
+		simScore += 10000 / Math.max(1, totalPackageSpeed - 10);
+		Main.ME.leaderboards.addToScore(Math.floor(simScore));
 	}
 
 	public function endGame (postGameMode: PostGameMode) {

@@ -223,6 +223,8 @@ class Ship extends Entity {
 
 			if (this.hullStrength <= 0) {
 				// POLISH: explosion
+				Res.audio.rocketLaunchShort.stop();
+				launchPlaying = false;
 				Game.ME.endGame(PostGameMode.DESTROYED);
 			}
 		}
