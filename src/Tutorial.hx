@@ -52,7 +52,7 @@ class Tutorial extends Process {
 		flow.addSpacing(20);
 		addSection("Once all packages are delivered, your mission is complete! Good luck!", null, Const.VIEWPORT_WIDTH, 1, h2d.Flow.FlowAlign.Middle);
 		addSection("Final score is calculated from the following:", null, Const.VIEWPORT_WIDTH, 1, 0x1CE019, h2d.Flow.FlowAlign.Middle);
-		addSection("Leftover budget [25%], Speed [25%], Extra packages launched [20%], Damage taken [20%], Gently delivering packages [10%].", null, Const.VIEWPORT_WIDTH, 1, 0x1CE019, h2d.Flow.FlowAlign.Middle);
+		addSection("Leftover budget [25%], Speed [25%], Damage taken [25%], Gently delivering packages [25%].", null, Const.VIEWPORT_WIDTH, 1, 0x1CE019, h2d.Flow.FlowAlign.Middle);
 
 		Process.resizeAll();
 	}
